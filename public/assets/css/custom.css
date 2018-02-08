@@ -1,0 +1,62 @@
+nav, .navbar-fixed {
+    height: 48px;
+}
+
+#sidenav-overlay {
+    z-index: auto;
+}
+
+.side-nav li a {
+    padding-top: 3px;
+}
+
+.router-link-active a span {
+    color: #3367d6 !important;
+}
+
+.side-nav li a.active {
+    color: #3367d6 !important;
+}
+
+.side-nav li:hover {
+    background-color: rgba(158,158,158,0.2);
+}
+
+.side-nav i {
+    float: left;
+    height: 20px !important;
+    line-height: 48px !important;
+    margin: 0 20px;
+    width: 24px;
+    color: rgba(0,0,0,0.7);
+    font-size: 20px;
+}
+
+#menu-button, #user-button {
+    margin: 0 10px 25px 10px;
+}
+
+#menu-button i, #user-button i {
+    line-height: 45px;
+}
+
+#main-nav {
+    top: 48px;
+    z-index: 999;
+}
+
+#pi-title {
+    font-size: 24px;
+    position: absolute;
+    top: -8px;
+    left: 65px;
+}
+
+#second-nav a {
+    color: black;
+}
+
+.show {
+  transition: 0.5s;
+  transform: translateX(0px);
+}

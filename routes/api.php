@@ -15,20 +15,31 @@ use Dingo\Api\Routing\Router;
 $api = app(Router::class);
 
 $api->version('v1', function (Router $api) {
-    $api->group(['namespace' => 'App\Http\Controllers\Api\v1'], function ($api) {
+    $api->group([
+        'middleware' => 'api',
+        'namespace' => 'App\Http\Controllers\Api\v1',
+    ], function ($api) {
         $api->post('/authenticate', 'AuthController@authenticate');
         // login
         $api->post('auth/login', 'AuthController@login');
         // refresh jwt token
         $api->post('auth/login/refresh', 'AuthController@refreshToken');
-        // need authentication
-        $api->group(['middleware' => 'jwt.auth'], function ($api) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Authenticated Routes
+        |--------------------------------------------------------------------------
+        */
+        $api->group([
+            'middleware' => 'jwt.auth'
+        ], function ($api) {
             // User
             $api->get('user', 'UserController@index');
             $api->get('user/{id}', 'UserController@show');
             $api->post('user', 'UserController@store');
             $api->put('user/{id}', 'UserController@update');
             $api->delete('user/{id}', 'UserController@destroy');
+            
             // Product
             $api->get('product', 'ProductController@index');
             $api->get('product/{id}', 'ProductController@show');

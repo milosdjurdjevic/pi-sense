@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 
@@ -18,6 +19,7 @@ class AuthController extends Controller
 
     public function __construct(User $user)
     {
+        $this->middleware('auth:api', ['except' => ['authenticate']]);
         $this->user = $user;
     }
 
@@ -32,19 +34,19 @@ class AuthController extends Controller
         }
         // grab credentials from the request
         $credentials = $request->only('email', 'password');
-
+//                       print_r($credentials); die;
 //        // attempt to verify the credentials and create a token for the user
 //        if (!$token = JWTAuth::attempt($credentials)) {
 //            $this->response->errorForbidden(trans('auth.incorrect'));
 //        }
 
-        $user = $this->user->where('password', $credentials['password'])->get();
+        $user = User::where('email', $credentials['email'])->get();
 
-//        return bcrypt('admin');
+//        return $user;
 
         try {
             // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::fromUser($user)) {
+            if (! $token = Auth::attempt($credentials)) {
                 return $this->response()->errorNotFound('invalid_credentials');
             }
         } catch (JWTException $e) {

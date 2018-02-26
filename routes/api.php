@@ -34,18 +34,11 @@ $api->version('v1', function (Router $api) {
             'middleware' => 'jwt.auth'
         ], function ($api) {
             // User
-            $api->get('user', 'UserController@index');
+            $api->get('users', 'UsersController@index');
             $api->get('user/{id}', 'UserController@show');
             $api->post('user', 'UserController@store');
             $api->put('user/{id}', 'UserController@update');
             $api->delete('user/{id}', 'UserController@destroy');
-            
-            // Product
-            $api->get('product', 'ProductController@index');
-            $api->get('product/{id}', 'ProductController@show');
-            $api->post('product', 'ProductController@store');
-            $api->put('product/{id}', 'ProductController@update');
-            $api->delete('product/{id}', 'ProductController@destroy');
         });
     });
 

@@ -8,7 +8,7 @@
         </div>
         <div class="nav-wrapper right">
           <!-- Dropdown Trigger -->
-          <a class='dropdown-button btn' id="dd-btn" href='#' data-activates='dd-user'>Username</a>
+          <a class="dropdown-button btn" id="dd-btn" href='#' data-activates='dd-user'>Username</a>
 
           <!-- Dropdown Structure -->
           <ul id='dd-user' class='dropdown-content'>

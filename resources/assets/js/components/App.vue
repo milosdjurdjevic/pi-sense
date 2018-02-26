@@ -4,7 +4,7 @@
             <top-bar></top-bar>
             <div class="columns">
                 <div class="container">
-                    <!--<router-view></router-view>-->
+                    <router-view></router-view>
                 </div>
             </div>
         </div>

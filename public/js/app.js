@@ -22144,18 +22144,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger__ = __webpack_require__(50);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_authentication__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_users__ = __webpack_require__(118);
 
 
 
 
-// import users from './modules/users';
+
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
 
 /* harmony default export */ __webpack_exports__["default"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
   modules: {
-    authentication: __WEBPACK_IMPORTED_MODULE_3__modules_authentication__["a" /* default */]
-    // users,
+    authentication: __WEBPACK_IMPORTED_MODULE_3__modules_authentication__["a" /* default */],
+    users: __WEBPACK_IMPORTED_MODULE_4__modules_users__["a" /* default */]
   },
   plugins: [__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default()({
     collapsed: false
@@ -40068,8 +40069,10 @@ try {
 
 window.axios = __webpack_require__(27);
 
+var bearer = localStorage.getItem('token') ? localStorage.getItem('token').replace(/['"]+/g, '') : '';
+
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + bearer;
 window.axios.defaults.baseURL = '/api/v1/';
 
 /**
@@ -50129,7 +50132,7 @@ var actions = {
     var commit = _ref.commit;
 
 
-    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["a" /* LOGIN */], response);
+    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["b" /* LOGIN */], response);
     // return new Promise((resolve, reject) => {
     //   api.post('users', user).then((response) => {
     //     console.log(response);
@@ -50143,20 +50146,21 @@ var actions = {
   logout: function logout(_ref2) {
     var commit = _ref2.commit;
 
-    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["b" /* LOGOUT */]);
+    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["c" /* LOGOUT */]);
   }
 };
 
 /**
  * MUTATIONS
  */
-var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["a" /* LOGIN */], function (state, data) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["b" /* LOGIN */], function (state, data) {
+  console.log(data.token);
   state.token = data.token;
   state.user = data.user[0];
 
   __WEBPACK_IMPORTED_MODULE_1_store___default.a.set('token', state.token);
   __WEBPACK_IMPORTED_MODULE_1_store___default.a.set('user', state.user);
-}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["b" /* LOGOUT */], function () {
+}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["c" /* LOGOUT */], function () {
   state.token = '';
   state.user = {};
 
@@ -51352,13 +51356,13 @@ if (typeof JSON !== "object") {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LOGIN; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return LOGOUT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return LOGIN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return LOGOUT; });
 /* unused harmony export FETCH_USERS */
-/* unused harmony export CREATE_USER */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CREATE_USER; });
 /* unused harmony export UPDATE_USER */
 /* unused harmony export DELETE_USER */
-/* unused harmony export UPDATE_USER_STATE */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return UPDATE_USER_STATE; });
 var LOGIN = 'LOGIN';
 var LOGOUT = 'LOGOUT';
 
@@ -51901,20 +51905,17 @@ var render = function() {
   return _c(
     "div",
     { attrs: { id: "outer-container" } },
-    [_c("top-bar"), _vm._v(" "), _vm._m(0)],
+    [
+      _c("top-bar"),
+      _vm._v(" "),
+      _c("div", { staticClass: "columns" }, [
+        _c("div", { staticClass: "container" }, [_c("router-view")], 1)
+      ])
+    ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "columns" }, [
-      _c("div", { staticClass: "container" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -52447,7 +52448,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -52462,7 +52463,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_toasted__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_toasted___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue_toasted__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store__ = __webpack_require__(8);
 //
 //
 //
@@ -52515,7 +52515,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
+// import store from '../../store';
 // import api from '../../api/index';
 // import {UPDATE_USER_STATE} from '../../store/mutation-types';
 
@@ -52541,7 +52541,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
       var _this = this;
 
       return this.users.filter(function (user) {
-        return user.attributes.name.toLowerCase().includes(_this.search.toLowerCase());
+        return user.name.toLowerCase().includes(_this.search.toLowerCase());
       });
     }
   },
@@ -52557,11 +52557,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
       this.$store.dispatch('fetchUsers', page).then(function (response) {
-        _this2.users = response.body.data;
-        _this2.links = response.body.links;
-        _this2.total = response.body.meta.pagination.total;
-        _this2.totalPages = response.body.meta.pagination.total_pages;
-        _this2.currentPage = response.body.meta.pagination.current_page;
+        console.log(response);
+        _this2.users = response.data.data;
+        _this2.links = response.data.meta.pagination.links;
+        _this2.total = response.data.meta.pagination.total;
+        _this2.totalPages = response.data.meta.pagination.total_pages;
+        _this2.currentPage = response.data.meta.pagination.current_page;
       }, function () {
         _this2.users = [];
       });
@@ -52667,9 +52668,9 @@ var render = function() {
               return _c("tr", [
                 _c("td", [_vm._v(_vm._s(user.id))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.attributes.name))]),
+                _c("td", [_vm._v(_vm._s(user.name))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.attributes.email))]),
+                _c("td", [_vm._v(_vm._s(user.email))]),
                 _vm._v(" "),
                 _c("td", [
                   _c(
@@ -53136,6 +53137,129 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */,
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */,
+/* 116 */,
+/* 117 */,
+/* 118 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mutation_types__ = __webpack_require__(63);
+var _mutations;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+// import api from '../../api';
+
+
+/**
+ * STATE
+ */
+var state = {
+  users: [],
+  links: {},
+  total: 0,
+  totalPages: 0,
+  currentPage: 0,
+  search: ''
+};
+
+/**
+ * GETTERS
+ */
+var getters = {
+  // eslint-disable-next-line
+  users: function users(state) {
+    return state.users;
+  },
+  links: function links(state) {
+    return state.links;
+  },
+  total: function total(state) {
+    return state.total;
+  },
+  totalPages: function totalPages(state) {
+    return state.totalPages;
+  },
+  currentPage: function currentPage(state) {
+    return state.currentPage;
+  },
+  search: function search(state) {
+    return state.search;
+  }
+};
+
+/**
+ * ACTIONS
+ * @type {{login({commit: *}, *=): void}}
+ */
+var actions = {
+  createUser: function createUser(_ref, user) {
+    var context = _ref.context;
+
+    return new Promise(function (resolve, reject) {
+      axios.post('users', user).then(function (response) {
+        resolve(response);
+      }, function (error) {
+        reject(error);
+      });
+    });
+  },
+  fetchUsers: function fetchUsers(_ref2) {
+    var context = _ref2.context;
+    var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+    return new Promise(function (resolve, reject) {
+      axios.get('users?page=' + page).then(function (response) {
+        resolve(response);
+      }, function (error) {
+        reject(error);
+      });
+    });
+  },
+  deleteUser: function deleteUser(id) {
+    return new Promise(function (resolve, reject) {
+      axios.delete('users/' + id).then(function (response) {
+        resolve(response);
+      }, function (error) {
+        reject(error);
+      });
+    });
+  }
+};
+
+/**
+ * MUTATIONS
+ */
+var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["a" /* CREATE_USER */], function (user) {}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["d" /* UPDATE_USER_STATE */], function (user) {
+  state.user.firstName = user.firstName;
+}), _mutations);
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
 
 /***/ })
 /******/ ]);

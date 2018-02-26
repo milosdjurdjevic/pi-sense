@@ -3,10 +3,22 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Transformers\UserTransformer;
+use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
+    use Helpers;
+
+    protected $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +26,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        $users = $this->user->paginate(10);
+
+        return $this->response->paginator($users, new UserTransformer());
     }
 
     /**

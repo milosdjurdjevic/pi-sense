@@ -8,6 +8,7 @@ use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 
@@ -52,7 +53,7 @@ class AuthController extends Controller
 //            'password' => Hash::make($credentials['password'])
         ])->get();
 
-        // all good so return the token
+        // all good so return the token and user
         return $this->response->array(compact('token', 'user'));
     }
 }

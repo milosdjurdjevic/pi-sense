@@ -22,8 +22,10 @@ try {
 
 window.axios = require('axios');
 
+let bearer = localStorage.getItem('token') ? localStorage.getItem('token').replace(/['"]+/g, '') : '';
+
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+window.axios.defaults.headers.common['Authorization'] = `Bearer ${bearer}`;
 window.axios.defaults.baseURL = '/api/v1/';
 
 /**

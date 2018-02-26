@@ -24,8 +24,8 @@
         <tbody>
         <tr v-for="user in filteredList">
           <td>{{ user.id }}</td>
-          <td>{{ user.attributes.name }}</td>
-          <td>{{ user.attributes.email }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
           <td>
             <button v-on:click="" class="btn-floating waves-effect waves-light teal"><i class="material-icons">edit</i>
             </button>
@@ -50,7 +50,7 @@
 <script>
   import Vue from 'vue';
   import Toasted from 'vue-toasted';
-  import store from '../../store';
+  // import store from '../../store';
   // import api from '../../api/index';
   // import {UPDATE_USER_STATE} from '../../store/mutation-types';
 
@@ -73,7 +73,7 @@
     computed: {
       filteredList() {
         return this.users.filter((user) => {
-          return user.attributes.name.toLowerCase().includes(this.search.toLowerCase());
+          return user.name.toLowerCase().includes(this.search.toLowerCase());
         });
       },
     },
@@ -84,11 +84,12 @@
     methods: {
       loadData(page = 1) {
         this.$store.dispatch('fetchUsers', page).then((response) => {
-          this.users = response.body.data;
-          this.links = response.body.links;
-          this.total = response.body.meta.pagination.total;
-          this.totalPages = response.body.meta.pagination.total_pages;
-          this.currentPage = response.body.meta.pagination.current_page;
+            console.log(response);
+          this.users = response.data.data;
+          this.links = response.data.meta.pagination.links;
+          this.total = response.data.meta.pagination.total;
+          this.totalPages = response.data.meta.pagination.total_pages;
+          this.currentPage = response.data.meta.pagination.current_page;
         }, () => {
           this.users = [];
         });

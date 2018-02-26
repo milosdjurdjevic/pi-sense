@@ -11,14 +11,14 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
         <!-- Styles -->
-        <link rel="stylesheet" href="{{ asset('assets/materialize/css/materialize.min.css') }}">
+{{--        <link rel="stylesheet" href="{{ asset('assets/materialize/css/materialize.min.css') }}">--}}
         <link rel="stylesheet" href="{{ asset('assets/font-awesome/css/font-awesome.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     </head>
     <body>
         <div id="app"></div>
-        <script src="{{ asset('assets/jquery/jquery.min.js') }}"></script>
-        <script src="{{ asset('assets/materialize/js/materialize.min.js') }}"></script>
+        {{--<script src="{{ asset('assets/jquery/jquery.min.js') }}"></script>--}}
+        {{--<script src="{{ asset('assets/materialize/js/materialize.min.js') }}"></script>--}}
         <script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>

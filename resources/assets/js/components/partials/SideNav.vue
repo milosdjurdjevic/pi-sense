@@ -1,12 +1,12 @@
 <template>
   <div id="side-nav">
-    <button v-on:click="showNav()" id="menu-button" data-activates="main-nav"
+    <button id="menu-button" data-activates="main-nav"
             class="btn waves-effect waves-light btn-floating transparent"><i class="material-icons">menu</i>
     </button>
-    <ul v-bind:class="{show}" id="main-nav" class="side-nav">
+    <ul id="main-nav" class="side-nav">
       <!--<li>-->
       <router-link tag="li" class="pageLink" to="/" >
-        <a v-on:click="hideNav()" class="waves-effect">
+        <a class="waves-effect">
           <i class="fa fa-desktop"></i>
           <span class="page">Dashboard</span>
         </a>
@@ -41,13 +41,8 @@
         show: false,
       };
     },
-    methods: {
-      showNav() {
-        this.show = !this.show;
-      },
-      hideNav() {
-        return this.show;
-      },
+    mounted() {
+        $('#menu-button').sideNav();
     },
   };
 </script>

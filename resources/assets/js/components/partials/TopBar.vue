@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-fixed">
+  <div v-if="authToken" class="navbar-fixed">
     <nav class="blue darken-2">
       <div class="nav-wrapper">
         <div class="left">
@@ -8,10 +8,10 @@
         </div>
         <div class="nav-wrapper right">
           <!-- Dropdown Trigger -->
-          <a class='dropdown-button btn' href='#' data-activates='dropdown1'>Username</a>
+          <a class='dropdown-button btn' id="dd-btn" href='#' data-activates='dd-user'>Username</a>
 
           <!-- Dropdown Structure -->
-          <ul id='dropdown1' class='dropdown-content'>
+          <ul id='dd-user' class='dropdown-content'>
             <router-link tag="li" class="pageLink" to="/logout" >
               <a class="waves-effect">
                 <!--<i class="fa fa-desktop"></i>-->
@@ -33,9 +33,12 @@
     name: 'top-bar',
     data() {
       return {
-        // authToken: this.$store.getters.authToken,
+        authToken: this.$store.getters.authToken,
       };
     },
+    mounted() {
+        $('#dd-btn').dropdown();
+    }
   };
 </script>
 

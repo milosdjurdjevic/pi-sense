@@ -1,14 +1,14 @@
 <template>
-    <div id="app">
+    <!--<div id="app">-->
         <div id="outer-container">
             <top-bar></top-bar>
             <div class="columns">
                 <div class="container">
-                    <router-view></router-view>
+                    <!--<router-view></router-view>-->
                 </div>
             </div>
         </div>
-    </div>
+    <!--</div>-->
 </template>
 
 <script>

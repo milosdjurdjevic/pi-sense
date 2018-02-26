@@ -29,9 +29,6 @@
 </template>
 
 <script>
-  // import api from '../api';
-  // import { LOGIN } from '../store/mutation-types';
-
   export default {
     name: 'login',
     data() {
@@ -45,7 +42,8 @@
     methods: {
       login() {
           axios.post('/authenticate', this.user).then(response => {
-              console.log(response);
+              this.$store.dispatch('login', response.data);
+              location.href = '/';
           }).catch(err => {
               console.log(err);
           })

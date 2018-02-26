@@ -34,7 +34,7 @@ const getters = {
 const actions = {
   createUser({ context }, user) {
     return new Promise((resolve, reject) => {
-      api.post('users', user).then((response) => {
+      axios.post('users', user).then((response) => {
         resolve(response);
       }, (error) => {
         reject(error);
@@ -43,7 +43,7 @@ const actions = {
   },
   fetchUsers({ context }, page = 1) {
     return new Promise((resolve, reject) => {
-      api.get(`users?page=${page}`).then((response) => {
+      axios.get(`users?page=${page}`).then((response) => {
         resolve(response);
       }, (error) => {
         reject(error);
@@ -52,7 +52,7 @@ const actions = {
   },
   deleteUser(id) {
     return new Promise((resolve, reject) => {
-      api.delete(`users/${id}`).then((response) => {
+      axios.delete(`users/${id}`).then((response) => {
         resolve(response);
       }, (error) => {
         reject(error)

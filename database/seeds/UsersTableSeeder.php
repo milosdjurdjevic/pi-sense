@@ -22,7 +22,7 @@ class UsersTableSeeder extends Seeder
             \App\Models\User::create([
                 'name'           => 'Test' . str_random(5),
                 'email'          => 'test' . str_random(5) . '@test.com',
-                'password'       => app('hash')->make('test'),
+                'password'       => bcrypt('test'),
 //                'api_token' => str_random(60),
             ]);
         }

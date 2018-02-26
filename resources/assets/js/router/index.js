@@ -6,8 +6,8 @@ import store from '../store';
 import App from '../components/App';
 import Login from '../components/Login';
 import Logout from '../components/Logout';
-// import Users from '../components/users/Users';
-// import AddUser from '../components/users/AddUser';
+import Users from '../components/users/Users';
+import AddUser from '../components/users/AddUser';
 
 Vue.use(Router);
 
@@ -50,22 +50,22 @@ const router = new Router({
             // },
             // ],
         },
-        // {
-        //     path: '/users',
-        //     name: 'users',
-        //     component: Users,
-        //     meta: {
-        //         guarded: true,
-        //     },
-        // },
-        // {
-        //     path: '/add-user',
-        //     name: 'add-user',
-        //     component: AddUser,
-        //     meta: {
-        //         guarded: true,
-        //     },
-        // },
+        {
+            path: '/users',
+            name: 'users',
+            component: Users,
+            meta: {
+                guarded: true,
+            },
+        },
+        {
+            path: '/add-user',
+            name: 'add-user',
+            component: AddUser,
+            meta: {
+                guarded: true,
+            },
+        },
     ],
 });
 

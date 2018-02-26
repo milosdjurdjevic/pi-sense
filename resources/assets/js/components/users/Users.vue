@@ -50,8 +50,9 @@
 <script>
   import Vue from 'vue';
   import Toasted from 'vue-toasted';
-  import api from '../../api/index';
-  import {UPDATE_USER_STATE} from '../../store/mutation-types';
+  import store from '../../store';
+  // import api from '../../api/index';
+  // import {UPDATE_USER_STATE} from '../../store/mutation-types';
 
   Vue.use(Toasted, {
     iconPack: 'material', // set your iconPack, defaults to material. material|fontawesome
@@ -71,7 +72,6 @@
     },
     computed: {
       filteredList() {
-        // eslint-disable-next-line
         return this.users.filter((user) => {
           return user.attributes.name.toLowerCase().includes(this.search.toLowerCase());
         });

@@ -7,6 +7,7 @@ use App\Models\User;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 
@@ -32,21 +33,13 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return $this->errorBadRequest($validator->messages());
         }
+
         // grab credentials from the request
         $credentials = $request->only('email', 'password');
-//                       print_r($credentials); die;
-//        // attempt to verify the credentials and create a token for the user
-//        if (!$token = JWTAuth::attempt($credentials)) {
-//            $this->response->errorForbidden(trans('auth.incorrect'));
-//        }
-
-        $user = User::where('email', $credentials['email'])->get();
-
-//        return $user;
 
         try {
             // attempt to verify the credentials and create a token for the user
-            if (! $token = Auth::attempt($credentials)) {
+            if (! $token = JWTAuth::attempt($credentials)) {
                 return $this->response()->errorNotFound('invalid_credentials');
             }
         } catch (JWTException $e) {
@@ -54,8 +47,12 @@ class AuthController extends Controller
             return $this->response()->errorInternal('could_not_create_token');
         }
 
+        $user = $this->user->where([
+            'email' => $credentials['email'],
+//            'password' => Hash::make($credentials['password'])
+        ])->get();
+
         // all good so return the token
-        return $this->response->array(compact('token'));
-//        return response()->json(compact('token'));
+        return $this->response->array(compact('token', 'user'));
     }
 }

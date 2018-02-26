@@ -23,16 +23,18 @@ const getters = {
  * ACTIONS
  */
 const actions = {
-  login({ commit }, user) {
-    return new Promise((resolve, reject) => {
-      api.post('users', user).then((response) => {
-        console.log(response);
-        // commit(types.LOGIN, user);
-        // resolve(response);
-      }, (error) => {
-        reject(error);
-      });
-    });
+  login({ commit }, response) {
+
+    commit(types.LOGIN, response);
+    // return new Promise((resolve, reject) => {
+    //   api.post('users', user).then((response) => {
+    //     console.log(response);
+    //     // commit(types.LOGIN, user);
+    //     // resolve(response);
+    //   }, (error) => {
+    //     reject(error);
+    //   });
+    // });
   },
   logout({ commit }) {
     commit(types.LOGOUT);
@@ -44,9 +46,9 @@ const actions = {
  */
 const mutations = {
   // eslint-disable-next-line
-  [types.LOGIN](state, user) {
-    state.token = user.api_token;
-    state.user = omit(user, ['api_token']);
+  [types.LOGIN](state, data) {
+    state.token = data.token;
+    state.user = data.user[0];
 
     localStorage.set('token', state.token);
     localStorage.set('user', state.user);

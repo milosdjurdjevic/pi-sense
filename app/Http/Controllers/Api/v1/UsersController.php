@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Transformers\UserTransformer;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
+use Validator;
 
 class UsersController extends Controller
 {
@@ -49,7 +50,25 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->input(), [
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->messages());
+        }
+
+        $attributes = [
+            'name' => $request->get('firstName') . ' ' . $request->get('lastName'),
+            'email' => $request->get('email'),
+            'password' => app('hash')->make($request->get('password'))
+        ];
+        $user = $this->user->create($attributes);
+
+        return $this->response->array(compact('user'));
     }
 
     /**
@@ -60,7 +79,12 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = $this->user->where('id', $id)->first();
+
+        if (!$user)
+            return $this->errorBadRequest('No user found!');
+
+        return $this->response->item($user, new UserTransformer());
     }
 
     /**
@@ -83,7 +107,27 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->input(), [
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->messages());
+        }
+
+        $attributes = [
+            'name' => $request->get('firstName') . ' ' . $request->get('lastName'),
+            'email' => $request->get('email'),
+
+        ];
+        $user = $this->user->where('id', $id)->first();
+
+        if (!$user->update($attributes))
+            return $this->response->error('Update failed');
+
+        return $this->response->noContent();
     }
 
     /**
@@ -94,6 +138,15 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        if (! $user) {
+            return $this->response->errorNotFound();
+        }
+
+        if( !$user->delete() ) {
+            return $this->response->errorInternal();
+        }
+
+        return $this->response->noContent();
     }
 }

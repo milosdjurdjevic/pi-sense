@@ -35,10 +35,10 @@ $api->version('v1', function (Router $api) {
         ], function ($api) {
             // User
             $api->get('users', 'UsersController@index');
-            $api->get('user/{id}', 'UserController@show');
-            $api->post('user', 'UserController@store');
-            $api->put('user/{id}', 'UserController@update');
-            $api->delete('user/{id}', 'UserController@destroy');
+            $api->get('users/{id}', 'UsersController@show');
+            $api->post('users', 'UsersController@store');
+            $api->put('users/{id}', 'UsersController@update');
+            $api->delete('users/{id}', 'UsersController@destroy');
         });
     });
 

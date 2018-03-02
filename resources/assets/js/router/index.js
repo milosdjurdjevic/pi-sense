@@ -1,4 +1,3 @@
-/* eslint-disable */
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from '../store';
@@ -40,16 +39,6 @@ const router = new Router({
             meta: {
                 guarded: true,
             },
-            // children: [
-            //   {
-            // path: 'users',
-            // name: 'users',
-            // component: Users,
-            // meta: {
-            //   guarded: true,
-            // },
-            // },
-            // ],
         },
         {
             path: '/users',

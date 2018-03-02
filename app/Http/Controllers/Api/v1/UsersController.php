@@ -51,14 +51,14 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->input(), [
-            'firstName' => 'required',
-            'lastName' => 'required',
+            'firstName' => 'required|min:3',
+            'lastName' => 'required|min:3',
             'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return $this->errorBadRequest($validator->messages());
+            return $this->response->errorBadRequest($validator->errors());
         }
 
         $attributes = [
@@ -128,6 +128,17 @@ class UsersController extends Controller
             return $this->response->error('Update failed');
 
         return $this->response->noContent();
+    }
+
+    /**
+     * Change the user password
+     *
+     * @param Request $request
+     * @param $id
+     */
+    public function updatePassword(Request $request, $id)
+    {
+
     }
 
     /**

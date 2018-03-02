@@ -9,7 +9,7 @@
             </router-link>
             <div class="input-field col s6 right">
                 <input id="serachTable" type="text" class="validate" v-model="search">
-                <label class="active" for="serachTable">Search Users</label>
+                <label class="" for="serachTable">Search Users</label>
             </div>
 
             <table class="highlight">

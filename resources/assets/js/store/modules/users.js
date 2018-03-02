@@ -35,9 +35,11 @@ const actions = {
     createUser({context}, user) {
         return new Promise((resolve, reject) => {
             axios.post('users', user).then((response) => {
+                console.log(response);
                 resolve(response);
             }, (error) => {
-                reject(error);
+                console.log(error);
+                resolve(error);
             });
         });
     },

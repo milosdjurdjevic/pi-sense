@@ -138,7 +138,25 @@ class UsersController extends Controller
      */
     public function updatePassword(Request $request, $id)
     {
+        $validator = Validator::make($request->input(), [
+            'password' => 'required|min:6',
+            'passwordConfirmation' => 'required|min:6',
+        ]);
 
+        if ($validator->fails()) {
+            return $this->response->error($validator->errors(), 200);
+        }
+
+        if ($request->password === $request->passwordConfirmation) {
+            $user = $this->user->where('id', $id)->first();
+
+            if (!$user->update(['password' => bcrypt($request->password)]))
+                return $this->response->error('Update failed');
+
+            return $this->response->noContent();
+        }
+
+        return $this->response->error('Password does not match!', 200);
     }
 
     /**

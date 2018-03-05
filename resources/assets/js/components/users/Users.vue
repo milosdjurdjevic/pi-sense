@@ -53,9 +53,6 @@
 <script>
     import Vue from 'vue';
     import Toasted from 'vue-toasted';
-    // import store from '../../store';
-    // import api from '../../api/index';
-    // import {UPDATE_USER_STATE} from '../../store/mutation-types';
 
     Vue.use(Toasted, {
         iconPack: 'material', // set your iconPack, defaults to material. material|fontawesome
@@ -86,12 +83,13 @@
         },
         methods: {
             loadData(page = 1) {
-                this.$store.dispatch('fetchUsers', page).then((response) => {
-                    this.users = response.data.data;
-                    this.links = response.data.meta.pagination.links;
-                    this.total = response.data.meta.pagination.total;
-                    this.totalPages = response.data.meta.pagination.total_pages;
-                    this.currentPage = response.data.meta.pagination.current_page;
+                this.users = this.$store.getters.users;
+                this.$store.dispatch('fetchUsers', page).then(() => {
+                    this.users = this.$store.getters.users;
+                    this.links = this.$store.getters.usersMeta.pagination.links;
+                    this.total = this.$store.getters.usersMeta.pagination.total;
+                    this.totalPages = this.$store.getters.usersMeta.pagination.total_pages;
+                    this.currentPage = this.$store.getters.usersMeta.pagination.current_page;
                 }, () => {
                     this.users = [];
                 });

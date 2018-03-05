@@ -7,10 +7,11 @@ import * as types from '../mutation-types';
  */
 const state = {
     users: [],
-    links: {},
-    total: 0,
-    totalPages: 0,
-    currentPage: 0,
+    usersMeta: {},
+    // links: {},
+    // total: 0,
+    // totalPages: 0,
+    // currentPage: 0,
     search: '',
 };
 
@@ -20,10 +21,11 @@ const state = {
 const getters = {
     // eslint-disable-next-line
     users: state => state.users,
-    links: state => state.links,
-    total: state => state.total,
-    totalPages: state => state.totalPages,
-    currentPage: state => state.currentPage,
+    usersMeta: state => state.usersMeta,
+    // links: state => state.links,
+    // total: state => state.total,
+    // totalPages: state => state.totalPages,
+    // currentPage: state => state.currentPage,
     search: state => state.search,
 };
 
@@ -32,23 +34,29 @@ const getters = {
  * @type {{login({commit: *}, *=): void}}
  */
 const actions = {
+    fetchUsers({commit}, page = 1) {
+        return axios.get(`users?page=${page}`)
+            .then(response => {
+                commit(types.FETCH_USERS, response.data)
+            }, error => {
+                console.log(error);
+            });
+        // context.commit(types.FETCH_USERS);
+        // return new Promise((resolve, reject) => {
+        //     axios.get(`users?page=${page}`).then((response) => {
+        //
+        //         resolve(response);
+        //     }, (error) => {
+        //         reject(error);
+        //     });
+        // });
+    },
     createUser({context}, user) {
         return new Promise((resolve, reject) => {
             axios.post('users', user).then((response) => {
-                console.log(response);
                 resolve(response);
             }, (error) => {
-                console.log(error);
                 resolve(error);
-            });
-        });
-    },
-    fetchUsers({context}, page = 1) {
-        return new Promise((resolve, reject) => {
-            axios.get(`users?page=${page}`).then((response) => {
-                resolve(response);
-            }, (error) => {
-                reject(error);
             });
         });
     },
@@ -78,6 +86,15 @@ const actions = {
                 reject(error)
             });
         })
+    },
+    changePassword({context}, data) {
+        return new Promise((resolve, reject) => {
+            axios.put(`users/${data.id}/password`, data).then((response) => {
+                resolve(response);
+            }, (error) => {
+                reject(error)
+            });
+        })
     }
 };
 
@@ -85,9 +102,20 @@ const actions = {
  * MUTATIONS
  */
 const mutations = {
-    // eslint-disable-next-line
     [types.CREATE_USER](user) {
-
+        return new Promise((resolve, reject) => {
+            axios.get(`users?page=${page}`).then((response) => {
+                console.log(response);
+                state.users = response;
+                resolve(response);
+            }, (error) => {
+                reject(error);
+            });
+        });
+    },
+    [types.FETCH_USERS](state, data) {
+        state.users = data.data;
+        state.usersMeta = data.meta;
     },
     [types.UPDATE_USER_STATE](user) {
         state.user.firstName = user.firstName;

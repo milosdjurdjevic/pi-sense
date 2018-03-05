@@ -47,7 +47,6 @@ const actions = {
 const mutations = {
   // eslint-disable-next-line
   [types.LOGIN](state, data) {
-    console.log(data.token);
     state.token = data.token;
     state.user = data.user[0];
 

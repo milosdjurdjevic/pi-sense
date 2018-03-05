@@ -39949,13 +39949,13 @@ router.beforeEach(function (to, from, next) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return LOGIN; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return LOGOUT; });
-/* unused harmony export FETCH_USERS */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return LOGIN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return LOGOUT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return FETCH_USERS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CREATE_USER; });
 /* unused harmony export UPDATE_USER */
 /* unused harmony export DELETE_USER */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return UPDATE_USER_STATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return UPDATE_USER_STATE; });
 var LOGIN = 'LOGIN';
 var LOGOUT = 'LOGOUT';
 
@@ -50153,7 +50153,7 @@ var actions = {
     var commit = _ref.commit;
 
 
-    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["b" /* LOGIN */], response);
+    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["c" /* LOGIN */], response);
     // return new Promise((resolve, reject) => {
     //   api.post('users', user).then((response) => {
     //     console.log(response);
@@ -50167,21 +50167,20 @@ var actions = {
   logout: function logout(_ref2) {
     var commit = _ref2.commit;
 
-    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["c" /* LOGOUT */]);
+    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["d" /* LOGOUT */]);
   }
 };
 
 /**
  * MUTATIONS
  */
-var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["b" /* LOGIN */], function (state, data) {
-  console.log(data.token);
+var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["c" /* LOGIN */], function (state, data) {
   state.token = data.token;
   state.user = data.user[0];
 
   __WEBPACK_IMPORTED_MODULE_1_store___default.a.set('token', state.token);
   __WEBPACK_IMPORTED_MODULE_1_store___default.a.set('user', state.user);
-}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["c" /* LOGOUT */], function () {
+}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["d" /* LOGOUT */], function () {
   state.token = '';
   state.user = {};
 
@@ -51391,10 +51390,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  */
 var state = {
     users: [],
-    links: {},
-    total: 0,
-    totalPages: 0,
-    currentPage: 0,
+    usersMeta: {},
+    // links: {},
+    // total: 0,
+    // totalPages: 0,
+    // currentPage: 0,
     search: ''
 };
 
@@ -51406,18 +51406,13 @@ var getters = {
     users: function users(state) {
         return state.users;
     },
-    links: function links(state) {
-        return state.links;
+    usersMeta: function usersMeta(state) {
+        return state.usersMeta;
     },
-    total: function total(state) {
-        return state.total;
-    },
-    totalPages: function totalPages(state) {
-        return state.totalPages;
-    },
-    currentPage: function currentPage(state) {
-        return state.currentPage;
-    },
+    // links: state => state.links,
+    // total: state => state.total,
+    // totalPages: state => state.totalPages,
+    // currentPage: state => state.currentPage,
     search: function search(state) {
         return state.search;
     }
@@ -51428,28 +51423,33 @@ var getters = {
  * @type {{login({commit: *}, *=): void}}
  */
 var actions = {
-    createUser: function createUser(_ref, user) {
-        var context = _ref.context;
+    fetchUsers: function fetchUsers(_ref) {
+        var commit = _ref.commit;
+        var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+        return axios.get('users?page=' + page).then(function (response) {
+            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* FETCH_USERS */], response.data);
+        }, function (error) {
+            console.log(error);
+        });
+        // context.commit(types.FETCH_USERS);
+        // return new Promise((resolve, reject) => {
+        //     axios.get(`users?page=${page}`).then((response) => {
+        //
+        //         resolve(response);
+        //     }, (error) => {
+        //         reject(error);
+        //     });
+        // });
+    },
+    createUser: function createUser(_ref2, user) {
+        var context = _ref2.context;
 
         return new Promise(function (resolve, reject) {
             axios.post('users', user).then(function (response) {
-                console.log(response);
                 resolve(response);
             }, function (error) {
-                console.log(error);
                 resolve(error);
-            });
-        });
-    },
-    fetchUsers: function fetchUsers(_ref2) {
-        var context = _ref2.context;
-        var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-
-        return new Promise(function (resolve, reject) {
-            axios.get('users?page=' + page).then(function (response) {
-                resolve(response);
-            }, function (error) {
-                reject(error);
             });
         });
     },
@@ -51485,13 +51485,37 @@ var actions = {
                 reject(error);
             });
         });
+    },
+    changePassword: function changePassword(_ref6, data) {
+        var context = _ref6.context;
+
+        return new Promise(function (resolve, reject) {
+            axios.put('users/' + data.id + '/password', data).then(function (response) {
+                resolve(response);
+            }, function (error) {
+                reject(error);
+            });
+        });
     }
 };
 
 /**
  * MUTATIONS
  */
-var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["a" /* CREATE_USER */], function (user) {}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["d" /* UPDATE_USER_STATE */], function (user) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["a" /* CREATE_USER */], function (user) {
+    return new Promise(function (resolve, reject) {
+        axios.get('users?page=' + page).then(function (response) {
+            console.log(response);
+            state.users = response;
+            resolve(response);
+        }, function (error) {
+            reject(error);
+        });
+    });
+}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* FETCH_USERS */], function (state, data) {
+    state.users = data.data;
+    state.usersMeta = data.meta;
+}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["e" /* UPDATE_USER_STATE */], function (user) {
     state.user.firstName = user.firstName;
 }), _mutations);
 
@@ -52579,7 +52603,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -52649,9 +52673,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-// import store from '../../store';
-// import api from '../../api/index';
-// import {UPDATE_USER_STATE} from '../../store/mutation-types';
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_toasted___default.a, {
     iconPack: 'material' // set your iconPack, defaults to material. material|fontawesome
@@ -52690,12 +52711,13 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
 
             var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
-            this.$store.dispatch('fetchUsers', page).then(function (response) {
-                _this2.users = response.data.data;
-                _this2.links = response.data.meta.pagination.links;
-                _this2.total = response.data.meta.pagination.total;
-                _this2.totalPages = response.data.meta.pagination.total_pages;
-                _this2.currentPage = response.data.meta.pagination.current_page;
+            this.users = this.$store.getters.users;
+            this.$store.dispatch('fetchUsers', page).then(function () {
+                _this2.users = _this2.$store.getters.users;
+                _this2.links = _this2.$store.getters.usersMeta.pagination.links;
+                _this2.total = _this2.$store.getters.usersMeta.pagination.total;
+                _this2.totalPages = _this2.$store.getters.usersMeta.pagination.total_pages;
+                _this2.currentPage = _this2.$store.getters.usersMeta.pagination.current_page;
             }, function () {
                 _this2.users = [];
             });
@@ -53073,7 +53095,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vee_
             }, function (error) {
                 // let errors = JSON.parse(error.message);
                 console.log(error);
-                _this.$toasted.show(JSON.parse(error.data.error.message).firstName, { duration: 3000 });
+                _this.$toasted.show('Error', { duration: 3000 });
             });
         }
     }
@@ -60414,7 +60436,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -60425,6 +60447,9 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vee_validate__ = __webpack_require__(98);
 //
 //
 //
@@ -60473,6 +60498,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vee_validate__["a" /* default */]);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "edit-user",
@@ -60486,7 +60519,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             password: {
                 password: '',
-                confirmPassword: ''
+                passwordConfirmation: ''
             }
         };
     },
@@ -60511,9 +60544,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         editUser: function editUser() {
-            this.$store.dispatch('updateUser', this.user).then(function (response) {}, function (error) {});
+            var _this2 = this;
+
+            this.$store.dispatch('updateUser', this.user).then(function (response) {
+                _this2.$toasted.show('User updated', { duration: 3000 });
+            }, function (error) {
+                _this2.$toasted.show('Error', { duration: 3000 });
+            });
         },
-        changePassword: function changePassword() {}
+        changePassword: function changePassword() {
+            var _this3 = this;
+
+            this.password.id = this.$route.params.id;
+
+            this.$store.dispatch('changePassword', this.password).then(function (response) {
+                _this3.password.password = '';
+                _this3.password.passwordConfirmation = '';
+                _this3.$toasted.show('Password changed', { duration: 3000 });
+            }, function (error) {
+                _this3.$toasted.show('Error', { duration: 3000 });
+            });
+        }
     }
 });
 
@@ -60629,7 +60680,7 @@ var render = function() {
               staticClass: "btn-floating waves-effect waves-light blue",
               on: {
                 click: function($event) {
-                  _vm.editUser(_vm.user.id)
+                  _vm.editUser()
                 }
               }
             },
@@ -60639,80 +60690,107 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("form", { staticClass: "col s12", attrs: { id: "change-password" } }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "input-field col s6" }, [
-          _c("i", { staticClass: "material-icons prefix" }, [_vm._v("lock")]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.password.password,
-                expression: "password.password"
-              }
-            ],
-            staticClass: "validate",
-            attrs: { id: "password", type: "password" },
-            domProps: { value: _vm.password.password },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.password, "password", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "password" } }, [_vm._v("Password")])
-        ]),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "input-field col s6" }, [
+        _c("i", { staticClass: "material-icons prefix" }, [_vm._v("lock")]),
         _vm._v(" "),
-        _c("div", { staticClass: "input-field col s6" }, [
-          _c("i", { staticClass: "material-icons prefix" }, [_vm._v("lock")]),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.password.confirmPassword,
-                expression: "password.confirmPassword"
-              }
-            ],
-            staticClass: "validate",
-            attrs: { id: "confirmPassword", type: "password" },
-            domProps: { value: _vm.password.confirmPassword },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.password, "confirmPassword", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("label", { attrs: { for: "confirmPassword" } }, [
-            _vm._v("Confirm Passowrd")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "input-field col s6 center" }, [
-          _c(
-            "button",
+        _c("input", {
+          directives: [
             {
-              staticClass: "btn-floating waves-effect waves-light blue",
-              on: {
-                click: function($event) {
-                  _vm.changePassword()
-                }
-              }
+              name: "model",
+              rawName: "v-model",
+              value: _vm.password.password,
+              expression: "password.password"
             },
-            [_c("i", { staticClass: "material-icons" }, [_vm._v("edit")])]
-          )
+            {
+              name: "validate",
+              rawName: "v-validate",
+              value: "required|confirmed|min:6",
+              expression: "'required|confirmed|min:6'"
+            }
+          ],
+          class: { invalid: _vm.errors.has("password") },
+          attrs: { id: "password", name: "password", type: "password" },
+          domProps: { value: _vm.password.password },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.password, "password", $event.target.value)
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c(
+          "label",
+          {
+            attrs: {
+              for: "password",
+              "data-error": _vm.errors.first("password")
+            }
+          },
+          [_vm._v("Password")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "input-field col s6" }, [
+        _c("i", { staticClass: "material-icons prefix" }, [_vm._v("lock")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.password.passwordConfirmation,
+              expression: "password.passwordConfirmation"
+            },
+            {
+              name: "validate",
+              rawName: "v-validate",
+              value: "required",
+              expression: "'required'"
+            }
+          ],
+          class: { invalid: _vm.errors.has("password") },
+          attrs: {
+            id: "password_confirmation",
+            name: "password_confirmation",
+            type: "password"
+          },
+          domProps: { value: _vm.password.passwordConfirmation },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(
+                _vm.password,
+                "passwordConfirmation",
+                $event.target.value
+              )
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("label", { attrs: { for: "password_confirmation" } }, [
+          _vm._v("Confirm Passowrd")
         ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "input-field col s6 center" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn-floating waves-effect waves-light blue",
+            on: {
+              click: function($event) {
+                _vm.changePassword()
+              }
+            }
+          },
+          [_c("i", { staticClass: "material-icons" }, [_vm._v("edit")])]
+        )
       ])
     ])
   ])

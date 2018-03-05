@@ -18,35 +18,43 @@
                     <label for="email" class="active">Email</label>
                 </div>
                 <div class="input-field col s6 center">
-                    <button v-on:click="editUser(user.id)" class="btn-floating waves-effect waves-light blue"><i
+                    <button @click="editUser()" class="btn-floating waves-effect waves-light blue"><i
                             class="material-icons">edit</i>
                     </button>
                 </div>
             </div>
         </form>
-        <form class="col s12" id="change-password">
+        <!--<form class="col s12" id="change-password" method="post" @submin.prevent="onSubmit">-->
             <div class="row">
                 <div class="input-field col s6">
                     <i class="material-icons prefix">lock</i>
-                    <input v-model="password.password" id="password" type="password" class="validate">
-                    <label for="password">Password</label>
+                    <input v-model="password.password" v-validate="'required|confirmed|min:6'"
+                           id="password" name="password" type="password" :class="{'invalid': errors.has('password') }">
+                    <label for="password" :data-error="errors.first('password')">Password</label>
                 </div>
                 <div class="input-field col s6">
                     <i class="material-icons prefix">lock</i>
-                    <input v-model="password.confirmPassword" id="confirmPassword" type="password" class="validate">
-                    <label for="confirmPassword">Confirm Passowrd</label>
+                    <input v-model="password.passwordConfirmation" v-validate="'required'"
+                           id="password_confirmation" name="password_confirmation"
+                           type="password" :class="{'invalid': errors.has('password') }">
+                    <label for="password_confirmation">Confirm Passowrd</label>
                 </div>
                 <div class="input-field col s6 center">
-                    <button v-on:click="changePassword()" class="btn-floating waves-effect waves-light blue"><i
+                    <button @click="changePassword()" class="btn-floating waves-effect waves-light blue"><i
                             class="material-icons">edit</i>
                     </button>
                 </div>
             </div>
-        </form>
+        <!--</form>-->
     </div>
 </template>
 
 <script>
+    import Vue from 'vue';
+    import VeeValidate from 'vee-validate';
+
+    Vue.use(VeeValidate);
+
     export default {
         name: "edit-user",
         data() {
@@ -59,7 +67,7 @@
                 },
                 password: {
                     password: '',
-                    confirmPassword: '',
+                    passwordConfirmation: '',
                 }
             };
         },
@@ -77,18 +85,26 @@
                     this.user.lastName = name[1];
                     this.user.email = response.data.data.email;
                 }, (error) => {
-                    this.$toasted.show(JSON.parse(error.body.error.message).firstName, { duration: 3000 });
+                    this.$toasted.show(JSON.parse(error.body.error.message).firstName, {duration: 3000});
                 });
             },
             editUser() {
                 this.$store.dispatch('updateUser', this.user).then((response) => {
-
+                    this.$toasted.show('User updated', {duration: 3000});
                 }, (error) => {
-
+                    this.$toasted.show('Error', {duration: 3000});
                 });
             },
             changePassword() {
+                this.password.id = this.$route.params.id;
 
+                this.$store.dispatch('changePassword', this.password).then((response) => {
+                    this.password.password = '';
+                    this.password.passwordConfirmation = '';
+                    this.$toasted.show('Password changed', {duration: 3000});
+                }, (error) => {
+                    this.$toasted.show('Error', {duration: 3000});
+                });
             }
         },
     }

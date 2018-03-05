@@ -38,6 +38,7 @@ $api->version('v1', function (Router $api) {
             $api->get('users/{id}', 'UsersController@show');
             $api->post('users', 'UsersController@store');
             $api->put('users/{id}', 'UsersController@update');
+            $api->put('users/{id}/password', 'UsersController@updatePassword');
             $api->delete('users/{id}', 'UsersController@destroy');
         });
     });

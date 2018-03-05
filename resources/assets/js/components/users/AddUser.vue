@@ -34,7 +34,7 @@
                     <label for="password_confirmation">Confirm Passowrd</label>
                 </div>
                 <div class="input-field col s6 center">
-                    <button @click="createUser()" v-bind:disabled="errors.any()"
+                    <button @click="createUser()" :disabled="errors.any()"
                             class="btn-floating waves-effect waves-light blue"><i
                             class="material-icons">add</i>
                     </button>
@@ -70,7 +70,7 @@
                 }, (error) => {
                     // let errors = JSON.parse(error.message);
                     console.log(error);
-                    this.$toasted.show(JSON.parse(error.data.error.message).firstName, {duration: 3000});
+                    this.$toasted.show('Error', {duration: 3000});
                 });
             },
         },

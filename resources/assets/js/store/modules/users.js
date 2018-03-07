@@ -8,10 +8,7 @@ import * as types from '../mutation-types';
 const state = {
     users: [],
     usersMeta: {},
-    // links: {},
-    // total: 0,
-    // totalPages: 0,
-    // currentPage: 0,
+    allUsers: [],
     search: '',
 };
 
@@ -22,10 +19,7 @@ const getters = {
     // eslint-disable-next-line
     users: state => state.users,
     usersMeta: state => state.usersMeta,
-    // links: state => state.links,
-    // total: state => state.total,
-    // totalPages: state => state.totalPages,
-    // currentPage: state => state.currentPage,
+    allUsers: state => state.allUsers,
     search: state => state.search,
 };
 
@@ -41,15 +35,14 @@ const actions = {
             }, error => {
                 console.log(error);
             });
-        // context.commit(types.FETCH_USERS);
-        // return new Promise((resolve, reject) => {
-        //     axios.get(`users?page=${page}`).then((response) => {
-        //
-        //         resolve(response);
-        //     }, (error) => {
-        //         reject(error);
-        //     });
-        // });
+    },
+    allUsers({commit}) {
+        return axios.get(`users/all`)
+            .then(response => {
+                commit(types.ALL_USERS, response.data)
+            }, error => {
+                console.log(error);
+            });
     },
     createUser({context}, user) {
         return new Promise((resolve, reject) => {
@@ -116,6 +109,9 @@ const mutations = {
     [types.FETCH_USERS](state, data) {
         state.users = data.data;
         state.usersMeta = data.meta;
+    },
+    [types.ALL_USERS](state, data) {
+        state.allUsers = data.data;
     },
     [types.UPDATE_USER_STATE](user) {
         state.user.firstName = user.firstName;

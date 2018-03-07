@@ -27,7 +27,8 @@
                     <td>{{ user.name }}</td>
                     <td>{{ user.email }}</td>
                     <td>
-                        <router-link tag="button" class="btn-floating waves-effect waves-light teal" v-bind:to="`/users/${user.id}`">
+                        <router-link tag="button" class="btn-floating waves-effect waves-light teal"
+                                     v-bind:to="`/users/${user.id}`">
                             <i class="material-icons">edit</i>
                         </router-link>
 
@@ -62,7 +63,7 @@
         name: 'users',
         data() {
             return {
-                users: [],
+                users: this.$store.getters.users.length,
                 links: {},
                 total: 0,
                 totalPages: 0,
@@ -72,14 +73,24 @@
         },
         computed: {
             filteredList() {
-                return this.users.filter((user) => {
-                    return user.name.toLowerCase().includes(this.search.toLowerCase());
-                });
+                if (this.search === '') {
+                    return this.$store.getters.users
+                } else {
+                    if (this.$store.getters.allUsers.length === 0) {
+                        this.$store.dispatch('allUsers').then(() => {})
+                    }
+
+                    return this.$store.getters.allUsers.filter((user) => {
+                        return user.name.toLowerCase().includes(this.search.toLowerCase());
+                    });
+                }
             },
         },
         created() {
             // Get users
-            this.loadData();
+            if (this.$store.getters.users.length === 0) {
+                this.loadData();
+            }
         },
         methods: {
             loadData(page = 1) {

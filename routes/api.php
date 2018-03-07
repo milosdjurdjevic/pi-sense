@@ -34,6 +34,7 @@ $api->version('v1', function (Router $api) {
             'middleware' => 'jwt.auth'
         ], function ($api) {
             // User
+            $api->get('users/all', 'UsersController@allUsers');
             $api->get('users', 'UsersController@index');
             $api->get('users/{id}', 'UsersController@show');
             $api->post('users', 'UsersController@store');

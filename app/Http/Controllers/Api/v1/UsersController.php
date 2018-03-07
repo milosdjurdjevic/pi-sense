@@ -33,13 +33,15 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function allUsers()
     {
-        //
+        $users = $this->user->all();
+
+        return $this->response->collection($users, new UserTransformer());
     }
 
     /**
@@ -85,17 +87,6 @@ class UsersController extends Controller
             return $this->errorBadRequest('No user found!');
 
         return $this->response->item($user, new UserTransformer());
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**

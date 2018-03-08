@@ -15,7 +15,6 @@
         "jquery": "^3.2",
         "laravel-mix": "^2.0",
         "lodash": "^4.17.4",
-        "materialize-css": "^0.100.2",
         "popper.js": "^1.12",
         "store": "^2.0.12",
         "vue": "^2.5.7",
@@ -24,6 +23,8 @@
         "vuex": "^3.0.1"
     },
     "dependencies": {
-        "vee-validate": "^2.0.4"
+        "materialize-css": "^0.100.2",
+        "vee-validate": "^2.0.4",
+        "vue-material": "^1.0.0-beta-7"
     }
 }

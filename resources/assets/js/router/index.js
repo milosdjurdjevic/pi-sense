@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import store from '../store';
 
 import App from '../components/App';
+import Home from '../components/Home';
 import Login from '../components/Login';
 import Logout from '../components/Logout';
 import Users from '../components/users/Users';
@@ -35,7 +36,7 @@ const router = new Router({
         {
             path: '/',
             name: 'root',
-            component: App,
+            component: Home,
             meta: {
                 guarded: true,
             },

@@ -1,43 +1,47 @@
 <template>
     <div id="users">
         <div class="row">
-            <router-link tag="li" class="left" to="/add-user">
+            <router-link tag="a" class="" to="/add-user">
                 <a class="btn-floating waves-effect waves-light blue">
-                    <i class="material-icons">add</i>
+                    <md-icon>add</md-icon>
                     <span class="page">Add User</span>
                 </a>
             </router-link>
-            <div class="input-field col s6 right">
-                <input id="serachTable" type="text" class="validate" v-model="search">
-                <label class="" for="serachTable">Search Users</label>
-            </div>
 
-            <table class="highlight">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="user in filteredList">
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>
-                        <router-link tag="button" class="btn-floating waves-effect waves-light teal"
-                                     v-bind:to="`/users/${user.id}`">
+            <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+                <md-table-toolbar>
+                    <div class="md-toolbar-section-start">
+                        <h1 class="md-title">Users</h1>
+                    </div>
+
+                    <md-field md-clearable class="md-toolbar-section-end">
+                        <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable"/>
+                    </md-field>
+                </md-table-toolbar>
+
+                <md-table-empty-state md-label="No users found"
+                                      :md-description="`No user found for this '${search}' query. Try a different search term or create a new user.`">
+                    <router-link tag="md-button" class="md-primary md-raised" to="/add-user">
+                        Create New User
+                    </router-link>
+                </md-table-empty-state>
+
+                <md-table-row slot="md-table-row" slot-scope="{ item }">
+                    <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
+                    <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
+                    <md-table-cell md-label="Email" md-sort-by="email">{{ item.email }}</md-table-cell>
+                    <md-table-cell md-label="Action" >
+                        <router-link tag="md-button" class="md-icon-button md-primary md-raised"
+                                     :to="`/users/${item.id}`">
                             <i class="material-icons">edit</i>
                         </router-link>
+                        <md-button @click="confirmDelete(item.id)" class="md-icon-button md-raised md-accent">
+                            <md-icon>delete</md-icon>
+                        </md-button>
+                    </md-table-cell>
+                </md-table-row>
+            </md-table>
 
-                        <button v-on:click="confirmDelete(user.id)" class="btn-floating waves-effect waves-light red"><i
-                                class="material-icons">delete</i></button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
             <div class="row center">
                 <ul class="pagination">
                     <!--<li v-bind:class="currentPage === 0 ? 'disabled' : 'waves-effect'" v-on:click="loadData(currentPage - 1)"><a href="#!"><i class="material-icons">chevron_left</i></a></li>-->
@@ -59,32 +63,31 @@
         iconPack: 'material', // set your iconPack, defaults to material. material|fontawesome
     });
 
+    const toLower = text => {
+        return text.toString().toLowerCase()
+    };
+
+    const searchByName = (items, term) => {
+
+        if (term) {
+            return items.filter(item => toLower(item.name).includes(toLower(term)))
+        }
+
+        return items
+    };
+
     export default {
         name: 'users',
         data() {
             return {
-                users: this.$store.getters.users.length,
+                users: null,
                 links: {},
                 total: 0,
                 totalPages: 0,
                 currentPage: 0,
-                search: '',
+                search: null,
+                searched: this.$store.getters.users,
             };
-        },
-        computed: {
-            filteredList() {
-                if (this.search === '') {
-                    return this.$store.getters.users
-                } else {
-                    if (this.$store.getters.allUsers.length === 0) {
-                        this.$store.dispatch('allUsers').then(() => {})
-                    }
-
-                    return this.$store.getters.allUsers.filter((user) => {
-                        return user.name.toLowerCase().includes(this.search.toLowerCase());
-                    });
-                }
-            },
         },
         created() {
             // Get users
@@ -94,16 +97,18 @@
         },
         methods: {
             loadData(page = 1) {
-                this.users = this.$store.getters.users;
                 this.$store.dispatch('fetchUsers', page).then(() => {
-                    this.users = this.$store.getters.users;
+                    this.searched = this.$store.getters.users;
                     this.links = this.$store.getters.usersMeta.pagination.links;
                     this.total = this.$store.getters.usersMeta.pagination.total;
                     this.totalPages = this.$store.getters.usersMeta.pagination.total_pages;
                     this.currentPage = this.$store.getters.usersMeta.pagination.current_page;
                 }, () => {
-                    this.users = [];
+                    this.searched = [];
                 });
+            },
+            searchOnTable() {
+                this.searched = searchByName(this.$store.getters.users, this.search)
             },
             confirmDelete(id) {
                 this.$toasted.show('Are You sure?', {
@@ -135,5 +140,7 @@
 </script>
 
 <style scoped>
-
+    .md-table-content {
+        height: 500px;
+    }
 </style>

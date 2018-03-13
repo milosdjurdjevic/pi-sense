@@ -1,17 +1,23 @@
 <template>
     <div id="users">
         <div class="row">
-            <router-link tag="a" class="" to="/add-user">
-                <a class="btn-floating waves-effect waves-light blue">
-                    <md-icon>add</md-icon>
-                    <span class="page">Add User</span>
-                </a>
-            </router-link>
+            <md-toolbar class="md-transparent">
+                <h3 class="md-title">Users</h3>
+                <div class="md-toolbar-section-end">
+                    <router-link tag="span" class="" to="/add-user">
+                        <a class="btn-floating waves-effect waves-light blue">
+                            <md-icon>add</md-icon>
+                            <span class="page">Add User</span>
+                        </a>
+                    </router-link>
+                </div>
+            </md-toolbar>
+
 
             <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
                 <md-table-toolbar>
                     <div class="md-toolbar-section-start">
-                        <h1 class="md-title">Users</h1>
+                        <!--<h1 class="md-title">Users</h1>-->
                     </div>
 
                     <md-field md-clearable class="md-toolbar-section-end">
@@ -24,13 +30,14 @@
                     <router-link tag="md-button" class="md-primary md-raised" to="/add-user">
                         Create New User
                     </router-link>
+
                 </md-table-empty-state>
 
                 <md-table-row slot="md-table-row" slot-scope="{ item }">
                     <md-table-cell md-label="ID" md-sort-by="id" md-numeric>{{ item.id }}</md-table-cell>
                     <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }}</md-table-cell>
                     <md-table-cell md-label="Email" md-sort-by="email">{{ item.email }}</md-table-cell>
-                    <md-table-cell md-label="Action" >
+                    <md-table-cell md-label="Action">
                         <router-link tag="md-button" class="md-icon-button md-primary md-raised"
                                      :to="`/users/${item.id}`">
                             <i class="material-icons">edit</i>
@@ -40,29 +47,37 @@
                         </md-button>
                     </md-table-cell>
                 </md-table-row>
+
             </md-table>
+
 
             <div class="row center">
                 <ul class="pagination">
-                    <!--<li v-bind:class="currentPage === 0 ? 'disabled' : 'waves-effect'" v-on:click="loadData(currentPage - 1)"><a href="#!"><i class="material-icons">chevron_left</i></a></li>-->
+                    <li :class="currentPage === 0 ? 'disabled' : 'waves-effect'" @click="loadData(currentPage - 1)">
+                        <a>
+                            <i class="material-icons">chevron_left</i>
+                        </a>
+                    </li>
                     <li v-for="i in (0, totalPages)" v-on:click="loadData(i)"
-                        v-bind:class="currentPage === i ? 'active' : ''"
+                        :class="currentPage === i ? 'active' : ''"
                         class="waves-effect"><a>{{ i }}</a></li>
-                    <!--<li class="waves-effect" v-on:click="loadData(currentPage + 1)"><a href="#!"><i class="material-icons">chevron_right</i></a></li>-->
+                    <li class="waves-effect" @click="loadData(currentPage + 1)">
+                        <i class="material-icons">chevron_right</i>
+                    </li>
                 </ul>
             </div>
+
+            <md-snackbar :md-active.sync="showSnackbar" md-persistent :md-duration="1000000">
+                <span>Are you sure?</span>
+                <md-button class="md-accent" @click="deleteUser()">Yes</md-button>
+                <md-button class="md-primary" @click="showSnackbar = false">Cancel</md-button>
+            </md-snackbar>
+
         </div>
     </div>
 </template>
 
 <script>
-    import Vue from 'vue';
-    import Toasted from 'vue-toasted';
-
-    Vue.use(Toasted, {
-        iconPack: 'material', // set your iconPack, defaults to material. material|fontawesome
-    });
-
     const toLower = text => {
         return text.toString().toLowerCase()
     };
@@ -87,6 +102,8 @@
                 currentPage: 0,
                 search: null,
                 searched: this.$store.getters.users,
+                showSnackbar: false,
+                deleteId: null,
             };
         },
         created() {
@@ -95,14 +112,23 @@
                 this.loadData();
             }
         },
+        mounted() {
+            this.$on('loadingDone', () => {
+                alert();
+            })
+        },
         methods: {
             loadData(page = 1) {
+                this.$emit('loading-start');
+
                 this.$store.dispatch('fetchUsers', page).then(() => {
                     this.searched = this.$store.getters.users;
                     this.links = this.$store.getters.usersMeta.pagination.links;
                     this.total = this.$store.getters.usersMeta.pagination.total;
                     this.totalPages = this.$store.getters.usersMeta.pagination.total_pages;
                     this.currentPage = this.$store.getters.usersMeta.pagination.current_page;
+
+                    this.$emit('loading-done');
                 }, () => {
                     this.searched = [];
                 });
@@ -110,37 +136,100 @@
             searchOnTable() {
                 this.searched = searchByName(this.$store.getters.users, this.search)
             },
-            confirmDelete(id) {
-                this.$toasted.show('Are You sure?', {
-                    action: [
-                        {
-                            text: 'Cancel',
-                            onClick: (e, toastObject) => {
-                                toastObject.goAway(0);
-                            },
-                        },
-                        {
-                            text: 'Yes',
-                            // router navigation
-                            onClick: (e, toastObject) => {
-                                this.$store.dispatch('deleteUser', id).then(() => {
-                                    this.loadData(this.currentPage);
-                                    toastObject.goAway(0);
-                                }, () => {
-                                    toastObject.goAway(0);
-                                    this.$toasted.show('Error!', {duration: 3000});
-                                });
-                            },
-                        },
-                    ],
-                });
+            onPagination() {
+
             },
+            confirmDelete(id) {
+                console.log(id);
+                this.showSnackbar = true;
+                this.deleteId = id;
+            },
+            deleteUser() {
+                this.$store.dispatch('deleteUser', this.deleteId).then(() => {
+                    // this.loadData(this.currentPage);
+                    this.showSnackbar = false;
+                }, () => {
+                    // this.$toasted.show('Error!', {duration: 3000});
+                });
+            }
         },
     };
 </script>
 
 <style scoped>
-    .md-table-content {
-        height: 500px;
+    .md-table {
+        min-height: 675px;
+    }
+
+    .center, .center-align {
+        text-align: center;
+    }
+
+    .row {
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+    }
+
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .pagination li {
+        display: inline-block;
+        border-radius: 2px;
+        text-align: center;
+        vertical-align: top;
+        height: 30px;
+    }
+
+    .pagination li a {
+        color: #444;
+        display: inline-block;
+        font-size: 1.2rem;
+        padding: 0 10px;
+        line-height: 30px;
+        cursor: pointer;
+    }
+
+    .pagination li.active a {
+        color: #fff;
+    }
+
+    .pagination li.active {
+        background-color: #ee6e73;
+    }
+
+    .pagination li.disabled a {
+        cursor: default;
+        color: #999;
+    }
+
+    .pagination li i {
+        font-size: 2rem;
+    }
+
+    .pagination li.pages ul li {
+        display: inline-block;
+        float: none;
+    }
+
+    @media only screen and (max-width: 992px) {
+        .pagination {
+            width: 100%;
+        }
+
+        .pagination li.prev,
+        .pagination li.next {
+            width: 10%;
+        }
+
+        .pagination li.pages {
+            width: 80%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
     }
 </style>

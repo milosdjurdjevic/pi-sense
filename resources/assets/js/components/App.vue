@@ -1,5 +1,6 @@
 <template>
     <div class="page-container">
+        <md-progress-bar v-if="loading" md-mode="indeterminate" class="md-accent"></md-progress-bar>
         <md-app md-mode="reveal">
 
             <md-app-toolbar class="md-primary">
@@ -52,7 +53,7 @@
             </md-app-drawer>
 
             <md-app-content>
-                <router-view></router-view>
+                <router-view @loading-done="loadingDone" @loading-start="loadingStart"></router-view>
             </md-app-content>
         </md-app>
     </div>
@@ -70,20 +71,32 @@
     export default {
         name: 'app',
         data: () => ({
-            menuVisible: false
+            loading: false
         }),
+        // mounted() {
+        //     this.$emit('loadingDone');
+        // },
+        methods: {
+            loadingStart() {
+                this.loading = true;
+            },
+            loadingDone() {
+                this.loading = false;
+            }
+        }
     }
 </script>
 
 <style scoped>
-    .md-app {
-        /*min-height: 1000px;*/
-        /*max-height: 400px;*/
+    .md-progress-bar {
+        /*position: absolute;*/
+        /*top: 100px;*/
+        /*z-index: 999;*/
     }
 
     .md-drawer {
-        width: 230px;
-        max-width: calc(100vw - 125px);
+        width: 240px;
+        min-height: 900px;
     }
 
     .md-list-item {

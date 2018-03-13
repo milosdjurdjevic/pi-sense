@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class UsersTableSeeder extends Seeder
 {
@@ -18,10 +19,12 @@ class UsersTableSeeder extends Seeder
 //            'api_token' => str_random(60),
         ]);
 
-        for($i=0; $i<15; $i++) {
+        $faker = Faker::create();
+
+        for($i=0; $i<30; $i++) {
             \App\Models\User::create([
-                'name'           => 'Test' . str_random(5),
-                'email'          => 'test' . str_random(5) . '@test.com',
+                'name'           => $faker->name,
+                'email'          => $faker->email,
                 'password'       => bcrypt('test'),
 //                'api_token' => str_random(60),
             ]);

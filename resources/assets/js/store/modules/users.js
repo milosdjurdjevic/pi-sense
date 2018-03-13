@@ -53,9 +53,10 @@ const actions = {
             });
         });
     },
-    deleteUser({context}, id) {
+    deleteUser({commit}, id) {
         return new Promise((resolve, reject) => {
             axios.delete(`users/${id}`).then((response) => {
+                commit(types.DELETE_USER, id);
                 resolve(response);
             }, (error) => {
                 reject(error)
@@ -104,6 +105,11 @@ const mutations = {
             }, (error) => {
                 reject(error);
             });
+        });
+    },
+    [types.DELETE_USER](state, id) {
+        _.remove(state.users, (item) => {
+            return item.id === id;
         });
     },
     [types.FETCH_USERS](state, data) {

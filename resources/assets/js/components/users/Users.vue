@@ -13,7 +13,6 @@
                 </div>
             </md-toolbar>
 
-
             <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
                 <md-table-toolbar>
                     <div class="md-toolbar-section-start">
@@ -113,9 +112,7 @@
             }
         },
         mounted() {
-            this.$on('loadingDone', () => {
-                alert();
-            })
+            //
         },
         methods: {
             loadData(page = 1) {

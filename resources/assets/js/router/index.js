@@ -2,13 +2,15 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from '../store';
 
-import App from '../components/App';
 import Home from '../components/Home';
 import Login from '../components/Login';
 import Logout from '../components/Logout';
 import Users from '../components/users/Users';
 import AddUser from '../components/users/AddUser';
 import EditUser from '../components/users/EditUser';
+import Settings from '../components/settings/Settings';
+import AddProgram from '../components/settings/AddProgram';
+import Temperature from '../components/temperature/Temperature';
 
 Vue.use(Router);
 
@@ -61,6 +63,30 @@ const router = new Router({
             path: '/add-user',
             name: 'add-user',
             component: AddUser,
+            meta: {
+                guarded: true,
+            },
+        },
+        {
+            path: '/temperature',
+            name: 'temperature',
+            component: Temperature,
+            meta: {
+                guarded: true,
+            },
+        },
+        {
+            path: '/settings',
+            name: 'settings',
+            component: Settings,
+            meta: {
+                guarded: true,
+            },
+        },
+        {
+            path: '/add-program',
+            name: 'add-program',
+            component: AddProgram,
             meta: {
                 guarded: true,
             },

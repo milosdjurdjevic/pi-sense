@@ -33,7 +33,7 @@ $api->version('v1', function (Router $api) {
         $api->group([
             'middleware' => 'jwt.auth'
         ], function ($api) {
-            // User
+            // Users
             $api->get('users/all', 'UsersController@allUsers');
             $api->get('users', 'UsersController@index');
             $api->get('users/{id}', 'UsersController@show');
@@ -41,6 +41,13 @@ $api->version('v1', function (Router $api) {
             $api->put('users/{id}', 'UsersController@update');
             $api->put('users/{id}/password', 'UsersController@updatePassword');
             $api->delete('users/{id}', 'UsersController@destroy');
+
+            // Settings
+            $api->get('settings', 'SettingsController@index');
+            $api->put('settings', 'SettingsController@activateSetting');
+            $api->delete('settings/{id}', 'SettingsController@deleteSetting');
+            $api->post('settings', 'SettingsController@createProgram');
+
         });
     });
 

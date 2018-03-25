@@ -96,9 +96,9 @@
             return {
                 users: null,
                 links: {},
-                total: 0,
-                totalPages: 0,
-                currentPage: 0,
+                total: this.$store.getters.usersMeta.pagination.total,
+                totalPages: this.$store.getters.usersMeta.pagination.total_pages,
+                currentPage: this.$store.getters.usersMeta.pagination.current_page,
                 search: null,
                 searched: this.$store.getters.users,
                 showSnackbar: false,

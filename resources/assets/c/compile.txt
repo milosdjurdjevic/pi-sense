@@ -1,0 +1,1 @@
+gcc temp.c -o dht -lwiringPi `mysql_config --cflags --libs`

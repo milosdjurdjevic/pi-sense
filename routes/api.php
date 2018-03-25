@@ -48,6 +48,9 @@ $api->version('v1', function (Router $api) {
             $api->delete('settings/{id}', 'SettingsController@deleteSetting');
             $api->post('settings', 'SettingsController@createProgram');
 
+
+            // Test route
+            $api->get('test', 'TestController@index');
         });
     });
 

@@ -1,7 +1,7 @@
 const http = require('http');
 const express = require('express');
 const io = require('socket.io')(http);
-const port = process.env.PORT || 30020;
+const port = process.env.PORT || 3000;
 
 const Redis = require('ioredis');
 const redis = new Redis();
@@ -13,17 +13,23 @@ let app = express();
 let server = http.createServer(app);
 
 redis.subscribe('temperature-channel', function (err, data) {
-
+    //
 });
 
-redis.on('message', function(channel, message) {
+// redis.on('message', function(channel, message) {
+//
+//     console.log(message);
+//
+//     // console.log('Message Recieved: ' + message);
+//     // message = JSON.parse(message);
+//     // io.emit(channel + ':' + message.event, message.data);
+// });
+redis.on('message', (channel, message) => {
+    let readout = dht.read();
 
-    read();
-
-    console.log('Message Recieved: ' + message);
-    message = JSON.parse(message);
-    io.emit(channel + ':' + message.event, message.data);
-});
+    console.log(message);
+    io.emit('read.temp', readout.temperature.toFixed(0));
+})
 
 function read () {
     let readout = dht.read();

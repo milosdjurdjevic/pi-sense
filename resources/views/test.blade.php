@@ -5,7 +5,7 @@
 @stop
 
 @section('footer')
-    <script src="{{ asset('js/socket.io.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script>
         //var socket = io('http://localhost:3000');
         var socket = io('http://localhost:3000');

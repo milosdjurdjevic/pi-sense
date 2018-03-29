@@ -12,7 +12,7 @@ class TestController extends Controller
     public function index()
     {
 //        dd(exec(public_path('gpio read 22')));
-        $process = new Process('gpio readall');
+        $process = new Process('cd /Users/milos.djurdjevic/Desktop/testing && ./dht');
         $process->run();
 
         // executes after the command finishes

@@ -24,7 +24,8 @@ $api->version('v1', function (Router $api) {
         $api->post('auth/login', 'AuthController@login');
         // refresh jwt token
         $api->post('auth/login/refresh', 'AuthController@refreshToken');
-
+        // Test route
+        $api->get('test', 'TestController@index');   
         /*
         |--------------------------------------------------------------------------
         | Authenticated Routes
@@ -47,10 +48,6 @@ $api->version('v1', function (Router $api) {
             $api->put('settings', 'SettingsController@activateSetting');
             $api->delete('settings/{id}', 'SettingsController@deleteSetting');
             $api->post('settings', 'SettingsController@createProgram');
-
-
-            // Test route
-            $api->get('test', 'TestController@index');
         });
     });
 

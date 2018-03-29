@@ -6,14 +6,14 @@ const port = process.env.PORT || 3000;
 const Redis = require('ioredis');
 const redis = new Redis();
 
-const rpiDhtSensor = require('rpi-dht-sensor');
-const dht = new rpiDhtSensor.DHT11(22);
+// const rpiDhtSensor = require('rpi-dht-sensor');
+// const dht = new rpiDhtSensor.DHT11(22);
 
 let app = express();
 let server = http.createServer(app);
 
 redis.subscribe('temperature-channel', function (err, data) {
-    //
+    console.log('redis subscribed');
 });
 
 // redis.on('message', function(channel, message) {
@@ -25,7 +25,6 @@ redis.subscribe('temperature-channel', function (err, data) {
 //     // io.emit(channel + ':' + message.event, message.data);
 // });
 redis.on('message', (channel, message) => {
-    let readout = dht.read();
 
     console.log(message);
     io.emit('read.temp', readout.temperature.toFixed(0));

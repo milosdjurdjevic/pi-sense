@@ -28,6 +28,7 @@
         "materialize-css": "^0.100.2",
         "redis": "^2.8.0",
         "rpi-dht-sensor": "^0.1.1",
+        "sleep": "^5.1.1",
         "socket.io": "^2.0.4",
         "vue-material": "^1.0.0-beta-7",
         "vue-socket.io": "^2.1.1-b",

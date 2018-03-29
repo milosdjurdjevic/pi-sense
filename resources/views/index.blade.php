@@ -20,8 +20,7 @@
         <div id="app"></div>
         {{--<script src="{{ asset('assets/jquery/jquery.min.js') }}"></script>--}}
         {{--<script src="{{ asset('assets/materialize/js/materialize.min.js') }}"></script>--}}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js.map"></script>
+        <script src="{{ secure_asset('js/socket.io.js') }}"></script>
         <script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>

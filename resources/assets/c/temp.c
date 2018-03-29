@@ -110,7 +110,7 @@ void read_dht_data()
         mysql_free_result(res);
         mysql_close(conn);
 
-		printf( "All good!\n", (int)h, (int)c);
+		printf( "%d, %d\n", (int)h, (int)c);
 	}else  {
 		printf( "Data not good, skip!\n" );
 	}
@@ -124,7 +124,7 @@ int main( void )
 	while ( 1 )
 	{
 		read_dht_data();
-		delay(300000); /* wait 5 minutes before next read */
+		delay(3000); /* wait 5 minutes before next read */
 	}
 
 	return 0;

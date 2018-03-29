@@ -1,7 +1,8 @@
 const http = require('http');
 const express = require('express');
-const io = require('socket.io')(http);
-const port = process.env.PORT || 3000;
+const socketIO = require('socket.io');
+const { exec } = require('child_process');
+const axios = require('axios');
 
 const Redis = require('ioredis');
 const redis = new Redis();
@@ -9,33 +10,40 @@ const redis = new Redis();
 const rpiDhtSensor = require('rpi-dht-sensor');
 const dht = new rpiDhtSensor.DHT11(22);
 
+const port = process.env.PORT || 3000;
+
 let app = express();
 let server = http.createServer(app);
+let io = socketIO(server);
 
-redis.subscribe('temperature-channel', function (err, data) {
-    //
+io.on('connection', (socket) => {
+    console.log('socket')
 });
 
-// redis.on('message', function(channel, message) {
-//
-//     console.log(message);
-//
-//     // console.log('Message Recieved: ' + message);
-//     // message = JSON.parse(message);
-//     // io.emit(channel + ':' + message.event, message.data);
-// });
-redis.on('message', (channel, message) => {
-    let readout = dht.read();
+redis.subscribe('temperature-channel', function (err, data) {
+    console.log('redis subscribed')
+});
 
-    console.log(message);
-    io.emit('read.temp', readout.temperature.toFixed(0));
-})
+redis.on('message', (channel, message) => {
+    exec('cd /home/pi/Code/resources/assets/python && ./readings.py', (err, stdout, stderr) => {
+        if (err) {
+            // node couldn't execute the command
+            console.log(err);
+        }
+
+        // the *entire* stdout and stderr (buffered)
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+    });
+});
 
 function read () {
     let readout = dht.read();
 
-    console.log('Temperature: ' + readout.temperature.toFixed(0) + '*C, ' +
-        'humidity: ' + readout.humidity.toFixed(0) + '%');
+    return {
+        temperature: readout.temperature.toFixed(0),
+        humidity: readout.humidity.toFixed(0),
+    };
     // setTimeout(read, 1000);
 }
 

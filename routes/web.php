@@ -14,6 +14,7 @@
 Route::get('/', 'IndexController@index');
 
 Route::get('/fire', 'IndexController@fire');
+Route::get('/fire-write', 'IndexController@fireWrite');
 
 Route::get('/test', function () {
     // this checks for the event

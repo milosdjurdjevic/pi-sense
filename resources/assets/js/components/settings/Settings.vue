@@ -14,7 +14,7 @@
 
         <br>
 
-        <md-card v-for="setting in settings" :key="setting.id" :class="setting.is_active === 1 ? 'md-primary' : ''" :md-theme="setting.is_active === 1 ? 'green-card' : ''">
+        <md-card v-for="setting in settings" :key="setting.id" :class="setting.is_active === 1 ? 'md-primary' : ''">
             <md-card-header>
                 <md-card-header-text>
                     <div class="md-title">{{ setting.name }}</div>

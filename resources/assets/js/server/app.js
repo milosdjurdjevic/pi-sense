@@ -1,51 +1,52 @@
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
-const { exec } = require('child_process');
-const axios = require('axios');
-
 const Redis = require('ioredis');
 const redis = new Redis();
 
-const rpiDhtSensor = require('rpi-dht-sensor');
-const dht = new rpiDhtSensor.DHT11(22);
-
+const { exec } = require('child_process');
 const port = process.env.PORT || 3000;
 
-let app = express();
-let server = http.createServer(app);
-let io = socketIO(server);
+const app = express();
+const server = http.createServer(app);
 
-io.on('connection', (socket) => {
-    console.log('socket')
-});
+const io = socketIO.listen(server);
 
 redis.subscribe('temperature-channel', function (err, data) {
     console.log('redis subscribed')
+
+    io.sockets.on( 'connection', function( socket ) {
+        console.log('Socket connected')
+    });
+
+    redis.on('message', (channel, message) => {
+        exec('cd /home/pi/Code/resources/assets/python && ./readings.py', (err, stdout, stderr) => {
+            if (err) {
+                io.emit('err', err);
+            } else if (stderr) {
+                io.emit('stderr', stderr);
+            } else {
+                io.emit('reading', stdout);
+            }
+        });
+    });
+
 });
 
-redis.on('message', (channel, message) => {
+app.get('/reading', (req, res) => {
     exec('cd /home/pi/Code/resources/assets/python && ./readings.py', (err, stdout, stderr) => {
         if (err) {
-            // node couldn't execute the command
+            res.send('err', err);
             console.log(err);
+        } else if (stderr) {
+            res.send('stderr', stderr);
+            console.log(stderr);
+        } else {
+            res.send(stdout)
+            console.log(stdout);
         }
-
-        // the *entire* stdout and stderr (buffered)
-        console.log(`stdout: ${stdout}`);
-        console.log(`stderr: ${stderr}`);
     });
 });
-
-function read () {
-    let readout = dht.read();
-
-    return {
-        temperature: readout.temperature.toFixed(0),
-        humidity: readout.humidity.toFixed(0),
-    };
-    // setTimeout(read, 1000);
-}
 
 server.listen(port, () => {
     console.log(`Server is up on ${port}`);

@@ -1,3 +1,4 @@
+const fs = require('fs');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
@@ -5,11 +6,17 @@ const Redis = require('ioredis');
 const redis = new Redis();
 
 const { exec } = require('child_process');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 const app = express();
-const server = http.createServer(app);
+const options = {
+    key: fs.readFileSync('/etc/nginx/ssl/nginx.key'),
+    cert: fs.readFileSync('/etc/nginx/ssl/nginx.crt'),
+    // ca: fs.readFileSync('/etc/nginx/ssl/nginx.crt'),
+    rejectUnauthorized: false,
+};
 
+const server = http.createServer(app);
 const io = socketIO.listen(server);
 
 redis.subscribe('temperature-channel', function (err, data) {
@@ -20,20 +27,23 @@ redis.subscribe('temperature-channel', function (err, data) {
     });
 
     redis.on('message', (channel, message) => {
-        exec('cd /home/pi/Code/resources/assets/python && ./readings.py', (err, stdout, stderr) => {
+        exec('/home/pi/Code/resources/assets/python/readings.py', (err, stdout, stderr) => {
             if (err) {
                 io.emit('err', err);
+                console.log(err)
             } else if (stderr) {
                 io.emit('stderr', stderr);
+                console.log(stderr)
             } else {
                 io.emit('reading', stdout);
+                console.log(stdout)
             }
         });
     });
 
 });
 
-app.get('/reading', (req, res) => {
+app.get('/node/reading', (req, res) => {
     exec('cd /home/pi/Code/resources/assets/python && ./readings.py', (err, stdout, stderr) => {
         if (err) {
             res.send('err', err);

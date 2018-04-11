@@ -10,7 +10,7 @@
     </head>
     <body>
         <div id="app"></div>
-        <script src="{{ asset('js/socket.io.js') }}"></script>
+{{--        <script src="{{ secure_asset('js/socket.io.js') }}"></script>--}}
         <script src="{{ mix('js/app.js') }}"></script>
     </body>
 </html>

@@ -11,8 +11,13 @@ class TestController extends Controller
 {
     public function index()
     {
-//        dd(exec(public_path('gpio read 22')));
-        $process = new Process('cd /home/pi/Code/resources/assets/python && ./readings.py');
+//        $a = shell_exec('');
+//        $command = escapeshellcmd('/home/pi/Code/resources/assets/python/readings.py');
+        $output = shell_exec('/home/pi/Code/resources/assets/python/readings.py');
+        print_r('aaa');
+        print_r($output); die;
+//        dd($a);
+        $process = new Process('/home/pi/Code/resources/assets/python/readings.py');
         $process->run();
 
         // executes after the command finishes

@@ -31,19 +31,19 @@ class ReadTemperatureJob implements ShouldQueue
      */
     public function handle()
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://192.168.0.26:3000/reading");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch));
-
-        $settings = Program::where('is_active', 1)->first();
-
-        if ($response->temperature < $settings->min_temperature) {
-            // TODO: Turn on heating
-        }
-        if ($response->temperature > $settings->max_temperature) {
-            // TODO: Turn off heating
-        }
+//        $ch = curl_init();
+//        curl_setopt($ch, CURLOPT_URL, "https://sesamoid-jackal-7649.dataplicity.io:3000/reading");
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//        $response = json_decode(curl_exec($ch));
+//
+//        $settings = Program::where('is_active', 1)->first();
+//
+//        if ($response->temperature < $settings->min_temperature) {
+//            // TODO: Turn on heating
+//        }
+//        if ($response->temperature > $settings->max_temperature) {
+//            // TODO: Turn off heating
+//        }
 
         // TODO: Calculate formula for humidity
 

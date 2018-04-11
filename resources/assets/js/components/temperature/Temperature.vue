@@ -14,10 +14,11 @@
 <script>
     import Chart from './Chart';
 
-    const socket = io('192.168.0.26:3000', {
-        secure: true,
-    });
+    const io = require('socket.io-client');
+    const host = window.location.host.split(':')[0];
 
+    const socket = io('//' + host);
+    console.log(socket);
     export default {
         name: 'temperature',
         components: {
@@ -37,7 +38,10 @@
             this.initialFill();
 
             socket.on('connect', () => {
+                console.log('connected');
                 socket.on('reading', (data) => {
+                    console.log(data);
+
                     let reading = JSON.parse(data);
                     let d =new Date();
 

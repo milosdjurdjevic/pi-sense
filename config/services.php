@@ -30,9 +30,22 @@ return [
     ],
 
     'stripe' => [
-        'model' => App\User::class,
+        'model' => App\Models\User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'twilio' => [
+        'username' => env('TWILIO_USERNAME', 'pi-sense'), // optional when using auth token
+        'password' => env('TWILIO_PASSWORD', 'twiliopwd'), // optional when using auth token
+        'auth_token' => env('TWILIO_AUTH_TOKEN'), // optional when using username and password
+        'account_sid' => env('TWILIO_ACCOUNT_SID'),
+        'from' => env('TWILIO_FROM'), // optional
+    ],
+
+    'nexmo' => [
+        'key' => env('NEXMO_KEY'),
+        'secret' => env('NEXMO_SECRET'),
+        'sms_from' => '15556666666',
+    ],
 ];

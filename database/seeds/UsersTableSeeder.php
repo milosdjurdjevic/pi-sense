@@ -21,7 +21,7 @@ class UsersTableSeeder extends Seeder
 
         $faker = Faker::create();
 
-        for($i=0; $i<30; $i++) {
+        for($i=0; $i<10; $i++) {
             \App\Models\User::create([
                 'name'           => $faker->name,
                 'email'          => $faker->email,

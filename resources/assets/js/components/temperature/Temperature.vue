@@ -26,12 +26,12 @@
         },
         data() {
             return {
-                chartData: null,
-                chartTemperature: [],
-                chartHumidity: [],
-                xLabels: [],
-                temperature: null,
-                humidity: null,
+                chartData: this.$store.getters.chartData,
+                chartTemperature: this.$store.getters.chartTemperature,
+                chartHumidity: this.$store.getters.chartHumidity,
+                xLabels: this.$store.getters.xLabels,
+                temperature: this.$store.getters.temperature,
+                humidity: this.$store.getters.humidity,
             }
         },
         mounted() {
@@ -42,26 +42,15 @@
                 socket.on('reading', (data) => {
                     console.log(data);
 
-                    let reading = JSON.parse(data);
-                    let d =new Date();
+                    this.$store.dispatch('readings', data).then(() => {
+                        // Draw chart
+                        this.fillData();
+                        console.log('readings')
+                    }, (error) => {
+                        console.log(error)
+                    });
 
-                    if (this.chartTemperature.length === 10)
-                        this.chartTemperature.shift();
-                    this.chartTemperature.push(reading.temperature);
 
-                    if (this.chartHumidity.length === 10)
-                        this.chartHumidity.shift();
-                    this.chartHumidity.push(reading.humidity);
-
-                    if (this.xLabels.length === 10)
-                        this.xLabels.shift();
-                    this.xLabels.push(`${d.getHours()}:${d.getMinutes()}`);
-
-                    this.temperature = reading.temperature;
-                    this.humidity = reading.humidity;
-
-                    // Draw chart
-                    this.fillData();
                 });
 
                 socket.on('err', (data) => {
@@ -75,11 +64,12 @@
         },
         methods: {
             fillData () {
+                console.log('filling data');
                 this.chartData = {
                     labels: this.xLabels,
                     datasets: [
                         {
-                            label: 'Temperature',
+                            label: 'Reading',
                             backgroundColor: '#ff5252',
                             data: this.chartTemperature
                         }, {

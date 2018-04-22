@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Temperature;
+use App\Models\Reading;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -38,7 +38,7 @@ class WriteReadingsToDatabase implements ShouldQueue
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = json_decode(curl_exec($ch));
 
-        Temperature::create([
+        Reading::create([
             'temperature' => $response->temperature,
             'humidity' => $response->humidity,
             'created_at' => Carbon::now(),

@@ -12,6 +12,6 @@ class Reading extends Model
      * @var array
      */
     protected $fillable = [
-        'temperature', 'humidity', 'created_at', 'updated_at',
+        'temperature', 'humidity', 'temperature_tolerance', 'humidity_tolerance', 'created_at', 'updated_at',
     ];
 }

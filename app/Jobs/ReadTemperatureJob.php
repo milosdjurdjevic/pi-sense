@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Twilio\Rest\Client;
+use Nexmo\Laravel\Facade\Nexmo;
 
 class ReadTemperatureJob implements ShouldQueue
 {
@@ -50,24 +50,19 @@ class ReadTemperatureJob implements ShouldQueue
         }
 
         // Make a call if temperature is over tolerance
-        if (1) {
-            $client = new Twilio(
-                getenv('TWILIO_ACCOUNT_SID'),
-                getenv('TWILIO_AUTH_TOKEN')
-            );
-
-            try {
-                $client->calls->create(
-                    '+381600626593', // The visitor's phone number
-                    getenv('TWILIO_NUMBER') // A Twilio number in your account
-                );
-            } catch (\Exception $e) {
-                // Failed calls will throw
-                return $e;
-            }
-
-            // return a JSON response
-            return array('message' => 'Call incoming!');
+        if ($settings->temperature_tolerance >= ($settings->min_temperature - $response->temperature)) {
+            Nexmo::calls()->create([
+                'to' => [[
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ]],
+                'from' => [
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ],
+                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//text-to-speech'],
+                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+            ]);
         }
 
         // TODO: Calculate formula for humidity

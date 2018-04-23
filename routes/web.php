@@ -20,3 +20,13 @@ Route::get('/test', function () {
     // this checks for the event
     return view('test');
 });
+
+Route::get('/text-to-speech', function () {
+    $json = [[
+        'action' => 'talk',
+        'voiceName' => 'Russell',
+        'text' => 'Alert! Alert! Alert! Alert! Alert!',
+    ]];
+
+    return response()->json($json);
+});

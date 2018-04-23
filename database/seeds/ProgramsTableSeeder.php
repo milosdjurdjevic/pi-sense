@@ -16,6 +16,8 @@ class ProgramsTableSeeder extends Seeder
             'min_temperature' => '28',
             'max_temperature' => '35',
             'optimal_humidity' => '70',
+            'temperature_tolerance' => '5',
+            'humidity_tolerance' => '10',
             'is_active' => '1',
         ]);
 
@@ -24,6 +26,8 @@ class ProgramsTableSeeder extends Seeder
             'min_temperature' => '25',
             'max_temperature' => '30',
             'optimal_humidity' => '65',
+            'temperature_tolerance' => '10',
+            'humidity_tolerance' => '10',
             'is_active' => '0',
         ]);
 
@@ -32,6 +36,8 @@ class ProgramsTableSeeder extends Seeder
             'min_temperature' => '18',
             'max_temperature' => '25',
             'optimal_humidity' => '50',
+            'temperature_tolerance' => '8',
+            'humidity_tolerance' => '10',
             'is_active' => '0',
         ]);
     }

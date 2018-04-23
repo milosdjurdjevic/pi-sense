@@ -78115,6 +78115,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "settings",
@@ -78303,6 +78305,22 @@ var render = function() {
                 _vm._v(
                   "Max temperature: " + _vm._s(setting.max_temperature) + " ℃"
                 )
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "Temperature tolerance: " +
+                    _vm._s(setting.temperature_tolerance) +
+                    " ℃"
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "Humidity tolerance: " +
+                    _vm._s(setting.humidity_tolerance) +
+                    "%"
+                )
               ])
             ])
           ],
@@ -78409,7 +78427,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -78497,6 +78515,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -78510,7 +78547,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 name: '',
                 min_temperature: 0,
                 max_temperature: 0,
-                optimal_humidity: 0
+                optimal_humidity: 0,
+                temperature_tolerance: 0,
+                humidity_tolerance: 0
             },
             programSaved: false,
             sending: false,
@@ -78530,6 +78569,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 required: __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["required"]
             },
             optimal_humidity: {
+                required: __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["required"]
+            },
+            temperature_tolerance: {
+                required: __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["required"]
+            },
+            humidity_tolerance: {
                 required: __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["required"]
             }
         }
@@ -78568,6 +78613,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.form.min_temperature = 0;
             this.form.max_temperature = 0;
             this.form.optimal_humidity = 0;
+            this.form.temperature_tolerance = 0;
+            this.form.humidity_tolerance = 0;
         },
         validateUser: function validateUser() {
             this.$v.$touch();
@@ -78755,7 +78802,7 @@ var render = function() {
                           _vm._v(" "),
                           !_vm.$v.form.max_temperature.required
                             ? _c("span", { staticClass: "md-error" }, [
-                                _vm._v("The email is required")
+                                _vm._v("required")
                               ])
                             : _vm._e()
                         ],
@@ -78797,6 +78844,92 @@ var render = function() {
                           !_vm.$v.form.optimal_humidity.required
                             ? _c("span", { staticClass: "md-error" }, [
                                 _vm._v("The age is required")
+                              ])
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "md-layout md-gutter" }, [
+                  _c(
+                    "div",
+                    { staticClass: "md-layout-item md-small-size-100" },
+                    [
+                      _c(
+                        "md-field",
+                        {
+                          class: _vm.getValidationClass("temperature_tolerance")
+                        },
+                        [
+                          _c("label", { attrs: { for: "max_temperature" } }, [
+                            _vm._v("Temperature Tolerance")
+                          ]),
+                          _vm._v(" "),
+                          _c("md-input", {
+                            attrs: {
+                              type: "number",
+                              name: "temperature_tolerance",
+                              id: "temperature_tolerance",
+                              autocomplete: "temperature_tolerance",
+                              disabled: _vm.sending
+                            },
+                            model: {
+                              value: _vm.form.temperature_tolerance,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "temperature_tolerance", $$v)
+                              },
+                              expression: "form.temperature_tolerance"
+                            }
+                          }),
+                          _vm._v(" "),
+                          !_vm.$v.form.temperature_tolerance.required
+                            ? _c("span", { staticClass: "md-error" }, [
+                                _vm._v("required")
+                              ])
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "md-layout-item md-small-size-100" },
+                    [
+                      _c(
+                        "md-field",
+                        { class: _vm.getValidationClass("humidity_tolerance") },
+                        [
+                          _c("label", { attrs: { for: "min_temperature" } }, [
+                            _vm._v("Optimal Humidity")
+                          ]),
+                          _vm._v(" "),
+                          _c("md-input", {
+                            attrs: {
+                              type: "number",
+                              id: "humidity_tolerance",
+                              name: "humidity_tolerance",
+                              autocomplete: "humidity_tolerance",
+                              disabled: _vm.sending
+                            },
+                            model: {
+                              value: _vm.form.humidity_tolerance,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "humidity_tolerance", $$v)
+                              },
+                              expression: "form.humidity_tolerance"
+                            }
+                          }),
+                          _vm._v(" "),
+                          !_vm.$v.form.humidity_tolerance.required
+                            ? _c("span", { staticClass: "md-error" }, [
+                                _vm._v("required")
                               ])
                             : _vm._e()
                         ],

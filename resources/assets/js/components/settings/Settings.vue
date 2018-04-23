@@ -40,6 +40,8 @@
             <md-card-content>
                 <p>Min temperature: {{ setting.min_temperature }} &#8451</p>
                 <p>Max temperature: {{ setting.max_temperature }} &#8451</p>
+                <p>Temperature tolerance: {{ setting.temperature_tolerance }} &#8451</p>
+                <p>Humidity tolerance: {{ setting.humidity_tolerance }}%</p>
             </md-card-content>
         </md-card>
 

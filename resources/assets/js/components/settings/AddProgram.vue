@@ -43,7 +43,7 @@
                                 <label for="max_temperature">Maximum Temperature</label>
                                 <md-input type="number" name="max_temperature" id="max_temperature" autocomplete="max_temperature" v-model="form.max_temperature"
                                           :disabled="sending"/>
-                                <span class="md-error" v-if="!$v.form.max_temperature.required">The email is required</span>
+                                <span class="md-error" v-if="!$v.form.max_temperature.required">required</span>
                             </md-field>
                         </div>
 
@@ -52,6 +52,25 @@
                                 <label for="min_temperature">Optimal Humidity</label>
                                 <md-input type="number" id="optimal_humidity" name="optimal_humidity" autocomplete="optimal_humidity" v-model="form.optimal_humidity" :disabled="sending" />
                                 <span class="md-error" v-if="!$v.form.optimal_humidity.required">The age is required</span>
+                            </md-field>
+                        </div>
+                    </div>
+
+                    <div class="md-layout md-gutter">
+                        <div class="md-layout-item md-small-size-100">
+                            <md-field :class="getValidationClass('temperature_tolerance')">
+                                <label for="max_temperature">Temperature Tolerance</label>
+                                <md-input type="number" name="temperature_tolerance" id="temperature_tolerance" autocomplete="temperature_tolerance" v-model="form.temperature_tolerance"
+                                          :disabled="sending"/>
+                                <span class="md-error" v-if="!$v.form.temperature_tolerance.required">required</span>
+                            </md-field>
+                        </div>
+
+                        <div class="md-layout-item md-small-size-100">
+                            <md-field :class="getValidationClass('humidity_tolerance')">
+                                <label for="min_temperature">Optimal Humidity</label>
+                                <md-input type="number" id="humidity_tolerance" name="humidity_tolerance" autocomplete="humidity_tolerance" v-model="form.humidity_tolerance" :disabled="sending" />
+                                <span class="md-error" v-if="!$v.form.humidity_tolerance.required">required</span>
                             </md-field>
                         </div>
                     </div>
@@ -87,6 +106,8 @@
                 min_temperature: 0,
                 max_temperature: 0,
                 optimal_humidity: 0,
+                temperature_tolerance: 0,
+                humidity_tolerance: 0,
             },
             programSaved: false,
             sending: false,
@@ -107,6 +128,12 @@
                 optimal_humidity: {
                     required,
                 },
+                temperature_tolerance: {
+                    required,
+                },
+                humidity_tolerance: {
+                    required,
+                }
             }
         },
         methods: {
@@ -142,6 +169,8 @@
                 this.form.min_temperature = 0;
                 this.form.max_temperature = 0;
                 this.form.optimal_humidity = 0;
+                this.form.temperature_tolerance = 0;
+                this.form.humidity_tolerance = 0;
             },
             validateUser() {
                 this.$v.$touch()

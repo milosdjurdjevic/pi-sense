@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Events\ReadTemperatureEvent;
 use App\Models\Program;
+use App\Models\Reading;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -50,20 +51,33 @@ class ReadTemperatureJob implements ShouldQueue
         }
 
         // Make a call if temperature is over tolerance
-        if ($settings->temperature_tolerance >= ($settings->min_temperature - $response->temperature)) {
-            Nexmo::calls()->create([
-                'to' => [[
-                    'type' => 'phone',
-                    'number' => '+381600626593'
-                ]],
-                'from' => [
-                    'type' => 'phone',
-                    'number' => '+381600626593'
-                ],
-                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//text-to-speech'],
-                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
-            ]);
-        }
+//        if ($settings->temperature_tolerance <= ($settings->min_temperature - $response->temperature)) {
+//            Nexmo::calls()->create([
+//                'to' => [[
+//                    'type' => 'phone',
+//                    'number' => '+381600626593'
+//                ]],
+//                'from' => [
+//                    'type' => 'phone',
+//                    'number' => '+381600626593'
+//                ],
+//                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//min-temperature-alert'],
+//                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+//            ]);
+//        } else if ($settings->temperature_tolerance <= ($response->temperature - $settings->max)) {
+//            Nexmo::calls()->create([
+//                'to' => [[
+//                    'type' => 'phone',
+//                    'number' => '+381600626593'
+//                ]],
+//                'from' => [
+//                    'type' => 'phone',
+//                    'number' => '+381600626593'
+//                ],
+//                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//max-temperature-alert'],
+//                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+//            ]);
+//        }
 
         // TODO: Calculate formula for humidity
 

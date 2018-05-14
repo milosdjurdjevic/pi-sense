@@ -15,6 +15,16 @@ use Dingo\Api\Routing\Router;
 $api = app(Router::class);
 
 $api->version('v1', function (Router $api) {
+
+    $api->get('fire', function () {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://sesamoid-jackal-7649.dataplicity.io/fire");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+
+        return response()->json(json_encode(['response' => $response]));
+    });
+
     $api->group([
         'middleware' => 'api',
         'namespace' => 'App\Http\Controllers\Api\v1',
@@ -50,6 +60,9 @@ $api->version('v1', function (Router $api) {
             $api->put('settings', 'SettingsController@activateSetting');
             $api->delete('settings/{id}', 'SettingsController@deleteSetting');
             $api->post('settings', 'SettingsController@createProgram');
+
+            // Readings
+            $api->get('stats', 'ReadingsController@index');
         });
     });
 

@@ -79080,7 +79080,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -79106,6 +79106,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -79113,7 +79120,7 @@ var io = __webpack_require__(345);
 var host = window.location.host.split(':')[0];
 
 var socket = io('//' + host);
-console.log(socket);
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'temperature',
     components: {
@@ -79126,23 +79133,27 @@ console.log(socket);
             chartHumidity: this.$store.getters.chartHumidity,
             xLabels: this.$store.getters.xLabels,
             temperature: this.$store.getters.temperature,
-            humidity: this.$store.getters.humidity
+            humidity: this.$store.getters.humidity,
+            statsData: null,
+            statsTemperature: [],
+            statsHumidity: [],
+            statsLabels: []
         };
     },
     mounted: function mounted() {
         var _this = this;
 
-        this.initialFill();
+        if (this.$store.getters.temperature === null) {
+            this.initialFill();
+        }
+        this.stats();
 
         socket.on('connect', function () {
             console.log('connected');
             socket.on('reading', function (data) {
-                console.log(data);
-
                 _this.$store.dispatch('readings', data).then(function () {
                     // Draw chart
                     _this.fillData();
-                    console.log('readings');
                 }, function (error) {
                     console.log(error);
                 });
@@ -79164,7 +79175,7 @@ console.log(socket);
             this.chartData = {
                 labels: this.xLabels,
                 datasets: [{
-                    label: 'Reading',
+                    label: 'Temperature',
                     backgroundColor: '#ff5252',
                     data: this.chartTemperature
                 }, {
@@ -79173,9 +79184,47 @@ console.log(socket);
                     data: this.chartHumidity
                 }]
             };
+            this.temperature = this.$store.getters.temperature;
+            this.humidity = this.$store.getters.humidity;
         },
         initialFill: function initialFill() {
-            // TODO:  Send request to node server to get readings for initial drawing of the chart
+            var _this2 = this;
+
+            this.$emit('loading-start');
+
+            axios.get('fire').then(function (response) {
+                _this2.$emit('loading-done');
+            }, function (error) {
+                console.log(error);
+            });
+        },
+        stats: function stats() {
+            var _this3 = this;
+
+            axios.get('stats').then(function (response) {
+                _.forIn(response.data.data, function (res) {
+                    var date = new Date(res.created_at);
+
+                    _this3.statsLabels.push(date.getHours() + ':' + date.getMinutes());
+                    _this3.statsTemperature.push(res.temperature);
+                    _this3.statsHumidity.push(res.humidity);
+                });
+
+                _this3.statsData = {
+                    labels: _this3.statsLabels,
+                    datasets: [{
+                        label: 'Temperature',
+                        backgroundColor: '#ff5252',
+                        data: _this3.statsTemperature
+                    }, {
+                        label: 'Humidity',
+                        backgroundColor: '#448aff',
+                        data: _this3.statsHumidity
+                    }]
+                };
+            }, function (error) {
+                console.log(error);
+            });
         }
     }
 });
@@ -95268,6 +95317,16 @@ var render = function() {
       _c("chart", {
         attrs: {
           "chart-data": _vm.chartData,
+          options: { responsive: true, maintainAspectRatio: false },
+          height: 250
+        }
+      }),
+      _vm._v(" "),
+      _c("p", [_vm._v("Last 24 hours stats:")]),
+      _vm._v(" "),
+      _c("chart", {
+        attrs: {
+          "chart-data": _vm.statsData,
           options: { responsive: true, maintainAspectRatio: false },
           height: 250
         }

@@ -34,7 +34,7 @@ class WriteReadingsToDatabase implements ShouldQueue
     public function handle()
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://192.168.0.26:3000/reading");
+        curl_setopt($ch, CURLOPT_URL, "https://sesamoid-jackal-7649.dataplicity.io/node/reading");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = json_decode(curl_exec($ch));
 

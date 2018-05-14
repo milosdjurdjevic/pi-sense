@@ -9,12 +9,12 @@ const { exec } = require('child_process');
 const port = process.env.PORT || 8080;
 
 const app = express();
-const options = {
-    key: fs.readFileSync('/etc/nginx/ssl/nginx.key'),
-    cert: fs.readFileSync('/etc/nginx/ssl/nginx.crt'),
-    // ca: fs.readFileSync('/etc/nginx/ssl/nginx.crt'),
-    rejectUnauthorized: false,
-};
+// const options = {
+//     key: fs.readFileSync('/etc/nginx/ssl/nginx.key'),
+//     cert: fs.readFileSync('/etc/nginx/ssl/nginx.crt'),
+//     // ca: fs.readFileSync('/etc/nginx/ssl/nginx.crt'),
+//     rejectUnauthorized: false,
+// };
 
 const server = http.createServer(app);
 const io = socketIO.listen(server);
@@ -52,11 +52,20 @@ app.get('/node/reading', (req, res) => {
             res.send('stderr', stderr);
             console.log(stderr);
         } else {
-            res.send(stdout)
+            res.send(stdout);
             console.log(stdout);
         }
     });
 });
+
+app.get('/node/turn-on-led', (req, res) => {
+
+});
+
+app.get('/node/turn-off-led', (req, res) => {
+
+});
+
 
 server.listen(port, () => {
     console.log(`Server is up on ${port}`);

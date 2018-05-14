@@ -8,6 +8,13 @@
                 :options="{responsive: true, maintainAspectRatio: false}"
                 :height="250"
         ></chart>
+
+        <p>Last 24 hours stats:</p>
+        <chart
+            :chart-data="statsData"
+            :options="{responsive: true, maintainAspectRatio: false}"
+            :height="250"
+        ></chart>
     </div>
 </template>
 
@@ -18,7 +25,7 @@
     const host = window.location.host.split(':')[0];
 
     const socket = io('//' + host);
-    console.log(socket);
+
     export default {
         name: 'temperature',
         components: {
@@ -32,20 +39,24 @@
                 xLabels: this.$store.getters.xLabels,
                 temperature: this.$store.getters.temperature,
                 humidity: this.$store.getters.humidity,
+                statsData: null,
+                statsTemperature: [],
+                statsHumidity: [],
+                statsLabels: [],
             }
         },
         mounted() {
-            this.initialFill();
+            if (this.$store.getters.temperature === null) {
+                this.initialFill();
+            }
+            this.stats();
 
             socket.on('connect', () => {
                 console.log('connected');
                 socket.on('reading', (data) => {
-                    console.log(data);
-
                     this.$store.dispatch('readings', data).then(() => {
                         // Draw chart
                         this.fillData();
-                        console.log('readings')
                     }, (error) => {
                         console.log(error)
                     });
@@ -69,7 +80,7 @@
                     labels: this.xLabels,
                     datasets: [
                         {
-                            label: 'Reading',
+                            label: 'Temperature',
                             backgroundColor: '#ff5252',
                             data: this.chartTemperature
                         }, {
@@ -78,10 +89,48 @@
                             data: this.chartHumidity
                         }
                     ]
-                }
+                };
+                this.temperature = this.$store.getters.temperature;
+                this.humidity = this.$store.getters.humidity;
             },
             initialFill () {
-                // TODO:  Send request to node server to get readings for initial drawing of the chart
+                this.$emit('loading-start');
+
+                axios.get(`fire`)
+                    .then(response => {
+                        this.$emit('loading-done');
+                    }, error => {
+                        console.log(error);
+                    });
+            },
+            stats() {
+                axios.get('stats')
+                    .then(response => {
+                        _.forIn(response.data.data, (res) => {
+                            let date = new Date(res.created_at);
+
+                            this.statsLabels.push(`${date.getHours()}:${date.getMinutes()}`);
+                            this.statsTemperature.push(res.temperature)
+                            this.statsHumidity.push(res.humidity)
+                        });
+
+                        this.statsData = {
+                            labels: this.statsLabels,
+                            datasets: [
+                                {
+                                    label: 'Temperature',
+                                    backgroundColor: '#ff5252',
+                                    data: this.statsTemperature
+                                }, {
+                                    label: 'Humidity',
+                                    backgroundColor: '#448aff',
+                                    data: this.statsHumidity
+                                }
+                            ]
+                        };
+                    }, error => {
+                        console.log(error);
+                    });
             }
         },
     }

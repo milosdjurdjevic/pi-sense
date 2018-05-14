@@ -21,11 +21,21 @@ Route::get('/test', function () {
     return view('test');
 });
 
-Route::get('/text-to-speech', function () {
+Route::get('/max-temperature-alert', function () {
     $json = [[
         'action' => 'talk',
         'voiceName' => 'Russell',
-        'text' => 'Alert! Alert! Alert! Alert! Alert!',
+        'text' => 'Greenhouse is on fire!',
+    ]];
+
+    return response()->json($json);
+});
+
+Route::get('/min-temperature-alert', function () {
+    $json = [[
+        'action' => 'talk',
+        'voiceName' => 'Russell',
+        'text' => 'Greenhouse is as cold as ice!',
     ]];
 
     return response()->json($json);

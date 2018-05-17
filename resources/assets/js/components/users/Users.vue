@@ -96,18 +96,18 @@
             return {
                 users: null,
                 links: {},
-                total: this.$store.getters.usersMeta.pagination.total,
-                totalPages: this.$store.getters.usersMeta.pagination.total_pages,
-                currentPage: this.$store.getters.usersMeta.pagination.current_page,
+                total: null,
+                totalPages: null,
+                currentPage: null,
                 search: null,
-                searched: this.$store.getters.users,
+                searched: null,
                 showSnackbar: false,
                 deleteId: null,
             };
         },
         created() {
             // Get users
-            if (this.$store.getters.users.length === 0) {
+            if (this.$store.getters.users) {
                 this.loadData();
             }
         },

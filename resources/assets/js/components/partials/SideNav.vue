@@ -1,8 +1,8 @@
 <template>
     <div id="side-nav">
-        <button id="menu-button" data-activates="main-nav"
-                class="btn waves-effect waves-light btn-floating transparent"><i class="material-icons">menu</i>
-        </button>
+        <!--<button id="menu-button" data-activates="main-nav"-->
+                <!--class="btn waves-effect waves-light btn-floating transparent"><i class="material-icons">menu</i>-->
+        <!--</button>-->
         <ul id="main-nav" class="side-nav">
             <!--<li>-->
             <router-link tag="li" class="pageLink" to="/">
@@ -42,9 +42,9 @@
             };
         },
         mounted() {
-            $('#menu-button').sideNav({
-                closeOnClick: true
-            });
+            // $('#menu-button').sideNav({
+            //     closeOnClick: true
+            // });
         },
     };
 </script>

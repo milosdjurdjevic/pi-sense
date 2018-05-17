@@ -70,6 +70,21 @@ const mutations = {
 
         state.temperature = reading.temperature;
         state.humidity = reading.humidity;
+
+        state.chartData = {
+            labels: state.xLabels,
+            datasets: [
+                {
+                    label: 'Temperature',
+                    backgroundColor: '#ff5252',
+                    data: state.chartTemperature
+                }, {
+                    label: 'Humidity',
+                    backgroundColor: '#448aff',
+                    data: state.chartHumidity
+                }
+            ]
+        };
     }
 };
 

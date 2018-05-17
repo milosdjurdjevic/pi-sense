@@ -4,9 +4,9 @@
         <p>Current temperature: {{ temperature }}°C</p>
         <p>Current humidity: {{ humidity }}%</p>
         <chart
-                :chart-data="chartData"
-                :options="{responsive: true, maintainAspectRatio: false}"
-                :height="250"
+            :chart-data="chartData"
+            :options="{responsive: true, maintainAspectRatio: false}"
+            :height="250"
         ></chart>
 
         <p>Last 24 hours stats:</p>
@@ -33,12 +33,12 @@
         },
         data() {
             return {
-                chartData: this.$store.getters.chartData,
-                chartTemperature: this.$store.getters.chartTemperature,
-                chartHumidity: this.$store.getters.chartHumidity,
-                xLabels: this.$store.getters.xLabels,
-                temperature: this.$store.getters.temperature,
-                humidity: this.$store.getters.humidity,
+                chartData: this.$store.getters.chartData ? this.$store.getters.chartData : null,
+                chartTemperature: this.$store.getters.chartTemperature ? this.$store.getters.chartTemperature : null,
+                chartHumidity: this.$store.getters.chartHumidity ? this.$store.getters.chartHumidity : null,
+                xLabels: null,
+                temperature: this.$store.getters.temperature ? this.$store.getters.temperature : null,
+                humidity: this.$store.getters.humidity ? this.$store.getters.humidity : null,
                 statsData: null,
                 statsTemperature: [],
                 statsHumidity: [],
@@ -76,6 +76,8 @@
         methods: {
             fillData () {
                 console.log('filling data');
+                this.chartTemperature = this.$store.getters.chartTemperature;
+                this.chartHumidity = this.$store.getters.chartHumidity;
                 this.chartData = {
                     labels: this.xLabels,
                     datasets: [

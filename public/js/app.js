@@ -74849,6 +74849,19 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED
 
     state.temperature = reading.temperature;
     state.humidity = reading.humidity;
+
+    state.chartData = {
+        labels: state.xLabels,
+        datasets: [{
+            label: 'Temperature',
+            backgroundColor: '#ff5252',
+            data: state.chartTemperature
+        }, {
+            label: 'Humidity',
+            backgroundColor: '#448aff',
+            data: state.chartHumidity
+        }]
+    };
 }), _mutations);
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -75660,18 +75673,18 @@ var searchByName = function searchByName(items, term) {
         return {
             users: null,
             links: {},
-            total: this.$store.getters.usersMeta.pagination.total,
-            totalPages: this.$store.getters.usersMeta.pagination.total_pages,
-            currentPage: this.$store.getters.usersMeta.pagination.current_page,
+            total: null,
+            totalPages: null,
+            currentPage: null,
             search: null,
-            searched: this.$store.getters.users,
+            searched: null,
             showSnackbar: false,
             deleteId: null
         };
     },
     created: function created() {
         // Get users
-        if (this.$store.getters.users.length === 0) {
+        if (this.$store.getters.users) {
             this.loadData();
         }
     },
@@ -79080,7 +79093,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -79128,12 +79141,12 @@ var socket = io('//' + host);
     },
     data: function data() {
         return {
-            chartData: this.$store.getters.chartData,
-            chartTemperature: this.$store.getters.chartTemperature,
-            chartHumidity: this.$store.getters.chartHumidity,
-            xLabels: this.$store.getters.xLabels,
-            temperature: this.$store.getters.temperature,
-            humidity: this.$store.getters.humidity,
+            chartData: this.$store.getters.chartData ? this.$store.getters.chartData : null,
+            chartTemperature: this.$store.getters.chartTemperature ? this.$store.getters.chartTemperature : null,
+            chartHumidity: this.$store.getters.chartHumidity ? this.$store.getters.chartHumidity : null,
+            xLabels: null,
+            temperature: this.$store.getters.temperature ? this.$store.getters.temperature : null,
+            humidity: this.$store.getters.humidity ? this.$store.getters.humidity : null,
             statsData: null,
             statsTemperature: [],
             statsHumidity: [],
@@ -79172,6 +79185,8 @@ var socket = io('//' + host);
     methods: {
         fillData: function fillData() {
             console.log('filling data');
+            this.chartTemperature = this.$store.getters.chartTemperature;
+            this.chartHumidity = this.$store.getters.chartHumidity;
             this.chartData = {
                 labels: this.xLabels,
                 datasets: [{

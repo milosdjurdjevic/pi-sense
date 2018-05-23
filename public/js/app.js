@@ -79093,7 +79093,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -79187,18 +79187,7 @@ var socket = io('//' + host);
             console.log('filling data');
             this.chartTemperature = this.$store.getters.chartTemperature;
             this.chartHumidity = this.$store.getters.chartHumidity;
-            this.chartData = {
-                labels: this.xLabels,
-                datasets: [{
-                    label: 'Temperature',
-                    backgroundColor: '#ff5252',
-                    data: this.chartTemperature
-                }, {
-                    label: 'Humidity',
-                    backgroundColor: '#448aff',
-                    data: this.chartHumidity
-                }]
-            };
+            this.chartData = this.$store.getters.chartData;
             this.temperature = this.$store.getters.temperature;
             this.humidity = this.$store.getters.humidity;
         },

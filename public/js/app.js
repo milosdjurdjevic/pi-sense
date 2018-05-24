@@ -75657,7 +75657,6 @@ var toLower = function toLower(text) {
 };
 
 var searchByName = function searchByName(items, term) {
-
     if (term) {
         return items.filter(function (item) {
             return toLower(item.name).includes(toLower(term));
@@ -75683,14 +75682,11 @@ var searchByName = function searchByName(items, term) {
         };
     },
     created: function created() {
-        // Get users
-        if (this.$store.getters.users) {
+        if (this.$store.getters.users.length === 0) {
             this.loadData();
         }
     },
-    mounted: function mounted() {
-        //
-    },
+    mounted: function mounted() {},
 
     methods: {
         loadData: function loadData() {
@@ -75701,23 +75697,34 @@ var searchByName = function searchByName(items, term) {
             this.$emit('loading-start');
 
             this.$store.dispatch('fetchUsers', page).then(function () {
-                _this.searched = _this.$store.getters.users;
+                _this.users = _this.$store.getters.users;
                 _this.links = _this.$store.getters.usersMeta.pagination.links;
                 _this.total = _this.$store.getters.usersMeta.pagination.total;
                 _this.totalPages = _this.$store.getters.usersMeta.pagination.total_pages;
                 _this.currentPage = _this.$store.getters.usersMeta.pagination.current_page;
 
+                _this.$store.dispatch('allUsers').then(function () {
+                    // this.searched = this.$store.getters.allUsers;
+                }, function () {
+                    _this.searched = [];
+                });
+
                 _this.$emit('loading-done');
             }, function () {
-                _this.searched = [];
+                _this.users = null;
+                _this.links = null;
+                _this.total = null;
+                _this.totalPages = null;
+                _this.currentPage = null;
             });
         },
         searchOnTable: function searchOnTable() {
-            this.searched = searchByName(this.$store.getters.users, this.search);
+            this.users = searchByName(this.$store.getters.allUsers, this.search);
         },
-        onPagination: function onPagination() {},
+        onPagination: function onPagination() {
+            //
+        },
         confirmDelete: function confirmDelete(id) {
-            console.log(id);
             this.showSnackbar = true;
             this.deleteId = id;
         },
@@ -75859,11 +75866,11 @@ var render = function() {
               }
             ]),
             model: {
-              value: _vm.searched,
+              value: _vm.users,
               callback: function($$v) {
-                _vm.searched = $$v
+                _vm.users = $$v
               },
-              expression: "searched"
+              expression: "users"
             }
           },
           [

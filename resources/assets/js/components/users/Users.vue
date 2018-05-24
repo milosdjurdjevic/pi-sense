@@ -13,7 +13,7 @@
                 </div>
             </md-toolbar>
 
-            <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+            <md-table v-model="users" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
                 <md-table-toolbar>
                     <div class="md-toolbar-section-start">
                         <!--<h1 class="md-title">Users</h1>-->
@@ -82,7 +82,6 @@
     };
 
     const searchByName = (items, term) => {
-
         if (term) {
             return items.filter(item => toLower(item.name).includes(toLower(term)))
         }
@@ -106,38 +105,48 @@
             };
         },
         created() {
-            // Get users
-            if (this.$store.getters.users) {
+            if (this.$store.getters.users.length === 0) {
                 this.loadData();
             }
         },
         mounted() {
-            //
+
         },
         methods: {
             loadData(page = 1) {
                 this.$emit('loading-start');
 
                 this.$store.dispatch('fetchUsers', page).then(() => {
-                    this.searched = this.$store.getters.users;
+                    this.users = this.$store.getters.users;
                     this.links = this.$store.getters.usersMeta.pagination.links;
                     this.total = this.$store.getters.usersMeta.pagination.total;
                     this.totalPages = this.$store.getters.usersMeta.pagination.total_pages;
                     this.currentPage = this.$store.getters.usersMeta.pagination.current_page;
 
+                    this.$store.dispatch('allUsers').then(() => {
+                        // this.searched = this.$store.getters.allUsers;
+                    }, () => {
+                        this.searched = [];
+                    });
+
                     this.$emit('loading-done');
                 }, () => {
-                    this.searched = [];
+                    this.users = null;
+                    this.links = null;
+                    this.total = null;
+                    this.totalPages = null;
+                    this.currentPage = null;
                 });
-            },
-            searchOnTable() {
-                this.searched = searchByName(this.$store.getters.users, this.search)
-            },
-            onPagination() {
+
 
             },
+            searchOnTable() {
+                this.users = searchByName(this.$store.getters.allUsers, this.search)
+            },
+            onPagination() {
+                //
+            },
             confirmDelete(id) {
-                console.log(id);
                 this.showSnackbar = true;
                 this.deleteId = id;
             },

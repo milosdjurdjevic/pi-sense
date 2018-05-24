@@ -28,7 +28,7 @@ class UsersController extends Controller
     public function index()
     {
         $users = $this->user->paginate(10);
-//        sleep(1);
+
         return $this->response->paginator($users, new UserTransformer());
     }
 
@@ -40,7 +40,7 @@ class UsersController extends Controller
     public function allUsers()
     {
         $users = $this->user->all();
-//        sleep(1);
+
         return $this->response->collection($users, new UserTransformer());
     }
 
@@ -69,7 +69,7 @@ class UsersController extends Controller
             'password' => app('hash')->make($request->get('password'))
         ];
         $user = $this->user->create($attributes);
-//        sleep(2);
+
         return $this->response->array(compact('user'));
     }
 

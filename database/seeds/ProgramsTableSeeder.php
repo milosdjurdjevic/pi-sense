@@ -13,8 +13,8 @@ class ProgramsTableSeeder extends Seeder
     {
         \App\Models\Program::create([
             'name' => 'Watermelon',
-            'min_temperature' => '28',
-            'max_temperature' => '35',
+            'min_temperature' => '20',
+            'max_temperature' => '30',
             'optimal_humidity' => '70',
             'temperature_tolerance' => '5',
             'humidity_tolerance' => '10',

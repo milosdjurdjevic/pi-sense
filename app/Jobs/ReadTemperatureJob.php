@@ -11,6 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Nexmo\Laravel\Facade\Nexmo;
+use GuzzleHttp\Client;
 
 class ReadTemperatureJob implements ShouldQueue
 {
@@ -33,51 +34,47 @@ class ReadTemperatureJob implements ShouldQueue
      */
     public function handle()
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://sesamoid-jackal-7649.dataplicity.io/node/reading");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch));
+        $client = new Client(['base_uri' => 'https://sesamoid-jackal-7649.dataplicity.io/']);
+
+        $reading = json_decode($client->request('GET', 'node/reading')->getBody()->getContents());
 
         $settings = Program::where('is_active', 1)->first();
 
-        // Turn on heating
-        if ($response->temperature < $settings->min_temperature) {
-            // TODO: Turn on heating
-        }
-
-        // Turn off heating
-        if ($response->temperature > $settings->max_temperature) {
-            // TODO: Turn off heating
+        // Turn on or off heating
+        if ($reading->temperature < $settings->min_temperature) {
+            $client->request('GET', 'node/turn-on-heating');
+        } else if ($reading->temperature > $settings->max_temperature) {
+            $client->request('GET', 'node/turn-off-heating');
         }
 
         // Make a call if temperature is over tolerance
-//        if ($settings->temperature_tolerance <= ($settings->min_temperature - $response->temperature)) {
-//            Nexmo::calls()->create([
-//                'to' => [[
-//                    'type' => 'phone',
-//                    'number' => '+381600626593'
-//                ]],
-//                'from' => [
-//                    'type' => 'phone',
-//                    'number' => '+381600626593'
-//                ],
-//                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//min-temperature-alert'],
-//                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
-//            ]);
-//        } else if ($settings->temperature_tolerance <= ($response->temperature - $settings->max)) {
-//            Nexmo::calls()->create([
-//                'to' => [[
-//                    'type' => 'phone',
-//                    'number' => '+381600626593'
-//                ]],
-//                'from' => [
-//                    'type' => 'phone',
-//                    'number' => '+381600626593'
-//                ],
-//                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//max-temperature-alert'],
-//                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
-//            ]);
-//        }
+        if ($reading->temperature <= ($settings->min_temperature - $settings->temperature_tolerance)) {
+            Nexmo::calls()->create([
+                'to' => [[
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ]],
+                'from' => [
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ],
+                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//min-temperature-alert'],
+                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+            ]);
+        } else if ($reading->temperature >= ($settings->max_temperature + $settings->max)) {
+            Nexmo::calls()->create([
+                'to' => [[
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ]],
+                'from' => [
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ],
+                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//max-temperature-alert'],
+                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+            ]);
+        }
 
         // TODO: Calculate formula for humidity
 

@@ -26,7 +26,6 @@ $api->version('v1', function (Router $api) {
     });
 
     $api->group([
-        'middleware' => 'api',
         'namespace' => 'App\Http\Controllers\Api\v1',
     ], function ($api) {
         $api->post('/authenticate', 'AuthController@authenticate');
@@ -34,6 +33,14 @@ $api->version('v1', function (Router $api) {
         $api->post('auth/login', 'AuthController@login');
         // refresh jwt token
         $api->post('auth/login/refresh', 'AuthController@refreshToken');
+    });
+
+
+    $api->group([
+        'middleware' => 'jwt.auth',
+        'namespace' => 'App\Http\Controllers\Api\v1',
+    ], function ($api) {
+
 
         // Test route
         $api->get('test', 'TestController@index');
@@ -43,9 +50,9 @@ $api->version('v1', function (Router $api) {
         | Authenticated Routes
         |--------------------------------------------------------------------------
         */
-        $api->group([
-            'middleware' => 'jwt.auth'
-        ], function ($api) {
+//        $api->group([
+//            'middleware' => 'jwt.auth'
+//        ], function ($api) {
             // Users
             $api->get('users/all', 'UsersController@allUsers');
             $api->get('users', 'UsersController@index');
@@ -63,7 +70,7 @@ $api->version('v1', function (Router $api) {
 
             // Readings
             $api->get('stats', 'ReadingsController@index');
-        });
+//        });
     });
 
 });

@@ -5,7 +5,7 @@
             <div class="md-toolbar-section-end">
                 <router-link tag="span" class="" to="/add-program">
                     <a class="btn-floating waves-effect waves-light blue">
-                        <md-icon>add</md-icon>
+                        <!--<md-icon>add</md-icon>-->
                         <span class="page">Add Program</span>
                     </a>
                 </router-link>
@@ -14,7 +14,7 @@
 
         <br>
 
-        <md-card v-for="setting in settings" :key="setting.id" :class="setting.is_active === 1 ? 'md-primary' : ''">
+        <md-card v-for="setting in settings.settings" :key="setting.id" :class="setting.is_active === 1 ? 'md-primary' : ''">
             <md-card-header>
                 <md-card-header-text>
                     <div class="md-title">{{ setting.name }}</div>
@@ -49,13 +49,18 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     export default {
         name: "settings",
-        data() {
-            return {
-                settings: this.$store.getters.settings,
-            };
-        },
+        // data() {
+        //     return {
+        //         settings: this.$store.getters.settings,
+        //     };
+        // },
+        computed: mapState([
+            // map this.count to store.state.count
+            'settings'
+        ]),
         created() {
             // Get settings
             if (_.isEmpty(this.$store.getters.settings)) {

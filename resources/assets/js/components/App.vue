@@ -6,7 +6,7 @@
             <md-app-toolbar class="md-primary">
                 <span class="md-title">Pi Sense</span>
 
-                <div class="md-toolbar-section-end">
+                <div v-if="authenticated" class="md-toolbar-section-end">
                     <md-menu md-size="medium" md-align-trigger>
                         <md-button md-menu-trigger class="md-icon-button">
                             <md-icon>more_vert</md-icon>
@@ -22,7 +22,7 @@
                 </div>
             </md-app-toolbar>
 
-            <md-app-drawer md-permanent="clipped">
+            <md-app-drawer v-if="authenticated" md-permanent="clipped">
                 <md-list>
                     <md-list-item>
                         <md-icon>dashboard</md-icon>
@@ -71,7 +71,8 @@
     export default {
         name: 'app',
         data: () => ({
-            loading: false
+            loading: false,
+            authenticated: localStorage.getItem('token'),
         }),
         // mounted() {
         //     this.$emit('loadingDone');

@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->job(new ReadTemperatureJob())->everyMinute();
-         $schedule->job(new WriteReadingsToDatabase())->everyThirtyMinutes();
+         $schedule->job(new WriteReadingsToDatabase())->everyFiveMinutes();
     }
 
     /**

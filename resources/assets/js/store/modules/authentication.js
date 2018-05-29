@@ -24,17 +24,7 @@ const getters = {
  */
 const actions = {
   login({ commit }, response) {
-
     commit(types.LOGIN, response);
-    // return new Promise((resolve, reject) => {
-    //   api.post('users', user).then((response) => {
-    //     console.log(response);
-    //     // commit(types.LOGIN, user);
-    //     // resolve(response);
-    //   }, (error) => {
-    //     reject(error);
-    //   });
-    // });
   },
   logout({ commit }) {
     commit(types.LOGOUT);

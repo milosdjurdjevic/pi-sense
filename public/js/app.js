@@ -4583,7 +4583,7 @@
 "use strict";
 
 
-module.exports = __webpack_require__(21);
+module.exports = __webpack_require__(23);
 module.exports.easing = __webpack_require__(300);
 module.exports.canvas = __webpack_require__(301);
 module.exports.options = __webpack_require__(302);
@@ -4647,7 +4647,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.regex = exports.ref = exports.len = exports.req = exports.withParams = undefined;
 
-var _withParams = __webpack_require__(253);
+var _withParams = __webpack_require__(238);
 
 var _withParams2 = _interopRequireDefault(_withParams);
 
@@ -5749,7 +5749,7 @@ function localstorage() {
   } catch (e) {}
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
 
 /***/ }),
 /* 11 */
@@ -28431,736 +28431,6 @@ var READINGS = 'READINGS';
 "use strict";
 
 
-/**
- * @namespace Chart.helpers
- */
-var helpers = {
-	/**
-	 * An empty function that can be used, for example, for optional callback.
-	 */
-	noop: function() {},
-
-	/**
-	 * Returns a unique id, sequentially generated from a global variable.
-	 * @returns {Number}
-	 * @function
-	 */
-	uid: (function() {
-		var id = 0;
-		return function() {
-			return id++;
-		};
-	}()),
-
-	/**
-	 * Returns true if `value` is neither null nor undefined, else returns false.
-	 * @param {*} value - The value to test.
-	 * @returns {Boolean}
-	 * @since 2.7.0
-	 */
-	isNullOrUndef: function(value) {
-		return value === null || typeof value === 'undefined';
-	},
-
-	/**
-	 * Returns true if `value` is an array, else returns false.
-	 * @param {*} value - The value to test.
-	 * @returns {Boolean}
-	 * @function
-	 */
-	isArray: Array.isArray ? Array.isArray : function(value) {
-		return Object.prototype.toString.call(value) === '[object Array]';
-	},
-
-	/**
-	 * Returns true if `value` is an object (excluding null), else returns false.
-	 * @param {*} value - The value to test.
-	 * @returns {Boolean}
-	 * @since 2.7.0
-	 */
-	isObject: function(value) {
-		return value !== null && Object.prototype.toString.call(value) === '[object Object]';
-	},
-
-	/**
-	 * Returns `value` if defined, else returns `defaultValue`.
-	 * @param {*} value - The value to return if defined.
-	 * @param {*} defaultValue - The value to return if `value` is undefined.
-	 * @returns {*}
-	 */
-	valueOrDefault: function(value, defaultValue) {
-		return typeof value === 'undefined' ? defaultValue : value;
-	},
-
-	/**
-	 * Returns value at the given `index` in array if defined, else returns `defaultValue`.
-	 * @param {Array} value - The array to lookup for value at `index`.
-	 * @param {Number} index - The index in `value` to lookup for value.
-	 * @param {*} defaultValue - The value to return if `value[index]` is undefined.
-	 * @returns {*}
-	 */
-	valueAtIndexOrDefault: function(value, index, defaultValue) {
-		return helpers.valueOrDefault(helpers.isArray(value) ? value[index] : value, defaultValue);
-	},
-
-	/**
-	 * Calls `fn` with the given `args` in the scope defined by `thisArg` and returns the
-	 * value returned by `fn`. If `fn` is not a function, this method returns undefined.
-	 * @param {Function} fn - The function to call.
-	 * @param {Array|undefined|null} args - The arguments with which `fn` should be called.
-	 * @param {Object} [thisArg] - The value of `this` provided for the call to `fn`.
-	 * @returns {*}
-	 */
-	callback: function(fn, args, thisArg) {
-		if (fn && typeof fn.call === 'function') {
-			return fn.apply(thisArg, args);
-		}
-	},
-
-	/**
-	 * Note(SB) for performance sake, this method should only be used when loopable type
-	 * is unknown or in none intensive code (not called often and small loopable). Else
-	 * it's preferable to use a regular for() loop and save extra function calls.
-	 * @param {Object|Array} loopable - The object or array to be iterated.
-	 * @param {Function} fn - The function to call for each item.
-	 * @param {Object} [thisArg] - The value of `this` provided for the call to `fn`.
-	 * @param {Boolean} [reverse] - If true, iterates backward on the loopable.
-	 */
-	each: function(loopable, fn, thisArg, reverse) {
-		var i, len, keys;
-		if (helpers.isArray(loopable)) {
-			len = loopable.length;
-			if (reverse) {
-				for (i = len - 1; i >= 0; i--) {
-					fn.call(thisArg, loopable[i], i);
-				}
-			} else {
-				for (i = 0; i < len; i++) {
-					fn.call(thisArg, loopable[i], i);
-				}
-			}
-		} else if (helpers.isObject(loopable)) {
-			keys = Object.keys(loopable);
-			len = keys.length;
-			for (i = 0; i < len; i++) {
-				fn.call(thisArg, loopable[keys[i]], keys[i]);
-			}
-		}
-	},
-
-	/**
-	 * Returns true if the `a0` and `a1` arrays have the same content, else returns false.
-	 * @see http://stackoverflow.com/a/14853974
-	 * @param {Array} a0 - The array to compare
-	 * @param {Array} a1 - The array to compare
-	 * @returns {Boolean}
-	 */
-	arrayEquals: function(a0, a1) {
-		var i, ilen, v0, v1;
-
-		if (!a0 || !a1 || a0.length !== a1.length) {
-			return false;
-		}
-
-		for (i = 0, ilen = a0.length; i < ilen; ++i) {
-			v0 = a0[i];
-			v1 = a1[i];
-
-			if (v0 instanceof Array && v1 instanceof Array) {
-				if (!helpers.arrayEquals(v0, v1)) {
-					return false;
-				}
-			} else if (v0 !== v1) {
-				// NOTE: two different object instances will never be equal: {x:20} != {x:20}
-				return false;
-			}
-		}
-
-		return true;
-	},
-
-	/**
-	 * Returns a deep copy of `source` without keeping references on objects and arrays.
-	 * @param {*} source - The value to clone.
-	 * @returns {*}
-	 */
-	clone: function(source) {
-		if (helpers.isArray(source)) {
-			return source.map(helpers.clone);
-		}
-
-		if (helpers.isObject(source)) {
-			var target = {};
-			var keys = Object.keys(source);
-			var klen = keys.length;
-			var k = 0;
-
-			for (; k < klen; ++k) {
-				target[keys[k]] = helpers.clone(source[keys[k]]);
-			}
-
-			return target;
-		}
-
-		return source;
-	},
-
-	/**
-	 * The default merger when Chart.helpers.merge is called without merger option.
-	 * Note(SB): this method is also used by configMerge and scaleMerge as fallback.
-	 * @private
-	 */
-	_merger: function(key, target, source, options) {
-		var tval = target[key];
-		var sval = source[key];
-
-		if (helpers.isObject(tval) && helpers.isObject(sval)) {
-			helpers.merge(tval, sval, options);
-		} else {
-			target[key] = helpers.clone(sval);
-		}
-	},
-
-	/**
-	 * Merges source[key] in target[key] only if target[key] is undefined.
-	 * @private
-	 */
-	_mergerIf: function(key, target, source) {
-		var tval = target[key];
-		var sval = source[key];
-
-		if (helpers.isObject(tval) && helpers.isObject(sval)) {
-			helpers.mergeIf(tval, sval);
-		} else if (!target.hasOwnProperty(key)) {
-			target[key] = helpers.clone(sval);
-		}
-	},
-
-	/**
-	 * Recursively deep copies `source` properties into `target` with the given `options`.
-	 * IMPORTANT: `target` is not cloned and will be updated with `source` properties.
-	 * @param {Object} target - The target object in which all sources are merged into.
-	 * @param {Object|Array(Object)} source - Object(s) to merge into `target`.
-	 * @param {Object} [options] - Merging options:
-	 * @param {Function} [options.merger] - The merge method (key, target, source, options)
-	 * @returns {Object} The `target` object.
-	 */
-	merge: function(target, source, options) {
-		var sources = helpers.isArray(source) ? source : [source];
-		var ilen = sources.length;
-		var merge, i, keys, klen, k;
-
-		if (!helpers.isObject(target)) {
-			return target;
-		}
-
-		options = options || {};
-		merge = options.merger || helpers._merger;
-
-		for (i = 0; i < ilen; ++i) {
-			source = sources[i];
-			if (!helpers.isObject(source)) {
-				continue;
-			}
-
-			keys = Object.keys(source);
-			for (k = 0, klen = keys.length; k < klen; ++k) {
-				merge(keys[k], target, source, options);
-			}
-		}
-
-		return target;
-	},
-
-	/**
-	 * Recursively deep copies `source` properties into `target` *only* if not defined in target.
-	 * IMPORTANT: `target` is not cloned and will be updated with `source` properties.
-	 * @param {Object} target - The target object in which all sources are merged into.
-	 * @param {Object|Array(Object)} source - Object(s) to merge into `target`.
-	 * @returns {Object} The `target` object.
-	 */
-	mergeIf: function(target, source) {
-		return helpers.merge(target, source, {merger: helpers._mergerIf});
-	},
-
-	/**
-	 * Applies the contents of two or more objects together into the first object.
-	 * @param {Object} target - The target object in which all objects are merged into.
-	 * @param {Object} arg1 - Object containing additional properties to merge in target.
-	 * @param {Object} argN - Additional objects containing properties to merge in target.
-	 * @returns {Object} The `target` object.
-	 */
-	extend: function(target) {
-		var setFn = function(value, key) {
-			target[key] = value;
-		};
-		for (var i = 1, ilen = arguments.length; i < ilen; ++i) {
-			helpers.each(arguments[i], setFn);
-		}
-		return target;
-	},
-
-	/**
-	 * Basic javascript inheritance based on the model created in Backbone.js
-	 */
-	inherits: function(extensions) {
-		var me = this;
-		var ChartElement = (extensions && extensions.hasOwnProperty('constructor')) ? extensions.constructor : function() {
-			return me.apply(this, arguments);
-		};
-
-		var Surrogate = function() {
-			this.constructor = ChartElement;
-		};
-
-		Surrogate.prototype = me.prototype;
-		ChartElement.prototype = new Surrogate();
-		ChartElement.extend = helpers.inherits;
-
-		if (extensions) {
-			helpers.extend(ChartElement.prototype, extensions);
-		}
-
-		ChartElement.__super__ = me.prototype;
-		return ChartElement;
-	}
-};
-
-module.exports = helpers;
-
-// DEPRECATIONS
-
-/**
- * Provided for backward compatibility, use Chart.helpers.callback instead.
- * @function Chart.helpers.callCallback
- * @deprecated since version 2.6.0
- * @todo remove at version 3
- * @private
- */
-helpers.callCallback = helpers.callback;
-
-/**
- * Provided for backward compatibility, use Array.prototype.indexOf instead.
- * Array.prototype.indexOf compatibility: Chrome, Opera, Safari, FF1.5+, IE9+
- * @function Chart.helpers.indexOf
- * @deprecated since version 2.7.0
- * @todo remove at version 3
- * @private
- */
-helpers.indexOf = function(array, item, fromIndex) {
-	return Array.prototype.indexOf.call(array, item, fromIndex);
-};
-
-/**
- * Provided for backward compatibility, use Chart.helpers.valueOrDefault instead.
- * @function Chart.helpers.getValueOrDefault
- * @deprecated since version 2.7.0
- * @todo remove at version 3
- * @private
- */
-helpers.getValueOrDefault = helpers.valueOrDefault;
-
-/**
- * Provided for backward compatibility, use Chart.helpers.valueAtIndexOrDefault instead.
- * @function Chart.helpers.getValueAtIndexOrDefault
- * @deprecated since version 2.7.0
- * @todo remove at version 3
- * @private
- */
-helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports) {
-
-/**
- * Compiles a querystring
- * Returns string representation of the object
- *
- * @param {Object}
- * @api private
- */
-
-exports.encode = function (obj) {
-  var str = '';
-
-  for (var i in obj) {
-    if (obj.hasOwnProperty(i)) {
-      if (str.length) str += '&';
-      str += encodeURIComponent(i) + '=' + encodeURIComponent(obj[i]);
-    }
-  }
-
-  return str;
-};
-
-/**
- * Parses a simple querystring into an object
- *
- * @param {String} qs
- * @api private
- */
-
-exports.decode = function(qs){
-  var qry = {};
-  var pairs = qs.split('&');
-  for (var i = 0, l = pairs.length; i < l; i++) {
-    var pair = pairs[i].split('=');
-    qry[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
-  }
-  return qry;
-};
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports) {
-
-
-module.exports = function(a, b){
-  var fn = function(){};
-  fn.prototype = b.prototype;
-  a.prototype = new fn;
-  a.prototype.constructor = a;
-};
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-var utils = __webpack_require__(6);
-var normalizeHeaderName = __webpack_require__(191);
-
-var DEFAULT_CONTENT_TYPE = {
-  'Content-Type': 'application/x-www-form-urlencoded'
-};
-
-function setContentTypeIfUnset(headers, value) {
-  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-    headers['Content-Type'] = value;
-  }
-}
-
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = __webpack_require__(34);
-  } else if (typeof process !== 'undefined') {
-    // For node use HTTP adapter
-    adapter = __webpack_require__(34);
-  }
-  return adapter;
-}
-
-var defaults = {
-  adapter: getDefaultAdapter(),
-
-  transformRequest: [function transformRequest(data, headers) {
-    normalizeHeaderName(headers, 'Content-Type');
-    if (utils.isFormData(data) ||
-      utils.isArrayBuffer(data) ||
-      utils.isBuffer(data) ||
-      utils.isStream(data) ||
-      utils.isFile(data) ||
-      utils.isBlob(data)
-    ) {
-      return data;
-    }
-    if (utils.isArrayBufferView(data)) {
-      return data.buffer;
-    }
-    if (utils.isURLSearchParams(data)) {
-      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-      return data.toString();
-    }
-    if (utils.isObject(data)) {
-      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
-      return JSON.stringify(data);
-    }
-    return data;
-  }],
-
-  transformResponse: [function transformResponse(data) {
-    /*eslint no-param-reassign:0*/
-    if (typeof data === 'string') {
-      try {
-        data = JSON.parse(data);
-      } catch (e) { /* Ignore */ }
-    }
-    return data;
-  }],
-
-  timeout: 0,
-
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-
-  maxContentLength: -1,
-
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  }
-};
-
-defaults.headers = {
-  common: {
-    'Accept': 'application/json, text/plain, */*'
-  }
-};
-
-utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-  defaults.headers[method] = {};
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-});
-
-module.exports = defaults;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(209);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger__ = __webpack_require__(210);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_authentication__ = __webpack_require__(211);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_users__ = __webpack_require__(223);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modules_settings__ = __webpack_require__(224);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__modules_readings__ = __webpack_require__(225);
-
-
-
-
-
-
-
-
-
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
-
-/* harmony default export */ __webpack_exports__["default"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
-    modules: {
-        authentication: __WEBPACK_IMPORTED_MODULE_3__modules_authentication__["a" /* default */],
-        users: __WEBPACK_IMPORTED_MODULE_4__modules_users__["a" /* default */],
-        settings: __WEBPACK_IMPORTED_MODULE_5__modules_settings__["a" /* default */],
-        readings: __WEBPACK_IMPORTED_MODULE_6__modules_readings__["a" /* default */]
-    },
-    plugins: [__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default()({
-        collapsed: false
-    })]
-}));
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -29168,7 +28438,7 @@ exports.withParams = exports.validationMixin = exports.Vuelidate = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _vval = __webpack_require__(251);
+var _vval = __webpack_require__(236);
 
 var _params = __webpack_require__(39);
 
@@ -29700,7 +28970,7 @@ exports.withParams = _params.withParams;
 exports.default = Vuelidate;
 
 /***/ }),
-/* 28 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29711,75 +28981,75 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.maxValue = exports.minValue = exports.and = exports.or = exports.url = exports.sameAs = exports.requiredUnless = exports.requiredIf = exports.required = exports.minLength = exports.maxLength = exports.macAddress = exports.ipAddress = exports.email = exports.between = exports.numeric = exports.alphaNum = exports.alpha = undefined;
 
-var _alpha = __webpack_require__(252);
+var _alpha = __webpack_require__(237);
 
 var _alpha2 = _interopRequireDefault(_alpha);
 
-var _alphaNum = __webpack_require__(254);
+var _alphaNum = __webpack_require__(239);
 
 var _alphaNum2 = _interopRequireDefault(_alphaNum);
 
-var _numeric = __webpack_require__(255);
+var _numeric = __webpack_require__(240);
 
 var _numeric2 = _interopRequireDefault(_numeric);
 
-var _between = __webpack_require__(256);
+var _between = __webpack_require__(241);
 
 var _between2 = _interopRequireDefault(_between);
 
-var _email = __webpack_require__(257);
+var _email = __webpack_require__(242);
 
 var _email2 = _interopRequireDefault(_email);
 
-var _ipAddress = __webpack_require__(258);
+var _ipAddress = __webpack_require__(243);
 
 var _ipAddress2 = _interopRequireDefault(_ipAddress);
 
-var _macAddress = __webpack_require__(259);
+var _macAddress = __webpack_require__(244);
 
 var _macAddress2 = _interopRequireDefault(_macAddress);
 
-var _maxLength = __webpack_require__(260);
+var _maxLength = __webpack_require__(245);
 
 var _maxLength2 = _interopRequireDefault(_maxLength);
 
-var _minLength = __webpack_require__(261);
+var _minLength = __webpack_require__(246);
 
 var _minLength2 = _interopRequireDefault(_minLength);
 
-var _required = __webpack_require__(262);
+var _required = __webpack_require__(247);
 
 var _required2 = _interopRequireDefault(_required);
 
-var _requiredIf = __webpack_require__(263);
+var _requiredIf = __webpack_require__(248);
 
 var _requiredIf2 = _interopRequireDefault(_requiredIf);
 
-var _requiredUnless = __webpack_require__(264);
+var _requiredUnless = __webpack_require__(249);
 
 var _requiredUnless2 = _interopRequireDefault(_requiredUnless);
 
-var _sameAs = __webpack_require__(265);
+var _sameAs = __webpack_require__(250);
 
 var _sameAs2 = _interopRequireDefault(_sameAs);
 
-var _url = __webpack_require__(266);
+var _url = __webpack_require__(251);
 
 var _url2 = _interopRequireDefault(_url);
 
-var _or = __webpack_require__(267);
+var _or = __webpack_require__(252);
 
 var _or2 = _interopRequireDefault(_or);
 
-var _and = __webpack_require__(268);
+var _and = __webpack_require__(253);
 
 var _and2 = _interopRequireDefault(_and);
 
-var _minValue = __webpack_require__(269);
+var _minValue = __webpack_require__(254);
 
 var _minValue2 = _interopRequireDefault(_minValue);
 
-var _maxValue = __webpack_require__(270);
+var _maxValue = __webpack_require__(255);
 
 var _maxValue2 = _interopRequireDefault(_maxValue);
 
@@ -29803,6 +29073,736 @@ exports.or = _or2.default;
 exports.and = _and2.default;
 exports.minValue = _minValue2.default;
 exports.maxValue = _maxValue2.default;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @namespace Chart.helpers
+ */
+var helpers = {
+	/**
+	 * An empty function that can be used, for example, for optional callback.
+	 */
+	noop: function() {},
+
+	/**
+	 * Returns a unique id, sequentially generated from a global variable.
+	 * @returns {Number}
+	 * @function
+	 */
+	uid: (function() {
+		var id = 0;
+		return function() {
+			return id++;
+		};
+	}()),
+
+	/**
+	 * Returns true if `value` is neither null nor undefined, else returns false.
+	 * @param {*} value - The value to test.
+	 * @returns {Boolean}
+	 * @since 2.7.0
+	 */
+	isNullOrUndef: function(value) {
+		return value === null || typeof value === 'undefined';
+	},
+
+	/**
+	 * Returns true if `value` is an array, else returns false.
+	 * @param {*} value - The value to test.
+	 * @returns {Boolean}
+	 * @function
+	 */
+	isArray: Array.isArray ? Array.isArray : function(value) {
+		return Object.prototype.toString.call(value) === '[object Array]';
+	},
+
+	/**
+	 * Returns true if `value` is an object (excluding null), else returns false.
+	 * @param {*} value - The value to test.
+	 * @returns {Boolean}
+	 * @since 2.7.0
+	 */
+	isObject: function(value) {
+		return value !== null && Object.prototype.toString.call(value) === '[object Object]';
+	},
+
+	/**
+	 * Returns `value` if defined, else returns `defaultValue`.
+	 * @param {*} value - The value to return if defined.
+	 * @param {*} defaultValue - The value to return if `value` is undefined.
+	 * @returns {*}
+	 */
+	valueOrDefault: function(value, defaultValue) {
+		return typeof value === 'undefined' ? defaultValue : value;
+	},
+
+	/**
+	 * Returns value at the given `index` in array if defined, else returns `defaultValue`.
+	 * @param {Array} value - The array to lookup for value at `index`.
+	 * @param {Number} index - The index in `value` to lookup for value.
+	 * @param {*} defaultValue - The value to return if `value[index]` is undefined.
+	 * @returns {*}
+	 */
+	valueAtIndexOrDefault: function(value, index, defaultValue) {
+		return helpers.valueOrDefault(helpers.isArray(value) ? value[index] : value, defaultValue);
+	},
+
+	/**
+	 * Calls `fn` with the given `args` in the scope defined by `thisArg` and returns the
+	 * value returned by `fn`. If `fn` is not a function, this method returns undefined.
+	 * @param {Function} fn - The function to call.
+	 * @param {Array|undefined|null} args - The arguments with which `fn` should be called.
+	 * @param {Object} [thisArg] - The value of `this` provided for the call to `fn`.
+	 * @returns {*}
+	 */
+	callback: function(fn, args, thisArg) {
+		if (fn && typeof fn.call === 'function') {
+			return fn.apply(thisArg, args);
+		}
+	},
+
+	/**
+	 * Note(SB) for performance sake, this method should only be used when loopable type
+	 * is unknown or in none intensive code (not called often and small loopable). Else
+	 * it's preferable to use a regular for() loop and save extra function calls.
+	 * @param {Object|Array} loopable - The object or array to be iterated.
+	 * @param {Function} fn - The function to call for each item.
+	 * @param {Object} [thisArg] - The value of `this` provided for the call to `fn`.
+	 * @param {Boolean} [reverse] - If true, iterates backward on the loopable.
+	 */
+	each: function(loopable, fn, thisArg, reverse) {
+		var i, len, keys;
+		if (helpers.isArray(loopable)) {
+			len = loopable.length;
+			if (reverse) {
+				for (i = len - 1; i >= 0; i--) {
+					fn.call(thisArg, loopable[i], i);
+				}
+			} else {
+				for (i = 0; i < len; i++) {
+					fn.call(thisArg, loopable[i], i);
+				}
+			}
+		} else if (helpers.isObject(loopable)) {
+			keys = Object.keys(loopable);
+			len = keys.length;
+			for (i = 0; i < len; i++) {
+				fn.call(thisArg, loopable[keys[i]], keys[i]);
+			}
+		}
+	},
+
+	/**
+	 * Returns true if the `a0` and `a1` arrays have the same content, else returns false.
+	 * @see http://stackoverflow.com/a/14853974
+	 * @param {Array} a0 - The array to compare
+	 * @param {Array} a1 - The array to compare
+	 * @returns {Boolean}
+	 */
+	arrayEquals: function(a0, a1) {
+		var i, ilen, v0, v1;
+
+		if (!a0 || !a1 || a0.length !== a1.length) {
+			return false;
+		}
+
+		for (i = 0, ilen = a0.length; i < ilen; ++i) {
+			v0 = a0[i];
+			v1 = a1[i];
+
+			if (v0 instanceof Array && v1 instanceof Array) {
+				if (!helpers.arrayEquals(v0, v1)) {
+					return false;
+				}
+			} else if (v0 !== v1) {
+				// NOTE: two different object instances will never be equal: {x:20} != {x:20}
+				return false;
+			}
+		}
+
+		return true;
+	},
+
+	/**
+	 * Returns a deep copy of `source` without keeping references on objects and arrays.
+	 * @param {*} source - The value to clone.
+	 * @returns {*}
+	 */
+	clone: function(source) {
+		if (helpers.isArray(source)) {
+			return source.map(helpers.clone);
+		}
+
+		if (helpers.isObject(source)) {
+			var target = {};
+			var keys = Object.keys(source);
+			var klen = keys.length;
+			var k = 0;
+
+			for (; k < klen; ++k) {
+				target[keys[k]] = helpers.clone(source[keys[k]]);
+			}
+
+			return target;
+		}
+
+		return source;
+	},
+
+	/**
+	 * The default merger when Chart.helpers.merge is called without merger option.
+	 * Note(SB): this method is also used by configMerge and scaleMerge as fallback.
+	 * @private
+	 */
+	_merger: function(key, target, source, options) {
+		var tval = target[key];
+		var sval = source[key];
+
+		if (helpers.isObject(tval) && helpers.isObject(sval)) {
+			helpers.merge(tval, sval, options);
+		} else {
+			target[key] = helpers.clone(sval);
+		}
+	},
+
+	/**
+	 * Merges source[key] in target[key] only if target[key] is undefined.
+	 * @private
+	 */
+	_mergerIf: function(key, target, source) {
+		var tval = target[key];
+		var sval = source[key];
+
+		if (helpers.isObject(tval) && helpers.isObject(sval)) {
+			helpers.mergeIf(tval, sval);
+		} else if (!target.hasOwnProperty(key)) {
+			target[key] = helpers.clone(sval);
+		}
+	},
+
+	/**
+	 * Recursively deep copies `source` properties into `target` with the given `options`.
+	 * IMPORTANT: `target` is not cloned and will be updated with `source` properties.
+	 * @param {Object} target - The target object in which all sources are merged into.
+	 * @param {Object|Array(Object)} source - Object(s) to merge into `target`.
+	 * @param {Object} [options] - Merging options:
+	 * @param {Function} [options.merger] - The merge method (key, target, source, options)
+	 * @returns {Object} The `target` object.
+	 */
+	merge: function(target, source, options) {
+		var sources = helpers.isArray(source) ? source : [source];
+		var ilen = sources.length;
+		var merge, i, keys, klen, k;
+
+		if (!helpers.isObject(target)) {
+			return target;
+		}
+
+		options = options || {};
+		merge = options.merger || helpers._merger;
+
+		for (i = 0; i < ilen; ++i) {
+			source = sources[i];
+			if (!helpers.isObject(source)) {
+				continue;
+			}
+
+			keys = Object.keys(source);
+			for (k = 0, klen = keys.length; k < klen; ++k) {
+				merge(keys[k], target, source, options);
+			}
+		}
+
+		return target;
+	},
+
+	/**
+	 * Recursively deep copies `source` properties into `target` *only* if not defined in target.
+	 * IMPORTANT: `target` is not cloned and will be updated with `source` properties.
+	 * @param {Object} target - The target object in which all sources are merged into.
+	 * @param {Object|Array(Object)} source - Object(s) to merge into `target`.
+	 * @returns {Object} The `target` object.
+	 */
+	mergeIf: function(target, source) {
+		return helpers.merge(target, source, {merger: helpers._mergerIf});
+	},
+
+	/**
+	 * Applies the contents of two or more objects together into the first object.
+	 * @param {Object} target - The target object in which all objects are merged into.
+	 * @param {Object} arg1 - Object containing additional properties to merge in target.
+	 * @param {Object} argN - Additional objects containing properties to merge in target.
+	 * @returns {Object} The `target` object.
+	 */
+	extend: function(target) {
+		var setFn = function(value, key) {
+			target[key] = value;
+		};
+		for (var i = 1, ilen = arguments.length; i < ilen; ++i) {
+			helpers.each(arguments[i], setFn);
+		}
+		return target;
+	},
+
+	/**
+	 * Basic javascript inheritance based on the model created in Backbone.js
+	 */
+	inherits: function(extensions) {
+		var me = this;
+		var ChartElement = (extensions && extensions.hasOwnProperty('constructor')) ? extensions.constructor : function() {
+			return me.apply(this, arguments);
+		};
+
+		var Surrogate = function() {
+			this.constructor = ChartElement;
+		};
+
+		Surrogate.prototype = me.prototype;
+		ChartElement.prototype = new Surrogate();
+		ChartElement.extend = helpers.inherits;
+
+		if (extensions) {
+			helpers.extend(ChartElement.prototype, extensions);
+		}
+
+		ChartElement.__super__ = me.prototype;
+		return ChartElement;
+	}
+};
+
+module.exports = helpers;
+
+// DEPRECATIONS
+
+/**
+ * Provided for backward compatibility, use Chart.helpers.callback instead.
+ * @function Chart.helpers.callCallback
+ * @deprecated since version 2.6.0
+ * @todo remove at version 3
+ * @private
+ */
+helpers.callCallback = helpers.callback;
+
+/**
+ * Provided for backward compatibility, use Array.prototype.indexOf instead.
+ * Array.prototype.indexOf compatibility: Chrome, Opera, Safari, FF1.5+, IE9+
+ * @function Chart.helpers.indexOf
+ * @deprecated since version 2.7.0
+ * @todo remove at version 3
+ * @private
+ */
+helpers.indexOf = function(array, item, fromIndex) {
+	return Array.prototype.indexOf.call(array, item, fromIndex);
+};
+
+/**
+ * Provided for backward compatibility, use Chart.helpers.valueOrDefault instead.
+ * @function Chart.helpers.getValueOrDefault
+ * @deprecated since version 2.7.0
+ * @todo remove at version 3
+ * @private
+ */
+helpers.getValueOrDefault = helpers.valueOrDefault;
+
+/**
+ * Provided for backward compatibility, use Chart.helpers.valueAtIndexOrDefault instead.
+ * @function Chart.helpers.getValueAtIndexOrDefault
+ * @deprecated since version 2.7.0
+ * @todo remove at version 3
+ * @private
+ */
+helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports) {
+
+/**
+ * Compiles a querystring
+ * Returns string representation of the object
+ *
+ * @param {Object}
+ * @api private
+ */
+
+exports.encode = function (obj) {
+  var str = '';
+
+  for (var i in obj) {
+    if (obj.hasOwnProperty(i)) {
+      if (str.length) str += '&';
+      str += encodeURIComponent(i) + '=' + encodeURIComponent(obj[i]);
+    }
+  }
+
+  return str;
+};
+
+/**
+ * Parses a simple querystring into an object
+ *
+ * @param {String} qs
+ * @api private
+ */
+
+exports.decode = function(qs){
+  var qry = {};
+  var pairs = qs.split('&');
+  for (var i = 0, l = pairs.length; i < l; i++) {
+    var pair = pairs[i].split('=');
+    qry[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+  }
+  return qry;
+};
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports) {
+
+
+module.exports = function(a, b){
+  var fn = function(){};
+  fn.prototype = b.prototype;
+  a.prototype = new fn;
+  a.prototype.constructor = a;
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+var utils = __webpack_require__(6);
+var normalizeHeaderName = __webpack_require__(191);
+
+var DEFAULT_CONTENT_TYPE = {
+  'Content-Type': 'application/x-www-form-urlencoded'
+};
+
+function setContentTypeIfUnset(headers, value) {
+  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
+    headers['Content-Type'] = value;
+  }
+}
+
+function getDefaultAdapter() {
+  var adapter;
+  if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = __webpack_require__(34);
+  } else if (typeof process !== 'undefined') {
+    // For node use HTTP adapter
+    adapter = __webpack_require__(34);
+  }
+  return adapter;
+}
+
+var defaults = {
+  adapter: getDefaultAdapter(),
+
+  transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Content-Type');
+    if (utils.isFormData(data) ||
+      utils.isArrayBuffer(data) ||
+      utils.isBuffer(data) ||
+      utils.isStream(data) ||
+      utils.isFile(data) ||
+      utils.isBlob(data)
+    ) {
+      return data;
+    }
+    if (utils.isArrayBufferView(data)) {
+      return data.buffer;
+    }
+    if (utils.isURLSearchParams(data)) {
+      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
+      return data.toString();
+    }
+    if (utils.isObject(data)) {
+      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+      return JSON.stringify(data);
+    }
+    return data;
+  }],
+
+  transformResponse: [function transformResponse(data) {
+    /*eslint no-param-reassign:0*/
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (e) { /* Ignore */ }
+    }
+    return data;
+  }],
+
+  timeout: 0,
+
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
+  maxContentLength: -1,
+
+  validateStatus: function validateStatus(status) {
+    return status >= 200 && status < 300;
+  }
+};
+
+defaults.headers = {
+  common: {
+    'Accept': 'application/json, text/plain, */*'
+  }
+};
+
+utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
+  defaults.headers[method] = {};
+});
+
+utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
+});
+
+module.exports = defaults;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(209);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_authentication__ = __webpack_require__(211);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__modules_users__ = __webpack_require__(223);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__modules_settings__ = __webpack_require__(224);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__modules_readings__ = __webpack_require__(225);
+
+
+
+
+
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
+
+/* harmony default export */ __webpack_exports__["default"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
+    modules: {
+        authentication: __WEBPACK_IMPORTED_MODULE_3__modules_authentication__["a" /* default */],
+        users: __WEBPACK_IMPORTED_MODULE_4__modules_users__["a" /* default */],
+        settings: __WEBPACK_IMPORTED_MODULE_5__modules_settings__["a" /* default */],
+        readings: __WEBPACK_IMPORTED_MODULE_6__modules_readings__["a" /* default */]
+    },
+    plugins: [__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default()({
+        collapsed: false
+    })]
+}));
 
 /***/ }),
 /* 29 */
@@ -47816,16 +47816,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(208);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Home__ = __webpack_require__(226);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Home___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_Home__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Login__ = __webpack_require__(232);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Login___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_Login__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Logout__ = __webpack_require__(237);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Logout__ = __webpack_require__(257);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Logout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_Logout__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_users_Users__ = __webpack_require__(242);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_users_Users__ = __webpack_require__(262);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_users_Users___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_users_Users__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_users_AddUser__ = __webpack_require__(247);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_users_AddUser__ = __webpack_require__(267);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_users_AddUser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_users_AddUser__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_users_EditUser__ = __webpack_require__(272);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_users_EditUser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__components_users_EditUser__);
@@ -61894,9 +61894,9 @@ function polling (opts) {
  */
 
 var Transport = __webpack_require__(31);
-var parseqs = __webpack_require__(22);
+var parseqs = __webpack_require__(24);
 var parser = __webpack_require__(14);
-var inherit = __webpack_require__(23);
+var inherit = __webpack_require__(25);
 var yeast = __webpack_require__(174);
 var debug = __webpack_require__(10)('engine.io-client:polling');
 
@@ -62310,7 +62310,7 @@ var toArray = __webpack_require__(364);
 var on = __webpack_require__(177);
 var bind = __webpack_require__(178);
 var debug = __webpack_require__(10)('socket.io-client:socket');
-var parseqs = __webpack_require__(22);
+var parseqs = __webpack_require__(24);
 var hasBin = __webpack_require__(173);
 
 /**
@@ -63169,7 +63169,7 @@ module.exports = __webpack_require__(378);
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App__ = __webpack_require__(367);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_App___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_App__);
 
@@ -63183,7 +63183,7 @@ __webpack_require__(182);
 
 window.Vue = __webpack_require__(15);
 window.router = __webpack_require__(38);
-window.store = __webpack_require__(26);
+window.store = __webpack_require__(28);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -68410,7 +68410,7 @@ module.exports = __webpack_require__(188);
 var utils = __webpack_require__(6);
 var bind = __webpack_require__(33);
 var Axios = __webpack_require__(190);
-var defaults = __webpack_require__(24);
+var defaults = __webpack_require__(26);
 
 /**
  * Create an instance of Axios
@@ -68493,7 +68493,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(24);
+var defaults = __webpack_require__(26);
 var utils = __webpack_require__(6);
 var InterceptorManager = __webpack_require__(199);
 var dispatchRequest = __webpack_require__(200);
@@ -69034,7 +69034,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(6);
 var transformData = __webpack_require__(201);
 var isCancel = __webpack_require__(36);
-var defaults = __webpack_require__(24);
+var defaults = __webpack_require__(26);
 var isAbsoluteURL = __webpack_require__(202);
 var combineURLs = __webpack_require__(203);
 
@@ -69542,7 +69542,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(27)))
 
 /***/ }),
 /* 208 */
@@ -72181,7 +72181,7 @@ if (inBrowser && window.Vue) {
 "use strict";
 /* unused harmony export Store */
 /* unused harmony export install */
-/* unused harmony export mapState */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapState; });
 /* unused harmony export mapMutations */
 /* unused harmony export mapGetters */
 /* unused harmony export mapActions */
@@ -73293,17 +73293,7 @@ var actions = {
   login: function login(_ref, response) {
     var commit = _ref.commit;
 
-
     commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["h" /* LOGIN */], response);
-    // return new Promise((resolve, reject) => {
-    //   api.post('users', user).then((response) => {
-    //     console.log(response);
-    //     // commit(types.LOGIN, user);
-    //     // resolve(response);
-    //   }, (error) => {
-    //     reject(error);
-    //   });
-    // });
   },
   logout: function logout(_ref2) {
     var commit = _ref2.commit;
@@ -75052,7 +75042,7 @@ var normalizeComponent = __webpack_require__(8)
 /* script */
 var __vue_script__ = __webpack_require__(235)
 /* template */
-var __vue_template__ = __webpack_require__(236)
+var __vue_template__ = __webpack_require__(256)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -75125,7 +75115,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n.row[data-v-3e2ac97c] {\n  margin-top: 50px;\n}\n.z-depth-5.grey[data-v-3e2ac97c] {\n  display: inline-block;\n  padding: 0 48px 0 48px;\n}\n", ""]);
+exports.push([module.i, "\n.row[data-v-3e2ac97c] {\n    margin-top: 50px;\n}\n.z-depth-5.grey[data-v-3e2ac97c] {\n    display: inline-block;\n    padding: 0 48px 0 48px;\n}\n", ""]);
 
 // exports
 
@@ -75136,6 +75126,10 @@ exports.push([module.i, "\n.row[data-v-3e2ac97c] {\n  margin-top: 50px;\n}\n.z-d
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuelidate__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__);
 //
 //
 //
@@ -75166,45 +75160,693 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'login',
-  data: function data() {
-    return {
-      user: {
-        email: '',
-        password: ''
-      }
-    };
-  },
+    name: 'login',
+    mixins: [__WEBPACK_IMPORTED_MODULE_0_vuelidate__["validationMixin"]],
+    data: function data() {
+        return {
+            user: {
+                email: '',
+                password: ''
+            },
+            form: {
+                email: null,
+                password: null
+            },
+            sending: false,
+            failedLogin: false
+        };
+    },
 
-  methods: {
-    login: function login() {
-      var _this = this;
+    validations: {
+        form: {
+            email: {
+                required: __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["required"],
+                minLength: Object(__WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["minLength"])(3),
+                email: __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["email"]
+            },
+            password: {
+                required: __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["required"],
+                minLength: Object(__WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__["minLength"])(3)
+            }
+        }
+    },
+    methods: {
+        login: function login() {
+            var _this = this;
 
-      axios.post('/authenticate', this.user).then(function (response) {
-        _this.$store.dispatch('login', response.data);
-        location.href = '/';
-      }).catch(function (err) {
-        console.log(err);
-      });
+            this.sending = true;
+            axios.post('/authenticate', this.form).then(function (response) {
+                _this.$store.dispatch('login', response.data);
+                _this.sending = false;
+                location.href = '/';
+            }).catch(function (err) {
+                _this.sending = false;
+                _this.failedLogin = true;
+                _this.clearForm();
+            });
+        },
+        getValidationClass: function getValidationClass(fieldName) {
+            var field = this.$v.form[fieldName];
 
-      // api.post('login', this.user).then((response) => {
-      //   this.$store.dispatch('login', response.body.users[0]);
-      //   // this.$router.push({
-      //   //   name: 'root',
-      //   // });
-      //   location.href = '/';
-      //   // eslint-disable-next-line
-      // }, (error) => {
-      //
-      // });
+            if (field) {
+                return {
+                    'md-invalid': field.$invalid && field.$dirty
+                };
+            }
+        },
+        clearForm: function clearForm() {
+            this.$v.$reset();
+            this.form.email = null;
+            this.form.password = null;
+        },
+        validateUser: function validateUser() {
+            this.$v.$touch();
+
+            if (!this.$v.$invalid) {
+                this.login();
+            }
+        }
     }
-  }
 });
 
 /***/ }),
 /* 236 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.patchChildren = patchChildren;
+exports.h = h;
+// a minimial single-layer implementation
+// of virtual-validation patching,
+// based on Vue's snabbdom clone
+
+function isUndef(v) {
+  return v === null || v === undefined;
+}
+
+function isDef(v) {
+  return v !== null && v !== undefined;
+}
+
+function sameVval(oldVval, vval) {
+  return vval.tag === oldVval.tag && vval.key === oldVval.key;
+}
+
+function createVm(vval) {
+  var Vm = vval.tag;
+  vval.vm = new Vm({ data: vval.args });
+}
+
+function updateVval(vval) {
+  var keys = Object.keys(vval.args);
+  for (var i = 0; i < keys.length; i++) {
+    keys.forEach(function (k) {
+      vval.vm[k] = vval.args[k];
+    });
+  }
+}
+
+function createKeyToOldIdx(children, beginIdx, endIdx) {
+  var i = void 0,
+      key = void 0;
+  var map = {};
+  for (i = beginIdx; i <= endIdx; ++i) {
+    key = children[i].key;
+    if (isDef(key)) map[key] = i;
+  }
+  return map;
+}
+
+function updateChildren(oldCh, newCh) {
+  var oldStartIdx = 0;
+  var newStartIdx = 0;
+  var oldEndIdx = oldCh.length - 1;
+  var oldStartVval = oldCh[0];
+  var oldEndVval = oldCh[oldEndIdx];
+  var newEndIdx = newCh.length - 1;
+  var newStartVval = newCh[0];
+  var newEndVval = newCh[newEndIdx];
+  var oldKeyToIdx = void 0,
+      idxInOld = void 0,
+      elmToMove = void 0;
+
+  while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
+    if (isUndef(oldStartVval)) {
+      oldStartVval = oldCh[++oldStartIdx]; // Vval has been moved left
+    } else if (isUndef(oldEndVval)) {
+      oldEndVval = oldCh[--oldEndIdx];
+    } else if (sameVval(oldStartVval, newStartVval)) {
+      patchVval(oldStartVval, newStartVval);
+      oldStartVval = oldCh[++oldStartIdx];
+      newStartVval = newCh[++newStartIdx];
+    } else if (sameVval(oldEndVval, newEndVval)) {
+      patchVval(oldEndVval, newEndVval);
+      oldEndVval = oldCh[--oldEndIdx];
+      newEndVval = newCh[--newEndIdx];
+    } else if (sameVval(oldStartVval, newEndVval)) {
+      // Vval moved right
+      patchVval(oldStartVval, newEndVval);
+      oldStartVval = oldCh[++oldStartIdx];
+      newEndVval = newCh[--newEndIdx];
+    } else if (sameVval(oldEndVval, newStartVval)) {
+      // Vval moved left
+      patchVval(oldEndVval, newStartVval);
+      oldEndVval = oldCh[--oldEndIdx];
+      newStartVval = newCh[++newStartIdx];
+    } else {
+      if (isUndef(oldKeyToIdx)) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx);
+      idxInOld = isDef(newStartVval.key) ? oldKeyToIdx[newStartVval.key] : null;
+      if (isUndef(idxInOld)) {
+        // New element
+        createVm(newStartVval);
+        newStartVval = newCh[++newStartIdx];
+      } else {
+        elmToMove = oldCh[idxInOld];
+        if (sameVval(elmToMove, newStartVval)) {
+          patchVval(elmToMove, newStartVval);
+          oldCh[idxInOld] = undefined;
+          newStartVval = newCh[++newStartIdx];
+        } else {
+          // same key but different element. treat as new element
+          createVm(newStartVval);
+          newStartVval = newCh[++newStartIdx];
+        }
+      }
+    }
+  }
+  if (oldStartIdx > oldEndIdx) {
+    addVvals(newCh, newStartIdx, newEndIdx);
+  } else if (newStartIdx > newEndIdx) {
+    removeVvals(oldCh, oldStartIdx, oldEndIdx);
+  }
+}
+
+function addVvals(vvals, startIdx, endIdx) {
+  for (; startIdx <= endIdx; ++startIdx) {
+    createVm(vvals[startIdx]);
+  }
+}
+
+function removeVvals(vvals, startIdx, endIdx) {
+  for (; startIdx <= endIdx; ++startIdx) {
+    var ch = vvals[startIdx];
+    if (isDef(ch)) {
+      ch.vm.$destroy();
+      ch.vm = null;
+    }
+  }
+}
+
+function patchVval(oldVval, vval) {
+  if (oldVval === vval) {
+    return;
+  }
+  vval.vm = oldVval.vm;
+  updateVval(vval);
+}
+
+function patchChildren(oldCh, ch) {
+  if (isDef(oldCh) && isDef(ch)) {
+    if (oldCh !== ch) updateChildren(oldCh, ch);
+  } else if (isDef(ch)) {
+    addVvals(ch, 0, ch.length - 1);
+  } else if (isDef(oldCh)) {
+    removeVvals(oldCh, 0, oldCh.length - 1);
+  }
+}
+
+function h(tag, key, args) {
+  return { tag: tag, key: key, args: args };
+}
+
+/***/ }),
+/* 237 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = (0, _common.regex)('alpha', /^[a-zA-Z]*$/);
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* istanbul ignore next */
+var withParams =  false ? require('./withParamsBrowser').withParams : __webpack_require__(39).withParams;
+
+exports.default = withParams;
+
+/***/ }),
+/* 239 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = (0, _common.regex)('alphaNum', /^[a-zA-Z0-9]*$/);
+
+/***/ }),
+/* 240 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = (0, _common.regex)('numeric', /^[0-9]*$/);
+
+/***/ }),
+/* 241 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function (min, max) {
+  return (0, _common.withParams)({ type: 'between', min: min, max: max }, function (value) {
+    return !(0, _common.req)(value) || (!/\s/.test(value) || value instanceof Date) && +min <= +value && +max >= +value;
+  });
+};
+
+/***/ }),
+/* 242 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+var emailRegex = /(^$|^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$)/;
+
+exports.default = (0, _common.regex)('email', emailRegex);
+
+/***/ }),
+/* 243 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = (0, _common.withParams)({ type: 'ipAddress' }, function (value) {
+  if (!(0, _common.req)(value)) {
+    return true;
+  }
+
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  var nibbles = value.split('.');
+  return nibbles.length === 4 && nibbles.every(nibbleValid);
+});
+
+
+var nibbleValid = function nibbleValid(nibble) {
+  if (nibble.length > 3 || nibble.length === 0) {
+    return false;
+  }
+
+  if (nibble[0] === '0' && nibble !== '0') {
+    return false;
+  }
+
+  if (!nibble.match(/^\d+$/)) {
+    return false;
+  }
+
+  var numeric = +nibble | 0;
+  return numeric >= 0 && numeric <= 255;
+};
+
+/***/ }),
+/* 244 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function () {
+  var separator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ':';
+  return (0, _common.withParams)({ type: 'macAddress' }, function (value) {
+    if (!(0, _common.req)(value)) {
+      return true;
+    }
+
+    if (typeof value !== 'string') {
+      return false;
+    }
+
+    var parts = typeof separator === 'string' && separator !== '' ? value.split(separator) : value.length === 12 || value.length === 16 ? value.match(/.{2}/g) : null;
+
+    return parts !== null && (parts.length === 6 || parts.length === 8) && parts.every(hexValid);
+  });
+};
+
+var hexValid = function hexValid(hex) {
+  return hex.toLowerCase().match(/^[0-9a-f]{2}$/);
+};
+
+/***/ }),
+/* 245 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function (length) {
+  return (0, _common.withParams)({ type: 'maxLength', max: length }, function (value) {
+    return !(0, _common.req)(value) || (0, _common.len)(value) <= length;
+  });
+};
+
+/***/ }),
+/* 246 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function (length) {
+  return (0, _common.withParams)({ type: 'minLength', min: length }, function (value) {
+    return !(0, _common.req)(value) || (0, _common.len)(value) >= length;
+  });
+};
+
+/***/ }),
+/* 247 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = (0, _common.withParams)({ type: 'required' }, _common.req);
+
+/***/ }),
+/* 248 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function (prop) {
+  return (0, _common.withParams)({ type: 'requiredIf', prop: prop }, function (value, parentVm) {
+    return (0, _common.ref)(prop, this, parentVm) ? (0, _common.req)(value) : true;
+  });
+};
+
+/***/ }),
+/* 249 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function (prop) {
+  return (0, _common.withParams)({ type: 'requiredUnless', prop: prop }, function (value, parentVm) {
+    return !(0, _common.ref)(prop, this, parentVm) ? (0, _common.req)(value) : true;
+  });
+};
+
+/***/ }),
+/* 250 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function (equalTo) {
+  return (0, _common.withParams)({ type: 'sameAs', eq: equalTo }, function (value, parentVm) {
+    return value === (0, _common.ref)(equalTo, this, parentVm);
+  });
+};
+
+/***/ }),
+/* 251 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+var urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+
+exports.default = (0, _common.regex)('url', urlRegex);
+
+/***/ }),
+/* 252 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function () {
+  for (var _len = arguments.length, validators = Array(_len), _key = 0; _key < _len; _key++) {
+    validators[_key] = arguments[_key];
+  }
+
+  return (0, _common.withParams)({ type: 'or' }, function () {
+    var _this = this;
+
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    return validators.length > 0 && validators.reduce(function (valid, fn) {
+      return valid || fn.apply(_this, args);
+    }, false);
+  });
+};
+
+/***/ }),
+/* 253 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function () {
+  for (var _len = arguments.length, validators = Array(_len), _key = 0; _key < _len; _key++) {
+    validators[_key] = arguments[_key];
+  }
+
+  return (0, _common.withParams)({ type: 'and' }, function () {
+    var _this = this;
+
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    return validators.length > 0 && validators.reduce(function (valid, fn) {
+      return valid && fn.apply(_this, args);
+    }, true);
+  });
+};
+
+/***/ }),
+/* 254 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function (min) {
+  return (0, _common.withParams)({ type: 'minValue', min: min }, function (value) {
+    return !(0, _common.req)(value) || (!/\s/.test(value) || value instanceof Date) && +value >= +min;
+  });
+};
+
+/***/ }),
+/* 255 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _common = __webpack_require__(4);
+
+exports.default = function (max) {
+  return (0, _common.withParams)({ type: 'maxValue', max: max }, function (value) {
+    return !(0, _common.req)(value) || (!/\s/.test(value) || value instanceof Date) && +value <= +max;
+  });
+};
+
+/***/ }),
+/* 256 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -75212,119 +75854,168 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row" }, [
-    _c("div", { staticClass: "col s12 center" }, [
-      _c("div", { staticClass: "z-depth-5 grey lighten-4 row" }, [
+    _c("div", { staticClass: "md-layout md-centered" }, [
+      _c("div", { staticClass: "md-layout-item" }, [
         _c(
           "form",
           {
-            staticClass: "col s12",
-            attrs: { method: "post" },
+            staticClass: "md-layout",
+            attrs: { novalidate: "" },
             on: {
               submit: function($event) {
                 $event.preventDefault()
-                _vm.login($event)
+                _vm.validateUser($event)
               }
             }
           },
           [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "input-field col s12" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.user.email,
-                      expression: "user.email"
-                    }
-                  ],
-                  staticClass: "validate",
-                  attrs: { type: "email", name: "email", id: "email" },
-                  domProps: { value: _vm.user.email },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.user, "email", $event.target.value)
-                    }
-                  }
-                }),
+            _c(
+              "md-card",
+              { staticClass: "md-layout-item md-centered md-small-size-100" },
+              [
+                _c("md-card-header", [
+                  _c("div", { staticClass: "md-title" }, [_vm._v("Login")])
+                ]),
                 _vm._v(" "),
-                _c("label", { attrs: { for: "email" } }, [
-                  _vm._v("Enter your email")
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "input-field col s12" }, [
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.user.password,
-                      expression: "user.password"
-                    }
-                  ],
-                  staticClass: "validate",
-                  attrs: { type: "password", name: "password", id: "password" },
-                  domProps: { value: _vm.user.password },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.user, "password", $event.target.value)
-                    }
-                  }
-                }),
+                _c("md-card-content", [
+                  _c("div", { staticClass: "md-layout md-gutter" }, [
+                    _c(
+                      "div",
+                      { staticClass: "md-layout-item" },
+                      [
+                        _c(
+                          "md-field",
+                          { class: _vm.getValidationClass("email") },
+                          [
+                            _c("label", { attrs: { for: "email" } }, [
+                              _vm._v("Username")
+                            ]),
+                            _vm._v(" "),
+                            _c("md-input", {
+                              attrs: {
+                                name: "email",
+                                id: "email",
+                                autocomplete: "email",
+                                disabled: _vm.sending
+                              },
+                              model: {
+                                value: _vm.form.email,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "email", $$v)
+                                },
+                                expression: "form.email"
+                              }
+                            }),
+                            _vm._v(" "),
+                            !_vm.$v.form.email.required
+                              ? _c("span", { staticClass: "md-error" }, [
+                                  _vm._v("The email is required")
+                                ])
+                              : !_vm.$v.form.email.minlength
+                                ? _c("span", { staticClass: "md-error" }, [
+                                    _vm._v("Invalid email")
+                                  ])
+                                : _vm._e()
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "md-layout md-gutter" }, [
+                    _c(
+                      "div",
+                      { staticClass: "md-layout-item md-small-size-100" },
+                      [
+                        _c(
+                          "md-field",
+                          { class: _vm.getValidationClass("password") },
+                          [
+                            _c("label", { attrs: { for: "password" } }, [
+                              _vm._v("Password")
+                            ]),
+                            _vm._v(" "),
+                            _c("md-input", {
+                              attrs: {
+                                type: "password",
+                                name: "password",
+                                id: "password",
+                                autocomplete: "password",
+                                disabled: _vm.sending
+                              },
+                              model: {
+                                value: _vm.form.password,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "password", $$v)
+                                },
+                                expression: "form.password"
+                              }
+                            }),
+                            _vm._v(" "),
+                            !_vm.$v.form.password.required
+                              ? _c("span", { staticClass: "md-error" }, [
+                                  _vm._v("The password is required")
+                                ])
+                              : !_vm.$v.form.password.minlength
+                                ? _c("span", { staticClass: "md-error" }, [
+                                    _vm._v("Invalid password")
+                                  ])
+                                : _vm._e()
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ])
+                ]),
                 _vm._v(" "),
-                _c("label", { attrs: { for: "password" } }, [
-                  _vm._v("Enter your password")
-                ])
-              ]),
-              _vm._v(" "),
-              _vm._m(0)
-            ]),
+                _vm.sending
+                  ? _c("md-progress-bar", {
+                      attrs: { "md-mode": "indeterminate" }
+                    })
+                  : _vm._e(),
+                _vm._v(" "),
+                _c(
+                  "md-card-actions",
+                  [
+                    _c(
+                      "md-button",
+                      {
+                        staticClass: "md-primary",
+                        attrs: { type: "submit", disabled: _vm.sending }
+                      },
+                      [_vm._v("Login")]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
             _vm._v(" "),
-            _c("br"),
-            _vm._v(" "),
-            _vm._m(1)
-          ]
+            _c(
+              "md-snackbar",
+              {
+                attrs: { "md-active": _vm.failedLogin },
+                on: {
+                  "update:mdActive": function($event) {
+                    _vm.failedLogin = $event
+                  }
+                }
+              },
+              [_vm._v("Invalid credentials!")]
+            )
+          ],
+          1
         )
       ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { staticClass: "right" }, [
-      _c("a", { attrs: { href: "#!" } }, [
-        _c("b", [_vm._v("Forgot Password?")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row center" }, [
-      _c(
-        "button",
-        {
-          staticClass: "col s12 btn btn-large waves-effect blue",
-          attrs: { type: "submit", name: "btn_login" }
-        },
-        [_vm._v("Login")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -75335,19 +76026,19 @@ if (false) {
 }
 
 /***/ }),
-/* 237 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(238)
+  __webpack_require__(258)
 }
 var normalizeComponent = __webpack_require__(8)
 /* script */
-var __vue_script__ = __webpack_require__(240)
+var __vue_script__ = __webpack_require__(260)
 /* template */
-var __vue_template__ = __webpack_require__(241)
+var __vue_template__ = __webpack_require__(261)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -75386,13 +76077,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 238 */
+/* 258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(239);
+var content = __webpack_require__(259);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -75412,7 +76103,7 @@ if(false) {
 }
 
 /***/ }),
-/* 239 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)(false);
@@ -75426,7 +76117,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
 
 /***/ }),
-/* 240 */
+/* 260 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -75457,7 +76148,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 241 */
+/* 261 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -75477,19 +76168,19 @@ if (false) {
 }
 
 /***/ }),
-/* 242 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(243)
+  __webpack_require__(263)
 }
 var normalizeComponent = __webpack_require__(8)
 /* script */
-var __vue_script__ = __webpack_require__(245)
+var __vue_script__ = __webpack_require__(265)
 /* template */
-var __vue_template__ = __webpack_require__(246)
+var __vue_template__ = __webpack_require__(266)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -75528,13 +76219,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 243 */
+/* 263 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(244);
+var content = __webpack_require__(264);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -75554,7 +76245,7 @@ if(false) {
 }
 
 /***/ }),
-/* 244 */
+/* 264 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)(false);
@@ -75568,11 +76259,12 @@ exports.push([module.i, "\n.md-table[data-v-1f998e5a] {\n    min-height: 675px;\
 
 
 /***/ }),
-/* 245 */
+/* 265 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(209);
 //
 //
 //
@@ -75651,6 +76343,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 var toLower = function toLower(text) {
     return text.toString().toLowerCase();
@@ -75670,23 +76363,28 @@ var searchByName = function searchByName(items, term) {
     name: 'users',
     data: function data() {
         return {
-            users: null,
-            links: {},
-            total: null,
-            totalPages: null,
-            currentPage: null,
             search: null,
             searched: null,
             showSnackbar: false,
             deleteId: null
         };
     },
-    created: function created() {
+
+    computed: Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])([
+    // map this.count to store.state.count
+    'users']),
+    // computed: {
+    //     ...mapGetters({
+    //         users: 'users',
+    //     })
+    // },
+    created: function created() {},
+    mounted: function mounted() {
         if (this.$store.getters.users.length === 0) {
             this.loadData();
         }
+        console.log(this.users.allUsers);
     },
-    mounted: function mounted() {},
 
     methods: {
         loadData: function loadData() {
@@ -75697,11 +76395,11 @@ var searchByName = function searchByName(items, term) {
             this.$emit('loading-start');
 
             this.$store.dispatch('fetchUsers', page).then(function () {
-                _this.users = _this.$store.getters.users;
-                _this.links = _this.$store.getters.usersMeta.pagination.links;
-                _this.total = _this.$store.getters.usersMeta.pagination.total;
-                _this.totalPages = _this.$store.getters.usersMeta.pagination.total_pages;
-                _this.currentPage = _this.$store.getters.usersMeta.pagination.current_page;
+                // this.users = this.users;
+                // this.links = this.$store.getters.usersMeta.pagination.links;
+                // this.total = this.$store.getters.usersMeta.pagination.total;
+                // this.totalPages = this.$store.getters.usersMeta.pagination.total_pages;
+                // this.currentPage = this.$store.getters.usersMeta.pagination.current_page;
 
                 _this.$store.dispatch('allUsers').then(function () {
                     // this.searched = this.$store.getters.allUsers;
@@ -75719,7 +76417,7 @@ var searchByName = function searchByName(items, term) {
             });
         },
         searchOnTable: function searchOnTable() {
-            this.users = searchByName(this.$store.getters.allUsers, this.search);
+            this.users = searchByName(this.users.allUsers, this.search);
         },
         onPagination: function onPagination() {
             //
@@ -75742,7 +76440,7 @@ var searchByName = function searchByName(items, term) {
 });
 
 /***/ }),
-/* 246 */
+/* 266 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -75765,12 +76463,7 @@ var render = function() {
                 _c(
                   "a",
                   { staticClass: "btn-floating waves-effect waves-light blue" },
-                  [
-                    _c("md-icon", [_vm._v("add")]),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "page" }, [_vm._v("Add User")])
-                  ],
-                  1
+                  [_c("span", { staticClass: "page" }, [_vm._v("Add User")])]
                 )
               ])
             ],
@@ -75866,11 +76559,11 @@ var render = function() {
               }
             ]),
             model: {
-              value: _vm.users,
+              value: _vm.users.users,
               callback: function($$v) {
-                _vm.users = $$v
+                _vm.$set(_vm.users, "users", $$v)
               },
-              expression: "users"
+              expression: "users.users"
             }
           },
           [
@@ -75943,22 +76636,32 @@ var render = function() {
               _c(
                 "li",
                 {
-                  class: _vm.currentPage === 0 ? "disabled" : "waves-effect",
+                  class:
+                    _vm.users.usersMeta.pagination.currentPage === 0
+                      ? "disabled"
+                      : "waves-effect",
                   on: {
                     click: function($event) {
-                      _vm.loadData(_vm.currentPage - 1)
+                      _vm.loadData(
+                        _vm.users.usersMeta.pagination.currentPage - 1
+                      )
                     }
                   }
                 },
                 [_vm._m(0)]
               ),
               _vm._v(" "),
-              _vm._l((0, _vm.totalPages), function(i) {
+              _vm._l((0, _vm.users.usersMeta.pagination.totalPages), function(
+                i
+              ) {
                 return _c(
                   "li",
                   {
                     staticClass: "waves-effect",
-                    class: _vm.currentPage === i ? "active" : "",
+                    class:
+                      _vm.users.usersMeta.pagination.currentPage === i
+                        ? "active"
+                        : "",
                     on: {
                       click: function($event) {
                         _vm.loadData(i)
@@ -75975,7 +76678,9 @@ var render = function() {
                   staticClass: "waves-effect",
                   on: {
                     click: function($event) {
-                      _vm.loadData(_vm.currentPage + 1)
+                      _vm.loadData(
+                        _vm.users.usersMeta.pagination.currentPage + 1
+                      )
                     }
                   }
                 },
@@ -76060,17 +76765,17 @@ if (false) {
 }
 
 /***/ }),
-/* 247 */
+/* 267 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(248)
+  __webpack_require__(268)
 }
 var normalizeComponent = __webpack_require__(8)
 /* script */
-var __vue_script__ = __webpack_require__(250)
+var __vue_script__ = __webpack_require__(270)
 /* template */
 var __vue_template__ = __webpack_require__(271)
 /* template functional */
@@ -76111,13 +76816,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 248 */
+/* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(249);
+var content = __webpack_require__(269);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -76137,7 +76842,7 @@ if(false) {
 }
 
 /***/ }),
-/* 249 */
+/* 269 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)(false);
@@ -76151,14 +76856,14 @@ exports.push([module.i, "\n.md-progress-bar[data-v-9c011044] {\n  position: abso
 
 
 /***/ }),
-/* 250 */
+/* 270 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuelidate__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__);
 //
 //
@@ -76338,562 +77043,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 251 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.patchChildren = patchChildren;
-exports.h = h;
-// a minimial single-layer implementation
-// of virtual-validation patching,
-// based on Vue's snabbdom clone
-
-function isUndef(v) {
-  return v === null || v === undefined;
-}
-
-function isDef(v) {
-  return v !== null && v !== undefined;
-}
-
-function sameVval(oldVval, vval) {
-  return vval.tag === oldVval.tag && vval.key === oldVval.key;
-}
-
-function createVm(vval) {
-  var Vm = vval.tag;
-  vval.vm = new Vm({ data: vval.args });
-}
-
-function updateVval(vval) {
-  var keys = Object.keys(vval.args);
-  for (var i = 0; i < keys.length; i++) {
-    keys.forEach(function (k) {
-      vval.vm[k] = vval.args[k];
-    });
-  }
-}
-
-function createKeyToOldIdx(children, beginIdx, endIdx) {
-  var i = void 0,
-      key = void 0;
-  var map = {};
-  for (i = beginIdx; i <= endIdx; ++i) {
-    key = children[i].key;
-    if (isDef(key)) map[key] = i;
-  }
-  return map;
-}
-
-function updateChildren(oldCh, newCh) {
-  var oldStartIdx = 0;
-  var newStartIdx = 0;
-  var oldEndIdx = oldCh.length - 1;
-  var oldStartVval = oldCh[0];
-  var oldEndVval = oldCh[oldEndIdx];
-  var newEndIdx = newCh.length - 1;
-  var newStartVval = newCh[0];
-  var newEndVval = newCh[newEndIdx];
-  var oldKeyToIdx = void 0,
-      idxInOld = void 0,
-      elmToMove = void 0;
-
-  while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
-    if (isUndef(oldStartVval)) {
-      oldStartVval = oldCh[++oldStartIdx]; // Vval has been moved left
-    } else if (isUndef(oldEndVval)) {
-      oldEndVval = oldCh[--oldEndIdx];
-    } else if (sameVval(oldStartVval, newStartVval)) {
-      patchVval(oldStartVval, newStartVval);
-      oldStartVval = oldCh[++oldStartIdx];
-      newStartVval = newCh[++newStartIdx];
-    } else if (sameVval(oldEndVval, newEndVval)) {
-      patchVval(oldEndVval, newEndVval);
-      oldEndVval = oldCh[--oldEndIdx];
-      newEndVval = newCh[--newEndIdx];
-    } else if (sameVval(oldStartVval, newEndVval)) {
-      // Vval moved right
-      patchVval(oldStartVval, newEndVval);
-      oldStartVval = oldCh[++oldStartIdx];
-      newEndVval = newCh[--newEndIdx];
-    } else if (sameVval(oldEndVval, newStartVval)) {
-      // Vval moved left
-      patchVval(oldEndVval, newStartVval);
-      oldEndVval = oldCh[--oldEndIdx];
-      newStartVval = newCh[++newStartIdx];
-    } else {
-      if (isUndef(oldKeyToIdx)) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx);
-      idxInOld = isDef(newStartVval.key) ? oldKeyToIdx[newStartVval.key] : null;
-      if (isUndef(idxInOld)) {
-        // New element
-        createVm(newStartVval);
-        newStartVval = newCh[++newStartIdx];
-      } else {
-        elmToMove = oldCh[idxInOld];
-        if (sameVval(elmToMove, newStartVval)) {
-          patchVval(elmToMove, newStartVval);
-          oldCh[idxInOld] = undefined;
-          newStartVval = newCh[++newStartIdx];
-        } else {
-          // same key but different element. treat as new element
-          createVm(newStartVval);
-          newStartVval = newCh[++newStartIdx];
-        }
-      }
-    }
-  }
-  if (oldStartIdx > oldEndIdx) {
-    addVvals(newCh, newStartIdx, newEndIdx);
-  } else if (newStartIdx > newEndIdx) {
-    removeVvals(oldCh, oldStartIdx, oldEndIdx);
-  }
-}
-
-function addVvals(vvals, startIdx, endIdx) {
-  for (; startIdx <= endIdx; ++startIdx) {
-    createVm(vvals[startIdx]);
-  }
-}
-
-function removeVvals(vvals, startIdx, endIdx) {
-  for (; startIdx <= endIdx; ++startIdx) {
-    var ch = vvals[startIdx];
-    if (isDef(ch)) {
-      ch.vm.$destroy();
-      ch.vm = null;
-    }
-  }
-}
-
-function patchVval(oldVval, vval) {
-  if (oldVval === vval) {
-    return;
-  }
-  vval.vm = oldVval.vm;
-  updateVval(vval);
-}
-
-function patchChildren(oldCh, ch) {
-  if (isDef(oldCh) && isDef(ch)) {
-    if (oldCh !== ch) updateChildren(oldCh, ch);
-  } else if (isDef(ch)) {
-    addVvals(ch, 0, ch.length - 1);
-  } else if (isDef(oldCh)) {
-    removeVvals(oldCh, 0, oldCh.length - 1);
-  }
-}
-
-function h(tag, key, args) {
-  return { tag: tag, key: key, args: args };
-}
-
-/***/ }),
-/* 252 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = (0, _common.regex)('alpha', /^[a-zA-Z]*$/);
-
-/***/ }),
-/* 253 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/* istanbul ignore next */
-var withParams =  false ? require('./withParamsBrowser').withParams : __webpack_require__(39).withParams;
-
-exports.default = withParams;
-
-/***/ }),
-/* 254 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = (0, _common.regex)('alphaNum', /^[a-zA-Z0-9]*$/);
-
-/***/ }),
-/* 255 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = (0, _common.regex)('numeric', /^[0-9]*$/);
-
-/***/ }),
-/* 256 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function (min, max) {
-  return (0, _common.withParams)({ type: 'between', min: min, max: max }, function (value) {
-    return !(0, _common.req)(value) || (!/\s/.test(value) || value instanceof Date) && +min <= +value && +max >= +value;
-  });
-};
-
-/***/ }),
-/* 257 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-var emailRegex = /(^$|^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$)/;
-
-exports.default = (0, _common.regex)('email', emailRegex);
-
-/***/ }),
-/* 258 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = (0, _common.withParams)({ type: 'ipAddress' }, function (value) {
-  if (!(0, _common.req)(value)) {
-    return true;
-  }
-
-  if (typeof value !== 'string') {
-    return false;
-  }
-
-  var nibbles = value.split('.');
-  return nibbles.length === 4 && nibbles.every(nibbleValid);
-});
-
-
-var nibbleValid = function nibbleValid(nibble) {
-  if (nibble.length > 3 || nibble.length === 0) {
-    return false;
-  }
-
-  if (nibble[0] === '0' && nibble !== '0') {
-    return false;
-  }
-
-  if (!nibble.match(/^\d+$/)) {
-    return false;
-  }
-
-  var numeric = +nibble | 0;
-  return numeric >= 0 && numeric <= 255;
-};
-
-/***/ }),
-/* 259 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function () {
-  var separator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ':';
-  return (0, _common.withParams)({ type: 'macAddress' }, function (value) {
-    if (!(0, _common.req)(value)) {
-      return true;
-    }
-
-    if (typeof value !== 'string') {
-      return false;
-    }
-
-    var parts = typeof separator === 'string' && separator !== '' ? value.split(separator) : value.length === 12 || value.length === 16 ? value.match(/.{2}/g) : null;
-
-    return parts !== null && (parts.length === 6 || parts.length === 8) && parts.every(hexValid);
-  });
-};
-
-var hexValid = function hexValid(hex) {
-  return hex.toLowerCase().match(/^[0-9a-f]{2}$/);
-};
-
-/***/ }),
-/* 260 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function (length) {
-  return (0, _common.withParams)({ type: 'maxLength', max: length }, function (value) {
-    return !(0, _common.req)(value) || (0, _common.len)(value) <= length;
-  });
-};
-
-/***/ }),
-/* 261 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function (length) {
-  return (0, _common.withParams)({ type: 'minLength', min: length }, function (value) {
-    return !(0, _common.req)(value) || (0, _common.len)(value) >= length;
-  });
-};
-
-/***/ }),
-/* 262 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = (0, _common.withParams)({ type: 'required' }, _common.req);
-
-/***/ }),
-/* 263 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function (prop) {
-  return (0, _common.withParams)({ type: 'requiredIf', prop: prop }, function (value, parentVm) {
-    return (0, _common.ref)(prop, this, parentVm) ? (0, _common.req)(value) : true;
-  });
-};
-
-/***/ }),
-/* 264 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function (prop) {
-  return (0, _common.withParams)({ type: 'requiredUnless', prop: prop }, function (value, parentVm) {
-    return !(0, _common.ref)(prop, this, parentVm) ? (0, _common.req)(value) : true;
-  });
-};
-
-/***/ }),
-/* 265 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function (equalTo) {
-  return (0, _common.withParams)({ type: 'sameAs', eq: equalTo }, function (value, parentVm) {
-    return value === (0, _common.ref)(equalTo, this, parentVm);
-  });
-};
-
-/***/ }),
-/* 266 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-var urlRegex = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
-
-exports.default = (0, _common.regex)('url', urlRegex);
-
-/***/ }),
-/* 267 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function () {
-  for (var _len = arguments.length, validators = Array(_len), _key = 0; _key < _len; _key++) {
-    validators[_key] = arguments[_key];
-  }
-
-  return (0, _common.withParams)({ type: 'or' }, function () {
-    var _this = this;
-
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    return validators.length > 0 && validators.reduce(function (valid, fn) {
-      return valid || fn.apply(_this, args);
-    }, false);
-  });
-};
-
-/***/ }),
-/* 268 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function () {
-  for (var _len = arguments.length, validators = Array(_len), _key = 0; _key < _len; _key++) {
-    validators[_key] = arguments[_key];
-  }
-
-  return (0, _common.withParams)({ type: 'and' }, function () {
-    var _this = this;
-
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    return validators.length > 0 && validators.reduce(function (valid, fn) {
-      return valid && fn.apply(_this, args);
-    }, true);
-  });
-};
-
-/***/ }),
-/* 269 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function (min) {
-  return (0, _common.withParams)({ type: 'minValue', min: min }, function (value) {
-    return !(0, _common.req)(value) || (!/\s/.test(value) || value instanceof Date) && +value >= +min;
-  });
-};
-
-/***/ }),
-/* 270 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _common = __webpack_require__(4);
-
-exports.default = function (max) {
-  return (0, _common.withParams)({ type: 'maxValue', max: max }, function (value) {
-    return !(0, _common.req)(value) || (!/\s/.test(value) || value instanceof Date) && +value <= +max;
-  });
-};
-
-/***/ }),
 /* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -76916,12 +77065,7 @@ var render = function() {
               _c(
                 "a",
                 { staticClass: "btn-floating waves-effect waves-light blue" },
-                [
-                  _c("md-icon", [_vm._v("add")]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "page" }, [_vm._v("Back To Users")])
-                ],
-                1
+                [_c("span", { staticClass: "page" }, [_vm._v("Back To Users")])]
               )
             ])
           ],
@@ -77328,9 +77472,9 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuelidate__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__);
 //
 //
@@ -77615,12 +77759,7 @@ var render = function() {
               _c(
                 "a",
                 { staticClass: "btn-floating waves-effect waves-light blue" },
-                [
-                  _c("md-icon", [_vm._v("add")]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "page" }, [_vm._v("Back To Users")])
-                ],
-                1
+                [_c("span", { staticClass: "page" }, [_vm._v("Back To Users")])]
               )
             ])
           ],
@@ -78087,6 +78226,7 @@ exports.push([module.i, "\n@charset \"UTF-8\";\n/**\n * The complete material pa
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(209);
 //
 //
 //
@@ -78138,13 +78278,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "settings",
-    data: function data() {
-        return {
-            settings: this.$store.getters.settings
-        };
-    },
+    // data() {
+    //     return {
+    //         settings: this.$store.getters.settings,
+    //     };
+    // },
+    computed: Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])([
+    // map this.count to store.state.count
+    'settings']),
     created: function created() {
         // Get settings
         if (_.isEmpty(this.$store.getters.settings)) {
@@ -78215,12 +78359,7 @@ var render = function() {
               _c(
                 "a",
                 { staticClass: "btn-floating waves-effect waves-light blue" },
-                [
-                  _c("md-icon", [_vm._v("add")]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "page" }, [_vm._v("Add Program")])
-                ],
-                1
+                [_c("span", { staticClass: "page" }, [_vm._v("Add Program")])]
               )
             ])
           ],
@@ -78230,7 +78369,7 @@ var render = function() {
       _vm._v(" "),
       _c("br"),
       _vm._v(" "),
-      _vm._l(_vm.settings, function(setting) {
+      _vm._l(_vm.settings.settings, function(setting) {
         return _c(
           "md-card",
           {
@@ -78458,9 +78597,9 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuelidate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vuelidate__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vuelidate_lib_validators__);
 //
 //
@@ -78670,13 +78809,10 @@ var render = function() {
                 "a",
                 { staticClass: "btn-floating waves-effect waves-light blue" },
                 [
-                  _c("md-icon", [_vm._v("add")]),
-                  _vm._v(" "),
                   _c("span", { staticClass: "page" }, [
                     _vm._v("Back To Settings")
                   ])
-                ],
-                1
+                ]
               )
             ])
           ],
@@ -79778,7 +79914,7 @@ module.exports = function() {
 "use strict";
 
 
-var helpers = __webpack_require__(21);
+var helpers = __webpack_require__(23);
 
 /**
  * Easing functions adapted from Robert Penner's easing equations.
@@ -80035,7 +80171,7 @@ helpers.easingEffects = effects;
 "use strict";
 
 
-var helpers = __webpack_require__(21);
+var helpers = __webpack_require__(23);
 
 /**
  * @namespace Chart.helpers.canvas
@@ -80256,7 +80392,7 @@ helpers.drawRoundedRectangle = function(ctx) {
 "use strict";
 
 
-var helpers = __webpack_require__(21);
+var helpers = __webpack_require__(23);
 
 /**
  * @alias Chart.helpers.options
@@ -92939,7 +93075,7 @@ var debug = __webpack_require__(10)('engine.io-client:socket');
 var index = __webpack_require__(175);
 var parser = __webpack_require__(14);
 var parseuri = __webpack_require__(167);
-var parseqs = __webpack_require__(22);
+var parseqs = __webpack_require__(24);
 
 /**
  * Module exports.
@@ -93709,7 +93845,7 @@ try {
 var XMLHttpRequest = __webpack_require__(30);
 var Polling = __webpack_require__(172);
 var Emitter = __webpack_require__(13);
-var inherit = __webpack_require__(23);
+var inherit = __webpack_require__(25);
 var debug = __webpack_require__(10)('engine.io-client:polling-xhr');
 
 /**
@@ -94669,7 +94805,7 @@ module.exports = (function() {
  */
 
 var Polling = __webpack_require__(172);
-var inherit = __webpack_require__(23);
+var inherit = __webpack_require__(25);
 
 /**
  * Module exports.
@@ -94907,8 +95043,8 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 
 var Transport = __webpack_require__(31);
 var parser = __webpack_require__(14);
-var parseqs = __webpack_require__(22);
-var inherit = __webpack_require__(23);
+var parseqs = __webpack_require__(24);
+var inherit = __webpack_require__(25);
 var yeast = __webpack_require__(174);
 var debug = __webpack_require__(10)('engine.io-client:websocket');
 var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
@@ -95535,7 +95671,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
     name: 'app',
     data: function data() {
         return {
-            loading: false
+            loading: false,
+            authenticated: localStorage.getItem('token')
         };
     },
     // mounted() {
@@ -125771,41 +125908,47 @@ var render = function() {
           _c("md-app-toolbar", { staticClass: "md-primary" }, [
             _c("span", { staticClass: "md-title" }, [_vm._v("Pi Sense")]),
             _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "md-toolbar-section-end" },
-              [
-                _c(
-                  "md-menu",
-                  { attrs: { "md-size": "medium", "md-align-trigger": "" } },
+            _vm.authenticated
+              ? _c(
+                  "div",
+                  { staticClass: "md-toolbar-section-end" },
                   [
                     _c(
-                      "md-button",
+                      "md-menu",
                       {
-                        staticClass: "md-icon-button",
-                        attrs: { "md-menu-trigger": "" }
+                        attrs: { "md-size": "medium", "md-align-trigger": "" }
                       },
-                      [_c("md-icon", [_vm._v("more_vert")])],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "md-menu-content",
                       [
                         _c(
-                          "md-menu-item",
+                          "md-button",
+                          {
+                            staticClass: "md-icon-button",
+                            attrs: { "md-menu-trigger": "" }
+                          },
+                          [_c("md-icon", [_vm._v("more_vert")])],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "md-menu-content",
                           [
                             _c(
-                              "router-link",
-                              {
-                                staticClass: "md-list-item-text",
-                                attrs: { tag: "span", to: "/logout" }
-                              },
+                              "md-menu-item",
                               [
-                                _vm._v(
-                                  "\n                                Logout\n                            "
+                                _c(
+                                  "router-link",
+                                  {
+                                    staticClass: "md-list-item-text",
+                                    attrs: { tag: "span", to: "/logout" }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                Logout\n                            "
+                                    )
+                                  ]
                                 )
-                              ]
+                              ],
+                              1
                             )
                           ],
                           1
@@ -125816,89 +125959,91 @@ var render = function() {
                   ],
                   1
                 )
-              ],
-              1
-            )
+              : _vm._e()
           ]),
           _vm._v(" "),
-          _c(
-            "md-app-drawer",
-            { attrs: { "md-permanent": "clipped" } },
-            [
-              _c(
-                "md-list",
+          _vm.authenticated
+            ? _c(
+                "md-app-drawer",
+                { attrs: { "md-permanent": "clipped" } },
                 [
                   _c(
-                    "md-list-item",
+                    "md-list",
                     [
-                      _c("md-icon", [_vm._v("dashboard")]),
-                      _vm._v(" "),
                       _c(
-                        "router-link",
-                        {
-                          staticClass: "md-list-item-text",
-                          attrs: { tag: "span", to: "/" }
-                        },
-                        [_vm._v("Dashboard\n                    ")]
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "md-list-item",
-                    [
-                      _c("md-icon", [_vm._v("wb_sunny")]),
-                      _vm._v(" "),
-                      _c(
-                        "router-link",
-                        {
-                          staticClass: "md-list-item-text",
-                          attrs: { tag: "span", to: "/temperature" }
-                        },
+                        "md-list-item",
                         [
-                          _vm._v(
-                            "\n                        Temperature\n                    "
+                          _c("md-icon", [_vm._v("dashboard")]),
+                          _vm._v(" "),
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "md-list-item-text",
+                              attrs: { tag: "span", to: "/" }
+                            },
+                            [_vm._v("Dashboard\n                    ")]
                           )
-                        ]
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "md-list-item",
-                    [
-                      _c("md-icon", [_vm._v("people")]),
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
                       _c(
-                        "router-link",
-                        {
-                          staticClass: "md-list-item-text",
-                          attrs: { tag: "span", to: "/users" }
-                        },
-                        [_vm._v("Users\n                    ")]
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "md-list-item",
-                    [
-                      _c("md-icon", [_vm._v("settings")]),
-                      _vm._v(" "),
-                      _c(
-                        "router-link",
-                        {
-                          staticClass: "md-list-item-text",
-                          attrs: { tag: "span", to: "/settings" }
-                        },
+                        "md-list-item",
                         [
-                          _vm._v(
-                            "\n                        Settings\n                    "
+                          _c("md-icon", [_vm._v("wb_sunny")]),
+                          _vm._v(" "),
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "md-list-item-text",
+                              attrs: { tag: "span", to: "/temperature" }
+                            },
+                            [
+                              _vm._v(
+                                "\n                        Temperature\n                    "
+                              )
+                            ]
                           )
-                        ]
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "md-list-item",
+                        [
+                          _c("md-icon", [_vm._v("people")]),
+                          _vm._v(" "),
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "md-list-item-text",
+                              attrs: { tag: "span", to: "/users" }
+                            },
+                            [_vm._v("Users\n                    ")]
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "md-list-item",
+                        [
+                          _c("md-icon", [_vm._v("settings")]),
+                          _vm._v(" "),
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "md-list-item-text",
+                              attrs: { tag: "span", to: "/settings" }
+                            },
+                            [
+                              _vm._v(
+                                "\n                        Settings\n                    "
+                              )
+                            ]
+                          )
+                        ],
+                        1
                       )
                     ],
                     1
@@ -125906,9 +126051,7 @@ var render = function() {
                 ],
                 1
               )
-            ],
-            1
-          ),
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "md-app-content",

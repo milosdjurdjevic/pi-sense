@@ -5,7 +5,7 @@
             <div class="md-toolbar-section-end">
                 <router-link tag="span" class="" to="/users">
                     <a class="btn-floating waves-effect waves-light blue">
-                        <md-icon>add</md-icon>
+                        <!--<md-icon>add</md-icon>-->
                         <span class="page">Back To Users</span>
                     </a>
                 </router-link>

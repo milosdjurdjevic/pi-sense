@@ -4,7 +4,6 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Tymon\JWTAuth\Http\Middleware\RefreshToken;
-use Tymon\JWTAuth\Http\Middleware\Authenticate;
 
 class Kernel extends HttpKernel
 {
@@ -38,10 +37,6 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
-
-        'api' => [
-            RefreshToken::class,
-        ],
     ];
 
     /**
@@ -61,6 +56,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
-        'jwt.refresh' => RefreshToken::class,
+        'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
     ];
 }

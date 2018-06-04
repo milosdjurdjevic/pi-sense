@@ -52,16 +52,18 @@
 
             <div class="row center">
                 <ul class="pagination">
-                    <li :class="users.usersMeta.pagination.currentPage === 0 ? 'disabled' : 'waves-effect'" @click="loadData(users.usersMeta.pagination.currentPage - 1)">
-                        <a>
+                    <li :class="currentPage === 1 ? 'disabled' : 'waves-effect'">
+                        <a @click="loadData(currentPage === 1 ? 1 : currentPage - 1)">
                             <i class="material-icons">chevron_left</i>
                         </a>
                     </li>
-                    <li v-for="i in (0, users.usersMeta.pagination.totalPages)" v-on:click="loadData(i)"
-                        :class="users.usersMeta.pagination.currentPage === i ? 'active' : ''"
+                    <li v-for="i in (0, totalPages)" v-on:click="loadData(i)"
+                        :class="currentPage === i ? 'active' : ''"
                         class="waves-effect"><a>{{ i }}</a></li>
-                    <li class="waves-effect" @click="loadData(users.usersMeta.pagination.currentPage + 1)">
-                        <i class="material-icons">chevron_right</i>
+                    <li :class="currentPage === totalPages ? 'disabled' : 'waves-effect'" >
+                        <a @click="loadData(currentPage === totalPages ? currentPage : currentPage + 1)">
+                            <i class="material-icons">chevron_right</i>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -77,7 +79,6 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
     const toLower = text => {
         return text.toString().toLowerCase()
     };
@@ -100,10 +101,22 @@
                 deleteId: null,
             };
         },
-        computed: mapState([
-            // map this.count to store.state.count
-            'users'
-        ]),
+        // computed: mapState([
+        //     // map this.count to store.state.count
+        //     'users',
+        //     'currentPage'
+        // ]),
+        computed: {
+            users() {
+                return this.$store.state.users
+            },
+            currentPage() {
+                return this.$store.state.users.currentPage
+            },
+            totalPages() {
+                return this.$store.state.users.totalPages
+            }
+        },
         // computed: {
         //     ...mapGetters({
         //         users: 'users',
@@ -116,18 +129,12 @@
             if (this.$store.getters.users.length === 0) {
                 this.loadData();
             }
-            console.log(this.users.allUsers)
         },
         methods: {
             loadData(page = 1) {
                 this.$emit('loading-start');
 
                 this.$store.dispatch('fetchUsers', page).then(() => {
-                    // this.users = this.users;
-                    // this.links = this.$store.getters.usersMeta.pagination.links;
-                    // this.total = this.$store.getters.usersMeta.pagination.total;
-                    // this.totalPages = this.$store.getters.usersMeta.pagination.total_pages;
-                    // this.currentPage = this.$store.getters.usersMeta.pagination.current_page;
 
                     this.$store.dispatch('allUsers').then(() => {
                         // this.searched = this.$store.getters.allUsers;
@@ -138,10 +145,6 @@
                     this.$emit('loading-done');
                 }, () => {
                     this.users = null;
-                    this.links = null;
-                    this.total = null;
-                    this.totalPages = null;
-                    this.currentPage = null;
                 });
 
 

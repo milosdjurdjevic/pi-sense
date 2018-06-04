@@ -7,7 +7,7 @@ import * as types from '../mutation-types';
  * STATE
  */
 const state = {
-  user: localStorage.get('user') || '',
+  // user: localStorage.get('user') || '',
   token: localStorage.get('token') || '',
 };
 
@@ -37,18 +37,18 @@ const actions = {
 const mutations = {
   // eslint-disable-next-line
   [types.LOGIN](state, data) {
-    state.token = data.token;
-    state.user = data.user[0];
+    state.token = data.access_token;
+    // state.user = data.user[0];
 
     localStorage.set('token', state.token);
-    localStorage.set('user', state.user);
+    // localStorage.set('user', state.user);
   },
   [types.LOGOUT]() {
     state.token = '';
-    state.user = {};
+    // state.user = {};
 
     localStorage.remove('token');
-    localStorage.remove('user');
+    // localStorage.remove('user');
   },
 };
 

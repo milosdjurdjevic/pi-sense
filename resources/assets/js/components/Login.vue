@@ -124,7 +124,7 @@
         methods: {
             login() {
                 this.sending = true
-                axios.post('/authenticate', this.form).then(response => {
+                axios.post('/auth/login', this.form).then(response => {
                     this.$store.dispatch('login', response.data);
                     this.sending = false
                     location.href = '/';
@@ -145,8 +145,8 @@
             },
             clearForm() {
                 this.$v.$reset()
-                this.form.email = null
-                this.form.password = null
+                // this.form.email = null
+                // this.form.password = null
             },
             validateUser() {
                 this.$v.$touch()

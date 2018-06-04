@@ -25,14 +25,29 @@ $api->version('v1', function (Router $api) {
         return response()->json(json_encode(['response' => $response]));
     });
 
+//    $api->group([
+//        'namespace' => 'App\Http\Controllers\Api\v1',
+//    ], function ($api) {
+//        $api->post('/authenticate', 'AuthController@authenticate');
+//        // login
+//        $api->post('auth/login', 'AuthController@login');
+//        // refresh jwt token
+//        $api->post('auth/login/refresh', 'AuthController@refreshToken');
+//    });
+
     $api->group([
+
+//        'middleware' => 'api',
+        'prefix' => 'auth',
         'namespace' => 'App\Http\Controllers\Api\v1',
+
     ], function ($api) {
-        $api->post('/authenticate', 'AuthController@authenticate');
-        // login
-        $api->post('auth/login', 'AuthController@login');
-        // refresh jwt token
-        $api->post('auth/login/refresh', 'AuthController@refreshToken');
+
+        $api->post('login', 'AuthController@login');
+        $api->post('logout', 'AuthController@logout');
+        $api->post('refresh', 'AuthController@refresh');
+        $api->post('me', 'AuthController@me');
+
     });
 
 

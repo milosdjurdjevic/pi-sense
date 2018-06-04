@@ -9,7 +9,9 @@ const state = {
     users: [],
     usersMeta: {},
     allUsers: [],
-    search: '',
+    search: null,
+    currentPage: null,
+    totalPages: null,
 };
 
 /**
@@ -21,6 +23,7 @@ const getters = {
     usersMeta: state => state.usersMeta,
     allUsers: state => state.allUsers,
     search: state => state.search,
+    currentPage : state => state.usersMeta.pagination.current_page,
 };
 
 /**
@@ -115,6 +118,8 @@ const mutations = {
     [types.FETCH_USERS](state, data) {
         state.users = data.data;
         state.usersMeta = data.meta;
+        state.currentPage = data.meta.pagination.current_page;
+        state.totalPages = data.meta.pagination.total_pages;
     },
     [types.ALL_USERS](state, data) {
         state.allUsers = data.data;

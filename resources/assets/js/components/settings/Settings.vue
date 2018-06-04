@@ -72,7 +72,7 @@
                 this.$emit('loading-start');
 
                 this.$store.dispatch('fetchSettings').then(() => {
-                    this.settings = this.$store.getters.settings;
+                    // this.settings = this.$store.getters.settings;
 
                     this.$emit('loading-done');
                 }, () => {

@@ -7,6 +7,7 @@ export const CREATE_USER = 'CREATE_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 export const DELETE_USER = 'DELETE_USER';
 export const UPDATE_USER_STATE = 'UPDATE_USER_STATE';
+export const USER_SEARCH = 'USER_SEARCH';
 
 export const FETCH_SETTINGS = 'FETCH_SETTINGS';
 export const EDIT_SETTING = 'EDIT_SETTING';
@@ -14,3 +15,5 @@ export const CREATE_PROGRAM = 'CREATE_PROGRAM';
 
 export const FETCH_READINGS = 'FETCH_READINGS';
 export const READINGS = 'READINGS';
+
+export const FETCH_STATS = 'FETCH_STATS';

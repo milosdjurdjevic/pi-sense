@@ -54,7 +54,7 @@ const mutations = {
     },
     [types.READINGS](state, data) {
         let reading = JSON.parse(data);
-        let d =new Date();
+        let d = new Date();
 
         if (state.chartTemperature.length === 10)
             state.chartTemperature.shift();

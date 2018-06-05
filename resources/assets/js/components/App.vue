@@ -66,6 +66,11 @@
     import 'vue-material/dist/vue-material.min.css'
     import 'vue-material/dist/theme/default.css'
 
+    const io = require('socket.io-client');
+    const host = window.location.host.split(':')[0];
+
+    const socket = io('//' + host);
+
     Vue.use(VueMaterial);
 
     export default {
@@ -74,15 +79,47 @@
             loading: false,
             authenticated: localStorage.getItem('token'),
         }),
-        // mounted() {
-        //     this.$emit('loadingDone');
-        // },
+        mounted() {
+            if (this.$store.getters.temperature === null && this.$route.path !== '/login') {
+                this.initialFill();
+            }
+
+            socket.on('connect', () => {
+                console.log('connected');
+                socket.on('reading', (data) => {
+                    this.$store.dispatch('readings', data).then(() => {
+                        // Draw chart
+                        console.log('readings')
+                    }, (error) => {
+                        console.log(error)
+                    });
+                });
+
+                socket.on('err', (data) => {
+                    console.log(`Fatal error ${JSON.stringify(data)}`);
+                });
+
+                socket.on('stderr', (data) => {
+                    console.log(`Reading error ${data}`);
+                });
+            });
+        },
         methods: {
             loadingStart() {
                 this.loading = true;
             },
             loadingDone() {
                 this.loading = false;
+            },
+            initialFill() {
+                this.loadingStart();
+
+                axios.get(`fire`)
+                    .then(response => {
+                        this.loadingDone();
+                    }, error => {
+                        console.log(error);
+                    });
             }
         }
     }

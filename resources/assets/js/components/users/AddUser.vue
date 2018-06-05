@@ -79,7 +79,7 @@
                 </md-card-actions>
             </md-card>
 
-            <md-snackbar :md-active.sync="userSaved">The user {{ lastUser }} was saved with success!</md-snackbar>
+            <md-snackbar :md-active.sync="userSaved">{{ lastUser }}</md-snackbar>
         </form>
 
     </div>
@@ -138,11 +138,19 @@
                 this.sending = true;
 
 
-                this.$store.dispatch('createUser', this.form).then(() => {
-                    this.lastUser = `${this.form.firstName} ${this.form.lastName}`;
-                    this.userSaved = true;
-                    this.sending = false;
-                    this.clearForm();
+                this.$store.dispatch('createUser', this.form).then((response) => {
+                    console.log(response);
+                    if (response.data.error) {
+                        this.lastUser = `Something went wrong`;
+                        this.userSaved = true;
+                        this.sending = false;
+                        this.clearForm();
+                    } else {
+                        this.lastUser = `The user ${this.form.firstName} ${this.form.lastName} was saved with success!`;
+                        this.userSaved = true;
+                        this.sending = false;
+                        this.clearForm();
+                    }
 
                     this.$emit('loading-done');
                 }, (error) => {

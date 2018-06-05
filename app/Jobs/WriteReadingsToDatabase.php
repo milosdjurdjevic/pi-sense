@@ -41,7 +41,7 @@ class WriteReadingsToDatabase implements ShouldQueue
         Reading::create([
             'temperature' => $reading->temperature,
             'humidity' => $reading->humidity,
-            'created_at' => Carbon::now(),
+            'created_at' => Carbon::now('GMT+2'),
             'updated_at' => Carbon::now(),
         ]);
     }

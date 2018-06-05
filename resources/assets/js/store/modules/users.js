@@ -49,6 +49,7 @@ const actions = {
     createUser({context}, user) {
         return new Promise((resolve, reject) => {
             axios.post('users', user).then((response) => {
+                console.log(response)
                 resolve(response);
             }, (error) => {
                 resolve(error);
@@ -125,6 +126,9 @@ const mutations = {
     },
     [types.UPDATE_USER_STATE](user) {
         state.user.firstName = user.firstName;
+    },
+    [types.USER_SEARCH](state, data) {
+        state.users = data;
     },
 };
 

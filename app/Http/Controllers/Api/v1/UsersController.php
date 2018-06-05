@@ -60,7 +60,7 @@ class UsersController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response->errorBadRequest($validator->errors());
+            return response()->json(['error' => $validator->errors()]);
         }
 
         $attributes = [

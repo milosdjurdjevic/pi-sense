@@ -32,21 +32,9 @@
             }
         },
         created() {
-            if (this.$store.getters.temperature === null) {
-                this.initial();
-            }
+
         },
         methods: {
-            initial() {
-                this.$emit('loading-start');
-
-                axios.get(`fire`)
-                    .then(response => {
-                        this.$emit('loading-done');
-                    }, error => {
-                        console.log(error);
-                    });
-            },
             handleCheckbox() {
 
             }

@@ -102,8 +102,15 @@
             };
         },
         computed: {
-            users() {
-                return this.$store.state.users
+            users: {
+                get() {
+                    return this.$store.state.users
+                },
+                set(value) {
+                    // console.log(value);
+                    this.$store.commit('USER_SEARCH', value);
+                }
+
             },
             currentPage() {
                 return this.$store.state.users.currentPage
@@ -145,7 +152,7 @@
             },
             deleteUser() {
                 this.$store.dispatch('deleteUser', this.deleteId).then(() => {
-                    // this.loadData(this.currentPage);
+                    this.loadData(this.currentPage);
                     this.showSnackbar = false;
                 }, () => {
                     // this.$toasted.show('Error!', {duration: 3000});

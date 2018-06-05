@@ -117,7 +117,6 @@
         name: "edit-user",
         mixins: [validationMixin],
         data: () => ({
-
             form: {
                 id: '',
                 firstName: '',

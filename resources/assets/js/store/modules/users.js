@@ -23,7 +23,6 @@ const getters = {
     usersMeta: state => state.usersMeta,
     allUsers: state => state.allUsers,
     search: state => state.search,
-    currentPage : state => state.usersMeta.pagination.current_page,
 };
 
 /**

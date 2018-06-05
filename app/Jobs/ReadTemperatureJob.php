@@ -4,14 +4,12 @@ namespace App\Jobs;
 
 use App\Events\ReadTemperatureEvent;
 use App\Models\Program;
-use App\Models\Reading;
+use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Nexmo\Laravel\Facade\Nexmo;
-use GuzzleHttp\Client;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class ReadTemperatureJob implements ShouldQueue
 {

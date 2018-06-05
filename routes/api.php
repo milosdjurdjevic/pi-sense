@@ -79,6 +79,8 @@ $api->version('v1', function (Router $api) {
 
             // Settings
             $api->get('settings', 'SettingsController@index');
+            $api->get('settings/{id}', 'SettingsController@show');
+            $api->put('settings/{id}', 'SettingsController@update');
             $api->put('settings', 'SettingsController@activateSetting');
             $api->delete('settings/{id}', 'SettingsController@deleteSetting');
             $api->post('settings', 'SettingsController@createProgram');

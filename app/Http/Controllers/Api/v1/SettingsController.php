@@ -7,6 +7,7 @@ use App\Models\Program;
 use App\Transformers\ProgramTransformer;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
+use Validator;
 
 class SettingsController extends Controller
 {
@@ -43,7 +44,7 @@ class SettingsController extends Controller
             'is_active' => 1
         ]);
 
-        return $program;
+        return response()->json(['program' => $program]);;
     }
 
     public function deleteSetting($id)
@@ -56,11 +57,50 @@ class SettingsController extends Controller
 
     public function createProgram(Request $request)
     {
-        $data = $request->only('name', 'min_temperature', 'max_temperature', 'optimal_humidity');
+        $data = $request->only('name', 'min_temperature', 'max_temperature', 'temperature_tolerance');
+        $data['optimal_humidity'] = 0;
 
         if ($this->program->create($data))
-            return true;
+            return response()->json(['success' => true]);
 
-        return false;
+        return response()->json(['success' => false]);;
+    }
+
+    public function show($id)
+    {
+        $program = $this->program->where('id', $id)->first();
+
+        if (!$program)
+            return $this->errorBadRequest('No user found!');
+
+        return $this->response->item($program, new ProgramTransformer());
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->input(), [
+            'name' => 'required',
+            'minimum_temperature' => 'required',
+            'maximum_temperature' => 'required',
+            'temperature_tolerance' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator->messages());
+        }
+
+        $attributes = [
+            'name' => $request->get('name'),
+            'minimum_temperature' => $request->get('minimum_temperature'),
+            'maximum_temperature' => $request->get('maximum_temperature'),
+            'temperature_tolerance' => $request->get('temperature_tolerance'),
+
+        ];
+        $user = $this->program->where('id', $id)->first();
+
+        if (!$user->update($attributes))
+            return $this->response->error('Update failed');
+
+        return $this->response->noContent();
     }
 }

@@ -18,7 +18,7 @@ class CreateProgramsTable extends Migration
             $table->string('name', 15);
             $table->integer('min_temperature');
             $table->integer('max_temperature');
-            $table->integer('optimal_humidity');
+            $table->integer('optimal_humidity')->default(0);
             $table->integer('temperature_tolerance')->nullable();
             $table->integer('humidity_tolerance')->nullable();
             $table->tinyInteger('is_active')->default(0);

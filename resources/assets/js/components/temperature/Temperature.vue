@@ -33,16 +33,33 @@
         },
         data() {
             return {
-                chartData: this.$store.getters.chartData ? this.$store.getters.chartData : null,
-                chartTemperature: this.$store.getters.chartTemperature ? this.$store.getters.chartTemperature : null,
-                chartHumidity: this.$store.getters.chartHumidity ? this.$store.getters.chartHumidity : null,
-                xLabels: null,
-                temperature: this.$store.getters.temperature ? this.$store.getters.temperature : null,
-                humidity: this.$store.getters.humidity ? this.$store.getters.humidity : null,
+        //         chartData: this.$store.getters.chartData ? this.$store.getters.chartData : null,
+        //         chartTemperature: this.$store.getters.chartTemperature ? this.$store.getters.chartTemperature : null,
+        //         chartHumidity: this.$store.getters.chartHumidity ? this.$store.getters.chartHumidity : null,
+        //         xLabels: null,
+        //         temperature: this.$store.getters.temperature ? this.$store.getters.temperature : null,
+        //         humidity: this.$store.getters.humidity ? this.$store.getters.humidity : null,
                 statsData: null,
                 statsTemperature: [],
                 statsHumidity: [],
                 statsLabels: [],
+            }
+        },
+        computed: {
+            chartData() {
+                return this.$store.getters.chartData
+            },
+            chartTemperature() {
+                return this.$store.getters.chartTemperature
+            },
+            chartHumidity() {
+                return this.$store.getters.chartHumidity
+            },
+            temperature() {
+                return this.$store.getters.temperature
+            },
+            humidity() {
+                return this.$store.getters.humidity
             }
         },
         mounted() {
@@ -76,11 +93,11 @@
         methods: {
             fillData () {
                 console.log('filling data');
-                this.chartTemperature = this.$store.getters.chartTemperature;
-                this.chartHumidity = this.$store.getters.chartHumidity;
-                this.chartData = this.$store.getters.chartData;
-                this.temperature = this.$store.getters.temperature;
-                this.humidity = this.$store.getters.humidity;
+                // this.chartTemperature = this.$store.getters.chartTemperature;
+                // this.chartHumidity = this.$store.getters.chartHumidity;
+                // this.chartData = this.$store.getters.chartData;
+                // this.temperature = this.$store.getters.temperature;
+                // this.humidity = this.$store.getters.humidity;
             },
             initialFill () {
                 this.$emit('loading-start');

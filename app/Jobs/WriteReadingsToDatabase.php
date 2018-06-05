@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Reading;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -33,14 +34,13 @@ class WriteReadingsToDatabase implements ShouldQueue
      */
     public function handle()
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://sesamoid-jackal-7649.dataplicity.io/node/reading");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch));
+        $client = new Client(['base_uri' => 'https://sesamoid-jackal-7649.dataplicity.io/']);
+
+        $reading = json_decode($client->request('GET', 'node/reading')->getBody()->getContents());
 
         Reading::create([
-            'temperature' => $response->temperature,
-            'humidity' => $response->humidity,
+            'temperature' => $reading->temperature,
+            'humidity' => $reading->humidity,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

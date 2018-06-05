@@ -10,6 +10,7 @@ import AddUser from '../components/users/AddUser';
 import EditUser from '../components/users/EditUser';
 import Settings from '../components/settings/Settings';
 import AddProgram from '../components/settings/AddProgram';
+import EditProgram from '../components/settings/EditProgram';
 import Temperature from '../components/temperature/Temperature';
 
 Vue.use(Router);
@@ -87,6 +88,14 @@ const router = new Router({
             path: '/add-program',
             name: 'add-program',
             component: AddProgram,
+            meta: {
+                guarded: true,
+            },
+        },
+        {
+            path: '/edit-program/:id',
+            name: 'edit-program',
+            component: EditProgram,
             meta: {
                 guarded: true,
             },

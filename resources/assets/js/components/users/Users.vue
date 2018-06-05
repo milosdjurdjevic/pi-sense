@@ -101,11 +101,6 @@
                 deleteId: null,
             };
         },
-        // computed: mapState([
-        //     // map this.count to store.state.count
-        //     'users',
-        //     'currentPage'
-        // ]),
         computed: {
             users() {
                 return this.$store.state.users
@@ -116,14 +111,6 @@
             totalPages() {
                 return this.$store.state.users.totalPages
             }
-        },
-        // computed: {
-        //     ...mapGetters({
-        //         users: 'users',
-        //     })
-        // },
-        created() {
-
         },
         mounted() {
             if (this.$store.getters.users.length === 0) {
@@ -151,9 +138,6 @@
             },
             searchOnTable() {
                 this.users = searchByName(this.users.allUsers, this.search)
-            },
-            onPagination() {
-                //
             },
             confirmDelete(id) {
                 this.showSnackbar = true;

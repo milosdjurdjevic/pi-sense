@@ -20,16 +20,25 @@
                     <div class="md-title">{{ setting.name }}</div>
                 </md-card-header-text>
 
-                <md-menu v-if="setting.is_active === 0" md-size="big" md-direction="bottom-end">
+                <md-menu md-size="big" md-direction="bottom-end">
                     <md-button class="md-icon-button" md-menu-trigger>
                         <md-icon>more_vert</md-icon>
                     </md-button>
                     <md-menu-content>
-                        <md-menu-item @click="activateSetting(setting.id)">
+                        <md-menu-item @click="activateSetting(setting.id)" v-if="setting.is_active === 0">
                             <span>Activate</span>
                             <md-icon>airplanemode_active</md-icon>
                         </md-menu-item>
-                        <md-menu-item @click="deleteSetting(setting.id)">
+                        <md-menu-item @click="">
+                            <router-link tag="span" class="" :to="`/edit-program/${setting.id}`">
+                                <a class="">
+                                    <!--<md-icon>add</md-icon>-->
+                                    Edit
+                                </a>
+                            </router-link>
+                            <md-icon>edit</md-icon>
+                        </md-menu-item>
+                        <md-menu-item @click="deleteSetting(setting.id)" v-if="setting.is_active === 0">
                             <span>Delete</span>
                             <md-icon>delete</md-icon>
                         </md-menu-item>
@@ -52,15 +61,11 @@
     import { mapState } from 'vuex'
     export default {
         name: "settings",
-        // data() {
-        //     return {
-        //         settings: this.$store.getters.settings,
-        //     };
-        // },
-        computed: mapState([
-            // map this.count to store.state.count
-            'settings'
-        ]),
+        computed: {
+            settings() {
+                return this.$store.state.settings
+            },
+        },
         created() {
             // Get settings
             if (_.isEmpty(this.$store.getters.settings)) {

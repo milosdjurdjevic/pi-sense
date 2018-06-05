@@ -30,7 +30,7 @@ const actions = {
             });
     },
     activateSetting({commit}, id) {
-        return axios.put(`settings`, { id: id })
+        return axios.put(`settings`, {id: id})
             .then(response => {
                 // commit(types.FETCH_SETTINGS, response.data)
             }, error => {
@@ -52,6 +52,24 @@ const actions = {
             }, error => {
                 return false;
             });
+    },
+    getProgram({commit}, id) {
+        return new Promise((resolve, reject) => {
+            axios.get(`settings/${id}`).then((response) => {
+                resolve(response);
+            }, (error) => {
+                reject(error)
+            });
+        })
+    },
+    editProgram({commit}, id) {
+        return new Promise((resolve, reject) => {
+            axios.put(`settings/${id}`).then((response) => {
+                resolve(response);
+            }, (error) => {
+                reject(error)
+            });
+        })
     }
 };
 

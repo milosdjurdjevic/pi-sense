@@ -12,6 +12,6 @@ class Program extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'min_temperature', 'max_temperature', 'is_active', 'optimal_humidity'
+        'name', 'min_temperature', 'max_temperature', 'is_active', 'optimal_humidity', 'temperature_tolerance'
     ];
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <md-toolbar class="md-transparent">
-            <h3 class="md-title">Add Program</h3>
+            <h3 class="md-title">Add Setting</h3>
             <div class="md-toolbar-section-end">
                 <router-link tag="span" class="" to="/settings">
                     <a class="btn-floating waves-effect waves-light blue">

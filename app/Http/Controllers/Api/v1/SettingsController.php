@@ -80,8 +80,8 @@ class SettingsController extends Controller
     {
         $validator = Validator::make($request->input(), [
             'name' => 'required',
-            'minimum_temperature' => 'required',
-            'maximum_temperature' => 'required',
+            'min_temperature' => 'required',
+            'max_temperature' => 'required',
             'temperature_tolerance' => 'required',
         ]);
 
@@ -91,14 +91,14 @@ class SettingsController extends Controller
 
         $attributes = [
             'name' => $request->get('name'),
-            'minimum_temperature' => $request->get('minimum_temperature'),
-            'maximum_temperature' => $request->get('maximum_temperature'),
+            'min_temperature' => $request->get('min_temperature'),
+            'max_temperature' => $request->get('max_temperature'),
             'temperature_tolerance' => $request->get('temperature_tolerance'),
 
         ];
-        $user = $this->program->where('id', $id)->first();
+        $program = $this->program->where('id', $id)->first();
 
-        if (!$user->update($attributes))
+        if (!$program->update($attributes))
             return $this->response->error('Update failed');
 
         return $this->response->noContent();

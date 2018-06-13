@@ -62,9 +62,10 @@ const actions = {
             });
         })
     },
-    editProgram({commit}, id) {
+    editProgram({commit}, payload) {
+        console.log(payload)
         return new Promise((resolve, reject) => {
-            axios.put(`settings/${id}`).then((response) => {
+            axios.put(`settings/${payload.id}`, payload.payload).then((response) => {
                 resolve(response);
             }, (error) => {
                 reject(error)

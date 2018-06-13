@@ -3,10 +3,10 @@
         <md-toolbar class="md-transparent">
             <h3 class="md-title">Edit Program</h3>
             <div class="md-toolbar-section-end">
-                <router-link tag="span" class="" to="/users">
+                <router-link tag="span" class="" to="/settings">
                     <a class="btn-floating waves-effect waves-light blue">
                         <!--<md-icon>add</md-icon>-->
-                        <span class="page">Back To Programs</span>
+                        <span class="page">Back To Settings</span>
                     </a>
                 </router-link>
             </div>
@@ -65,11 +65,11 @@
                 <!--<md-progress-bar md-mode="indeterminate" v-if="sending"/>-->
 
                 <md-card-actions>
-                    <md-button type="submit" class="md-primary md-raised" :disabled="sending">Update user</md-button>
+                    <md-button type="submit" class="md-primary md-raised" :disabled="sending">Update setting</md-button>
                 </md-card-actions>
             </md-card>
 
-            <md-snackbar :md-active.sync="programSaved">The user {{ lastProgram }} was saved with success!</md-snackbar>
+            <md-snackbar :md-active.sync="programSaved">The program {{ lastProgram }} was saved with success!</md-snackbar>
         </form>
 
         <br><br>
@@ -125,8 +125,10 @@
                 this.sending = true;
 
 
-                this.$store.dispatch('editProgram', this.form).then(() => {
-                    alert('success')
+                this.$store.dispatch('editProgram', {
+                    payload: this.form,
+                    id: this.$route.params.id,
+                }).then(() => {
                     this.lastProgram = this.form.name;
                     this.programSaved = true;
                     this.sending = false;

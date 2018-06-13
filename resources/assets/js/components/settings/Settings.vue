@@ -6,7 +6,7 @@
                 <router-link tag="span" class="" to="/add-program">
                     <a class="btn-floating waves-effect waves-light blue">
                         <!--<md-icon>add</md-icon>-->
-                        <span class="page">Add Program</span>
+                        <span class="page">Add Setting</span>
                     </a>
                 </router-link>
             </div>

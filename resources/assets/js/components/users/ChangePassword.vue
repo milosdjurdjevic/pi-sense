@@ -106,8 +106,8 @@
                 }
             },
             clearPassword() {
-                this.form.password = null;
-                this.form.passwordConfirmation = null;
+                this.password.password = null;
+                this.password.passwordConfirmation = null;
             },
             validatePassword() {
                 this.$v.$touch();

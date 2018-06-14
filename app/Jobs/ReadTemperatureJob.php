@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Nexmo\Laravel\Facade\Nexmo;
 
 class ReadTemperatureJob implements ShouldQueue
 {
@@ -41,10 +42,8 @@ class ReadTemperatureJob implements ShouldQueue
 
         // Turn on or off heating
         if ($reading->temperature < $settings->min_temperature) {
-            if ($status->status == 0)
                 $client->request('GET', 'node/turn-on-heating');
         } else if ($reading->temperature > $settings->max_temperature) {
-            if ($status->status == 1)
                 $client->request('GET', 'node/turn-off-heating');
         }
 

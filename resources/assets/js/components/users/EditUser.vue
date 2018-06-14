@@ -141,7 +141,8 @@
                     this.lastUser = `${this.form.firstName} ${this.form.lastName}`;
                     this.userSaved = true;
                     this.sending = false;
-
+                    this.$store.dispatch('fetchUsers')
+                    this.$store.dispatch('allUsers')
                     this.$emit('loading-done');
                 }, (error) => {
                     alert('Error');

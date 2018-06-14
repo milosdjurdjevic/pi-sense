@@ -18144,21 +18144,21 @@ module.exports = Vue$3;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return LOGIN; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return LOGOUT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return FETCH_USERS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return LOGIN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return LOGOUT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return FETCH_USERS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ALL_USERS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return CREATE_USER; });
 /* unused harmony export UPDATE_USER */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return DELETE_USER; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return UPDATE_USER_STATE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return USER_SEARCH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return FETCH_SETTINGS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return UPDATE_USER_STATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return USER_SEARCH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return FETCH_SETTINGS; });
 /* unused harmony export EDIT_SETTING */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return CREATE_PROGRAM; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return FETCH_READINGS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return READINGS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return FETCH_STATS; });
+/* unused harmony export FETCH_READINGS */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return READINGS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return FETCH_STATS; });
 var LOGIN = 'LOGIN';
 var LOGOUT = 'LOGOUT';
 
@@ -29808,10 +29808,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
         settings: __WEBPACK_IMPORTED_MODULE_5__modules_settings__["a" /* default */],
         readings: __WEBPACK_IMPORTED_MODULE_6__modules_readings__["a" /* default */],
         stats: __WEBPACK_IMPORTED_MODULE_7__modules_stats__["a" /* default */]
-    }
-    // plugins: [createLogger({
-    //     collapsed: true,
-    // })],
+    },
+    plugins: [__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default()({
+        collapsed: true
+    })]
 }));
 
 /***/ }),
@@ -73313,25 +73313,25 @@ var actions = {
   login: function login(_ref, response) {
     var commit = _ref.commit;
 
-    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["i" /* LOGIN */], response);
+    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["h" /* LOGIN */], response);
   },
   logout: function logout(_ref2) {
     var commit = _ref2.commit;
 
-    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["j" /* LOGOUT */]);
+    commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["i" /* LOGOUT */]);
   }
 };
 
 /**
  * MUTATIONS
  */
-var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["i" /* LOGIN */], function (state, data) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["h" /* LOGIN */], function (state, data) {
   state.token = data.access_token;
   // state.user = data.user[0];
 
   __WEBPACK_IMPORTED_MODULE_1_store___default.a.set('token', state.token);
   // localStorage.set('user', state.user);
-}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["j" /* LOGOUT */], function () {
+}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_2__mutation_types__["i" /* LOGOUT */], function () {
   state.token = '';
   // state.user = {};
 
@@ -74577,7 +74577,7 @@ var actions = {
         var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
         return axios.get('users?page=' + page).then(function (response) {
-            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["h" /* FETCH_USERS */], response.data);
+            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["g" /* FETCH_USERS */], response.data);
         }, function (error) {
             console.log(error);
         });
@@ -74667,16 +74667,16 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED
     _.remove(state.users, function (item) {
         return item.id === id;
     });
-}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["h" /* FETCH_USERS */], function (state, data) {
+}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["g" /* FETCH_USERS */], function (state, data) {
     state.users = data.data;
     state.usersMeta = data.meta;
     state.currentPage = data.meta.pagination.current_page;
     state.totalPages = data.meta.pagination.total_pages;
 }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["a" /* ALL_USERS */], function (state, data) {
     state.allUsers = data.data;
-}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["l" /* UPDATE_USER_STATE */], function (user) {
+}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["k" /* UPDATE_USER_STATE */], function (user) {
     state.user.firstName = user.firstName;
-}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["m" /* USER_SEARCH */], function (state, data) {
+}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["l" /* USER_SEARCH */], function (state, data) {
     state.users = data;
 }), _mutations);
 
@@ -74725,7 +74725,7 @@ var actions = {
         var commit = _ref.commit;
 
         return axios.get('settings').then(function (response) {
-            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["f" /* FETCH_SETTINGS */], response.data);
+            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["e" /* FETCH_SETTINGS */], response.data);
         }, function (error) {
             console.log(error);
         });
@@ -74785,7 +74785,7 @@ var actions = {
 /**
  * MUTATIONS
  */
-var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["f" /* FETCH_SETTINGS */], function (state, data) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["e" /* FETCH_SETTINGS */], function (state, data) {
     state.settings = data.data;
 }), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["b" /* CREATE_PROGRAM */], function (state, data) {}), _mutations);
 
@@ -74802,8 +74802,6 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mutation_types__ = __webpack_require__(18);
-var _mutations;
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -74818,7 +74816,8 @@ var state = {
     chartHumidity: [],
     xLabels: [],
     temperature: null,
-    humidity: null
+    humidity: null,
+    heatingStatus: false
 };
 
 /**
@@ -74845,6 +74844,9 @@ var getters = {
     },
     humidity: function humidity(state) {
         return state.humidity;
+    },
+    heatingStatus: function heatingStatus(state) {
+        return state.heatingStatus;
     }
 };
 
@@ -74853,42 +74855,31 @@ var getters = {
  * @type {{login({commit: *}, *=): void}}
  */
 var actions = {
-    fetchReadings: function fetchReadings(_ref) {
+    readings: function readings(_ref, data) {
         var commit = _ref.commit;
 
-        return axios.get('settings').then(function (response) {
-            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["e" /* FETCH_READINGS */], response.data);
-        }, function (error) {
-            console.log(error);
-        });
-    },
-    readings: function readings(_ref2, data) {
-        var commit = _ref2.commit;
-
-        commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["k" /* READINGS */], data);
+        commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["j" /* READINGS */], data);
     }
 };
 
 /**
  * MUTATIONS
  */
-var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["e" /* FETCH_READINGS */], function (state, data) {
-    state.settings = data.data;
-}), _defineProperty(_mutations, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["k" /* READINGS */], function (state, data) {
-    var reading = JSON.parse(data);
+var mutations = _defineProperty({}, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["j" /* READINGS */], function (state, data) {
     var d = new Date();
 
     if (state.chartTemperature.length === 10) state.chartTemperature.shift();
-    state.chartTemperature.push(reading.temperature);
+    state.chartTemperature.push(data.temperature);
 
     if (state.chartHumidity.length === 10) state.chartHumidity.shift();
-    state.chartHumidity.push(reading.humidity);
+    state.chartHumidity.push(data.humidity);
 
     if (state.xLabels.length === 10) state.xLabels.shift();
     state.xLabels.push(d.getHours() + ':' + d.getMinutes());
 
-    state.temperature = reading.temperature;
-    state.humidity = reading.humidity;
+    state.temperature = data.temperature;
+    state.humidity = data.humidity;
+    state.heatingStatus = data.heatingStatus;
 
     state.chartData = {
         labels: state.xLabels,
@@ -74902,7 +74893,7 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, __WEBPACK_IMPORTED
             data: state.chartHumidity
         }]
     };
-}), _mutations);
+});
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     state: state,
@@ -74958,7 +74949,7 @@ var actions = {
         var commit = _ref.commit;
 
         return axios.get('stats').then(function (response) {
-            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["g" /* FETCH_STATS */], response.data.data);
+            commit(__WEBPACK_IMPORTED_MODULE_0__mutation_types__["f" /* FETCH_STATS */], response.data.data);
         }, function (error) {
             console.log(error);
         });
@@ -74968,7 +74959,7 @@ var actions = {
 /**
  * MUTATIONS
  */
-var mutations = _defineProperty({}, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["g" /* FETCH_STATS */], function (state, data) {
+var mutations = _defineProperty({}, __WEBPACK_IMPORTED_MODULE_0__mutation_types__["f" /* FETCH_STATS */], function (state, data) {
 
     _.forIn(data, function (value) {
         var d = new Date(value.created_at);
@@ -74990,8 +74981,6 @@ var mutations = _defineProperty({}, __WEBPACK_IMPORTED_MODULE_0__mutation_types_
             data: state.statsHumidity
         }]
     };
-
-    console.log(state.statsData);
 });
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -75087,7 +75076,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -75147,12 +75136,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'home',
     data: function data() {
         return {
-            heatingStatus: false,
+            // heatingStatus: false,
             sending: false
         };
     },
@@ -75163,12 +75158,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         humidity: function humidity() {
             return this.$store.getters.humidity;
+        },
+        heatingStatus: function heatingStatus() {
+            return this.$store.getters.heatingStatus;
+        },
+        settings: function settings() {
+            return this.$store.getters.settings;
         }
     },
-    created: function created() {},
+    created: function created() {
+        // Get settings
+        if (_.isEmpty(this.$store.getters.settings)) {
+            this.loadData();
+        }
+    },
 
     methods: {
-        handleCheckbox: function handleCheckbox() {}
+        loadData: function loadData() {
+            var _this = this;
+
+            this.$emit('loading-start');
+
+            this.$store.dispatch('fetchSettings').then(function () {
+                // this.settings = this.$store.getters.settings;
+
+                _this.$emit('loading-done');
+            }, function () {
+                _this.settings = [];
+            });
+        }
     }
 });
 
@@ -75180,45 +75198,54 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h1", [_vm._v("Dashboard")]),
-    _vm._v(" "),
-    _c("p", [_vm._v("Current temperature: " + _vm._s(_vm.temperature) + "°C")]),
-    _vm._v(" "),
-    _c("p", [_vm._v("Current humidity: " + _vm._s(_vm.humidity) + "%")]),
-    _vm._v(" "),
-    _c(
-      "p",
-      [
-        _vm._v("Heating status:\n        "),
-        _c(
-          "md-switch",
-          {
-            staticClass: "md-primary",
-            attrs: { disabled: _vm.sending },
-            on: {
-              change: function($event) {
-                _vm.handleCheckbox($event)
-              }
-            },
-            model: {
-              value: _vm.heatingStatus,
-              callback: function($$v) {
-                _vm.heatingStatus = $$v
-              },
-              expression: "heatingStatus"
-            }
-          },
-          [_vm._v("Primary")]
-        ),
+  return _c(
+    "div",
+    [
+      _c("h1", [_vm._v("Dashboard")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "item" }, [
+        _c("p", [
+          _vm._v("Current temperature: " + _vm._s(_vm.temperature) + "°C")
+        ]),
         _vm._v(" "),
-        _vm.heatingStatus === 1
-          ? _c("span", [_vm._v("ON")])
-          : _vm.heatingStatus === 0 ? _c("span", [_vm._v("OFF")]) : _vm._e()
-      ],
-      1
-    )
-  ])
+        _c("p", [_vm._v("Current humidity: " + _vm._s(_vm.humidity) + "%")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("Heating status:\n            "),
+          _vm.heatingStatus === 1
+            ? _c("span", [_vm._v("ON")])
+            : _vm.heatingStatus === 0 ? _c("span", [_vm._v("OFF")]) : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.settings, function(item) {
+        return item.is_active === 1
+          ? _c("div", { key: item.id, staticClass: "item" }, [
+              _c("h2", [_vm._v("Active setting")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "Minimum temperature: " + _vm._s(item.min_temperature) + "°C"
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "Maximum temprature: " + _vm._s(item.max_temperature) + "%°C"
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "Optimal humidity: " + _vm._s(item.optimal_humidity) + "%°C"
+                )
+              ])
+            ])
+          : _vm._e()
+      })
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -77665,7 +77692,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -77828,7 +77855,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.lastUser = _this2.form.firstName + ' ' + _this2.form.lastName;
                 _this2.userSaved = true;
                 _this2.sending = false;
-
+                _this2.$store.dispatch('fetchUsers');
+                _this2.$store.dispatch('allUsers');
                 _this2.$emit('loading-done');
             }, function (error) {
                 alert('Error');
@@ -78067,8 +78095,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         clearPassword: function clearPassword() {
-            this.form.password = null;
-            this.form.passwordConfirmation = null;
+            this.password.password = null;
+            this.password.passwordConfirmation = null;
         },
         validatePassword: function validatePassword() {
             this.$v.$touch();
@@ -78660,6 +78688,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -78804,7 +78833,6 @@ var render = function() {
                         _vm._v(" "),
                         _c(
                           "md-menu-item",
-                          { on: { click: function($event) {} } },
                           [
                             _c(
                               "router-link",
@@ -78815,11 +78843,9 @@ var render = function() {
                                 }
                               },
                               [
-                                _c("a", {}, [
-                                  _vm._v(
-                                    "\n                                Edit\n                            "
-                                  )
-                                ])
+                                _vm._v(
+                                  "\n                                Edit\n\n                        "
+                                )
                               ]
                             ),
                             _vm._v(" "),
@@ -79698,7 +79724,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.programSaved = true;
                 _this.sending = false;
                 _this.clearForm();
-
+                _this.$store.dispatch('fetchSettings');
                 _this.$emit('loading-done');
             }, function (error) {
                 // let errors = JSON.parse(error.message);
@@ -80115,7 +80141,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -80191,9 +80217,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         stats: function stats() {
-            this.$emit('loading-start');
+            var _this = this;
 
-            this.$store.dispatch('fetchStats');
+            this.$emit('loading-start');
+            this.$store.dispatch('fetchStats').then(function () {
+
+                _this.$emit('loading-done');
+            });
         }
     }
 });

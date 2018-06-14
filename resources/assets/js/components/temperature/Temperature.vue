@@ -61,8 +61,10 @@
         methods: {
             stats() {
                 this.$emit('loading-start');
+                this.$store.dispatch('fetchStats').then(() => {
 
-                this.$store.dispatch('fetchStats')
+                    this.$emit('loading-done');
+                })
             }
         },
     }

@@ -1,6 +1,5 @@
 import * as types from '../mutation-types';
 
-
 /**
  * STATE
  */
@@ -12,6 +11,7 @@ const state = {
     xLabels: [],
     temperature: null,
     humidity: null,
+    heatingStatus: false,
 };
 
 /**
@@ -25,6 +25,7 @@ const getters = {
     xLabels: state => state.xLabels,
     temperature: state => state.temperature,
     humidity: state => state.humidity,
+    heatingStatus: state => state.heatingStatus,
 };
 
 /**
@@ -32,14 +33,6 @@ const getters = {
  * @type {{login({commit: *}, *=): void}}
  */
 const actions = {
-    fetchReadings({commit}) {
-        return axios.get(`settings`)
-            .then(response => {
-                commit(types.FETCH_READINGS, response.data)
-            }, error => {
-                console.log(error);
-            });
-    },
     readings({commit}, data) {
         commit(types.READINGS, data)
     }
@@ -49,27 +42,24 @@ const actions = {
  * MUTATIONS
  */
 const mutations = {
-    [types.FETCH_READINGS](state, data) {
-        state.settings = data.data;
-    },
     [types.READINGS](state, data) {
-        let reading = JSON.parse(data);
         let d = new Date();
 
         if (state.chartTemperature.length === 10)
             state.chartTemperature.shift();
-        state.chartTemperature.push(reading.temperature);
+        state.chartTemperature.push(data.temperature);
 
         if (state.chartHumidity.length === 10)
             state.chartHumidity.shift();
-        state.chartHumidity.push(reading.humidity);
+        state.chartHumidity.push(data.humidity);
 
         if (state.xLabels.length === 10)
             state.xLabels.shift();
         state.xLabels.push(`${d.getHours()}:${d.getMinutes()}`);
 
-        state.temperature = reading.temperature;
-        state.humidity = reading.humidity;
+        state.temperature = data.temperature;
+        state.humidity = data.humidity;
+        state.heatingStatus = data.heatingStatus;
 
         state.chartData = {
             labels: state.xLabels,

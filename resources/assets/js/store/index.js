@@ -19,7 +19,7 @@ export default new Vuex.Store({
         readings,
         stats,
     },
-    // plugins: [createLogger({
-    //     collapsed: true,
-    // })],
+    plugins: [createLogger({
+        collapsed: true,
+    })],
 });

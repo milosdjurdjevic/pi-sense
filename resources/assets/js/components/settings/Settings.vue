@@ -29,12 +29,13 @@
                             <span>Activate</span>
                             <md-icon>airplanemode_active</md-icon>
                         </md-menu-item>
-                        <md-menu-item @click="">
+                        <md-menu-item>
                             <router-link tag="span" class="" :to="`/edit-program/${setting.id}`">
-                                <a class="">
+
+
                                     <!--<md-icon>add</md-icon>-->
                                     Edit
-                                </a>
+
                             </router-link>
                             <md-icon>edit</md-icon>
                         </md-menu-item>

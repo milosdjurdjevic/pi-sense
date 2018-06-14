@@ -133,7 +133,7 @@
                     this.programSaved = true;
                     this.sending = false;
                     this.clearForm();
-
+                    this.$store.dispatch('fetchSettings')
                     this.$emit('loading-done');
                 }, (error) => {
                     // let errors = JSON.parse(error.message);

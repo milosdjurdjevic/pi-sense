@@ -12,12 +12,6 @@ const { exec } = require('child_process');
 const port = process.env.PORT || 8080;
 
 const app = express();
-// const options = {
-//     key: fs.readFileSync('/etc/nginx/ssl/nginx.key'),
-//     cert: fs.readFileSync('/etc/nginx/ssl/nginx.crt'),
-//     // ca: fs.readFileSync('/etc/nginx/ssl/nginx.crt'),
-//     rejectUnauthorized: false,
-// };
 
 const server = http.createServer(app);
 const io = socketIO.listen(server);
@@ -38,7 +32,11 @@ redis.subscribe('temperature-channel', function (err, data) {
                 io.emit('stderr', stderr);
                 console.log(stderr)
             } else {
-                io.emit('reading', stdout);
+                io.emit('reading', {
+                    temperature: JSON.parse(stdout).temperature,
+                    humidity: JSON.parse(stdout).humidity,
+                    heatingStatus: LED.readSync()
+                });
                 console.log(stdout)
             }
         });

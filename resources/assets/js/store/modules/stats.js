@@ -65,8 +65,6 @@ const mutations = {
                 }
             ]
         };
-
-        console.log(state.statsData);
     }
 };
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Reading;
 use App\Transformers\ReadingsTransformer;
+use Carbon\Carbon;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,7 @@ class ReadingsController extends Controller
 
     public function index()
     {
-        $stats = $this->readings->all();
+        $stats = $this->readings->whereDate('created_at', '>=', Carbon::now()->subDay(1))->get();
 
         return $this->response->collection($stats, new ReadingsTransformer());
     }

@@ -10,7 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Nexmo\Laravel\Facade\Nexmo;
 
 class ReadTemperatureJob implements ShouldQueue
 {
@@ -48,35 +47,33 @@ class ReadTemperatureJob implements ShouldQueue
         }
 
         // Make a call if temperature is over tolerance
-//        if ($reading->temperature <= ($settings->min_temperature - $settings->temperature_tolerance)) {
-//            Nexmo::calls()->create([
-//                'to' => [[
-//                    'type' => 'phone',
-//                    'number' => '+381600626593'
-//                ]],
-//                'from' => [
-//                    'type' => 'phone',
-//                    'number' => '+381600626593'
-//                ],
-//                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//min-temperature-alert'],
-//                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
-//            ]);
-//        } else if ($reading->temperature >= ($settings->max_temperature + $settings->max)) {
-//            Nexmo::calls()->create([
-//                'to' => [[
-//                    'type' => 'phone',
-//                    'number' => '+381600626593'
-//                ]],
-//                'from' => [
-//                    'type' => 'phone',
-//                    'number' => '+381600626593'
-//                ],
-//                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//max-temperature-alert'],
-//                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
-//            ]);
-//        }
-
-        // TODO: Calculate formula for humidity
+        if ($reading->temperature <= ($settings->min_temperature - $settings->temperature_tolerance)) {
+            Nexmo::calls()->create([
+                'to' => [[
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ]],
+                'from' => [
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ],
+                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//min-temperature-alert'],
+                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+            ]);
+        } else if ($reading->temperature >= ($settings->max_temperature + $settings->max)) {
+            Nexmo::calls()->create([
+                'to' => [[
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ]],
+                'from' => [
+                    'type' => 'phone',
+                    'number' => '+381600626593'
+                ],
+                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//max-temperature-alert'],
+                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+            ]);
+        }
 
         event(new ReadTemperatureEvent());
     }

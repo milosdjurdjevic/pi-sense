@@ -28,10 +28,7 @@
         },
         data() {
             return {
-                // statsData: null,
-                // statsTemperature: [],
-                // statsHumidity: [],
-                // statsLabels: [],
+
             }
         },
         computed: {

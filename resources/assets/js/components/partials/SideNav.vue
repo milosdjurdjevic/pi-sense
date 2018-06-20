@@ -1,10 +1,6 @@
 <template>
     <div id="side-nav">
-        <!--<button id="menu-button" data-activates="main-nav"-->
-                <!--class="btn waves-effect waves-light btn-floating transparent"><i class="material-icons">menu</i>-->
-        <!--</button>-->
         <ul id="main-nav" class="side-nav">
-            <!--<li>-->
             <router-link tag="li" class="pageLink" to="/">
                 <a class="waves-effect">
                     <i class="fa fa-desktop"></i>
@@ -40,11 +36,6 @@
             return {
                 show: false,
             };
-        },
-        mounted() {
-            // $('#menu-button').sideNav({
-            //     closeOnClick: true
-            // });
         },
     };
 </script>

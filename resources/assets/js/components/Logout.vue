@@ -3,7 +3,6 @@
 </template>
 
 <script>
-  // import { LOGOUT } from '../store/mutation-types';
 
   export default {
     name: 'logout',
@@ -15,9 +14,6 @@
       logout() {
         this.$store.dispatch('logout');
         location.href = '/'
-        // this.$router.push({
-        //   name: 'login',
-        // });
       },
     },
   };

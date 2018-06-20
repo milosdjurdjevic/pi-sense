@@ -7,7 +7,6 @@ use App\Models\Reading;
 use App\Transformers\ReadingsTransformer;
 use Carbon\Carbon;
 use Dingo\Api\Routing\Helpers;
-use Illuminate\Http\Request;
 
 class ReadingsController extends Controller
 {

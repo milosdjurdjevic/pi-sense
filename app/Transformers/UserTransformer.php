@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: milos
- * Date: 26.2.18.
- * Time: 23.14
- */
 
 namespace App\Transformers;
 

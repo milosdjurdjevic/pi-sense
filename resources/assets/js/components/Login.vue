@@ -1,85 +1,59 @@
 <template>
     <div class="row">
-        <!--<div class="col s12 center">-->
-            <!--<div class="z-depth-5 grey lighten-4 row">-->
-            <!--<form @submit.prevent="login" class="col s12" method="post">-->
-            <!--<div class='row'>-->
-            <!--<div class='input-field col s12'>-->
-            <!--<input v-model="user.email" class='validate' type='email' name='email' id='email'/>-->
-            <!--<label for='email'>Enter your email</label>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class='row'>-->
-            <!--<div class='input-field col s12'>-->
-            <!--<input v-model="user.password" class='validate' type='password' name='password'-->
-            <!--id='password'/>-->
-            <!--<label for='password'>Enter your password</label>-->
-            <!--</div>-->
-            <!--<label class="right">-->
-            <!--<a href='#!'><b>Forgot Password?</b></a>-->
-            <!--</label>-->
-            <!--</div>-->
-            <!--<br/>-->
-            <!--<div class='row center'>-->
-            <!--<button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect blue'>Login-->
-            <!--</button>-->
-            <!--</div>-->
-            <!--</form>-->
+        <div class="md-layout md-centered">
+            <div class="md-layout-item">
+                <form novalidate class="md-layout" @submit.prevent="validateUser">
+                    <md-card class="md-layout-item md-centered md-small-size-100">
+                        <md-card-header>
+                            <div class="md-title">Login</div>
+                        </md-card-header>
 
-            <div class="md-layout md-centered">
-                <div class="md-layout-item">
-                    <form novalidate class="md-layout" @submit.prevent="validateUser">
-                        <md-card class="md-layout-item md-centered md-small-size-100">
-                            <md-card-header>
-                                <div class="md-title">Login</div>
-                            </md-card-header>
-
-                            <md-card-content>
-                                <div class="md-layout md-gutter">
-                                    <div class="md-layout-item">
-                                        <md-field :class="getValidationClass('email')">
-                                            <label for="email">Username</label>
-                                            <md-input name="email" id="email" autocomplete="email"
-                                                      v-model="form.email" :disabled="sending"/>
-                                            <span class="md-error" v-if="!$v.form.email.required">The email is required</span>
-                                            <span class="md-error" v-else-if="!$v.form.email.minlength">Invalid email</span>
-                                        </md-field>
-                                    </div>
+                        <md-card-content>
+                            <div class="md-layout md-gutter">
+                                <div class="md-layout-item">
+                                    <md-field :class="getValidationClass('email')">
+                                        <label for="email">Username</label>
+                                        <md-input name="email" id="email" autocomplete="email"
+                                                  v-model="form.email" :disabled="sending"/>
+                                        <span class="md-error"
+                                              v-if="!$v.form.email.required">The email is required</span>
+                                        <span class="md-error" v-else-if="!$v.form.email.minlength">Invalid email</span>
+                                    </md-field>
                                 </div>
+                            </div>
 
-                                <div class="md-layout md-gutter">
-                                    <div class="md-layout-item md-small-size-100">
-                                        <md-field :class="getValidationClass('password')">
-                                            <label for="password">Password</label>
-                                            <md-input type="password" name="password" id="password" autocomplete="password"
-                                                      v-model="form.password" :disabled="sending"/>
-                                            <span class="md-error"
-                                                  v-if="!$v.form.password.required">The password is required</span>
-                                            <span class="md-error"
-                                                  v-else-if="!$v.form.password.minlength">Invalid password</span>
-                                        </md-field>
-                                    </div>
+                            <div class="md-layout md-gutter">
+                                <div class="md-layout-item md-small-size-100">
+                                    <md-field :class="getValidationClass('password')">
+                                        <label for="password">Password</label>
+                                        <md-input type="password" name="password" id="password" autocomplete="password"
+                                                  v-model="form.password" :disabled="sending"/>
+                                        <span class="md-error"
+                                              v-if="!$v.form.password.required">The password is required</span>
+                                        <span class="md-error"
+                                              v-else-if="!$v.form.password.minlength">Invalid password</span>
+                                    </md-field>
                                 </div>
+                            </div>
 
-                            </md-card-content>
+                        </md-card-content>
 
-                            <md-progress-bar md-mode="indeterminate" v-if="sending"/>
+                        <md-progress-bar md-mode="indeterminate" v-if="sending"/>
 
-                            <md-card-actions>
-                                <md-button type="submit" class="md-primary" :disabled="sending">Login</md-button>
-                            </md-card-actions>
-                        </md-card>
+                        <md-card-actions>
+                            <md-button type="submit" class="md-primary" :disabled="sending">Login</md-button>
+                        </md-card-actions>
+                    </md-card>
 
-                        <md-snackbar :md-active.sync="failedLogin">Invalid credentials!</md-snackbar>
+                    <md-snackbar :md-active.sync="failedLogin">Invalid credentials!</md-snackbar>
 
-                    </form>
-                </div>
+                </form>
             </div>
-
-
-
-            <!--</div>-->
         </div>
+
+
+        <!--</div>-->
+    </div>
     <!--</div>-->
 </template>
 

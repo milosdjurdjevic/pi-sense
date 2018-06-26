@@ -34,7 +34,7 @@ class WriteReadingsToDatabase implements ShouldQueue
      */
     public function handle()
     {
-        $client = new Client(['base_uri' => 'https://sesamoid-jackal-7649.dataplicity.io/']);
+        $client = new Client(['base_uri' => 'https://pi-sense-device.dataplicity.io//']);
 
         $reading = json_decode($client->request('GET', 'node/reading')->getBody()->getContents());
 

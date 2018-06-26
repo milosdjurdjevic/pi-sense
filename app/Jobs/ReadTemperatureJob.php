@@ -57,8 +57,8 @@ class ReadTemperatureJob implements ShouldQueue
                     'type' => 'phone',
                     'number' => '+381600626593'
                 ],
-                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//min-temperature-alert'],
-                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+                'answer_url' => ['https://pi-sense-device.dataplicity.io/min-temperature-alert'],
+                'event_url' => ['https://pi-sense-device.dataplicity.io/']
             ]);
         } else if ($reading->temperature >= ($settings->max_temperature + $settings->max)) {
             Nexmo::calls()->create([
@@ -70,8 +70,8 @@ class ReadTemperatureJob implements ShouldQueue
                     'type' => 'phone',
                     'number' => '+381600626593'
                 ],
-                'answer_url' => ['https://sesamoid-jackal-7649.dataplicity.io//max-temperature-alert'],
-                'event_url' => ['https://sesamoid-jackal-7649.dataplicity.io']
+                'answer_url' => ['https://pi-sense-device.dataplicity.io/'],
+                'event_url' => ['https://pi-sense-device.dataplicity.io/']
             ]);
         }
 

@@ -14,6 +14,10 @@
 Route::get('/', 'IndexController@index');
 Route::get('/fire', 'IndexController@fire');
 Route::get('/fire-write', 'IndexController@fireWrite');
+Route::get('/event', function () {
+    event(new \App\Events\ReadTemperatureEvent());
+    return 'true';
+});
 Route::get('/max-temperature-alert', function () {
     $json = [[
         'action' => 'talk',

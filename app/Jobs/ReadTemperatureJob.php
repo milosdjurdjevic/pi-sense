@@ -32,7 +32,7 @@ class ReadTemperatureJob implements ShouldQueue
      */
     public function handle()
     {
-        $client = new Client(['base_uri' => 'https://sesamoid-jackal-7649.dataplicity.io/']);
+        $client = new Client(['base_uri' => 'https://pi-sense-device.dataplicity.io/']);
 
         $reading = json_decode($client->request('GET', 'node/reading')->getBody()->getContents());
         $status = json_decode($client->request('GET', 'node/heating-status')->getBody()->getContents());
@@ -46,7 +46,7 @@ class ReadTemperatureJob implements ShouldQueue
                 $client->request('GET', 'node/turn-off-heating');
         }
 
-        // Make a call if temperature is over tolerance
+//         Make a call if temperature is over tolerance
         if ($reading->temperature <= ($settings->min_temperature - $settings->temperature_tolerance)) {
             Nexmo::calls()->create([
                 'to' => [[

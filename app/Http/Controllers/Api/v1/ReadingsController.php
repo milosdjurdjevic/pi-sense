@@ -21,7 +21,7 @@ class ReadingsController extends Controller
 
     public function index()
     {
-        $stats = $this->readings->whereDate('created_at', '>=', Carbon::now()->subDay(1))->get();
+        $stats = $this->readings->whereDate('created_at', '>=', Carbon::now()->subDay(10))->get();
 
         return $this->response->collection($stats, new ReadingsTransformer());
     }
